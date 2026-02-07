@@ -1,0 +1,78 @@
+<nz-layout class="app-layout">
+  <nz-sider class="menu-sidebar" nzCollapsible [(nzCollapsed)]="isCollapsed" [nzTrigger]="null">
+    <div class="sidebar-logo">
+      <h1>Meeting Room</h1>
+    </div>
+    <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+      <li nz-submenu nzOpen nzTitle="Dashboard" nzIcon="dashboard">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/home/onboarding">Onboarding</a>
+          </li>
+          <li nz-menu-item nzMatchRouter *ngIf="hasAdminAccess">
+            <a routerLink="/home/analytics">Analytics</a>
+          </li>
+        </ul>
+      </li>
+      <li nz-submenu nzTitle="Meeting Rooms" nzIcon="calendar">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/home/rooms">Danh sách phòng</a>
+          </li>
+          <li nz-menu-item nzMatchRouter *ngIf="hasManagerAccess">
+            <a routerLink="/home/bookings">Quản lý đặt phòng</a>
+          </li>
+        </ul>
+      </li>
+      <li nz-submenu nzTitle="Quản lý" nzIcon="setting" *ngIf="hasAdminAccess">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/home/users">Người dùng</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/home/roles">Phân quyền</a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </nz-sider>
+  <nz-layout>
+    <nz-header>
+      <div class="app-header">
+        <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
+          <span class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></span>
+        </span>
+        <div class="header-right">
+          <span class="user-name">{{ currentUser?.name }}</span>
+          <nz-avatar [nzText]="currentUser?.name?.charAt(0) || 'U'" nzSize="default"></nz-avatar>
+          <button nz-button nzType="text" nz-dropdown [nzDropdownMenu]="menu">
+            <span nz-icon nzType="down"></span>
+          </button>
+          <nz-dropdown-menu #menu="nzDropdownMenu">
+            <ul nz-menu>
+              <li nz-menu-item>
+                <span nz-icon nzType="user"></span>
+                Profile
+              </li>
+              <li nz-menu-item>
+                <span nz-icon nzType="setting"></span>
+                Settings
+              </li>
+              <li nz-menu-divider></li>
+              <li nz-menu-item (click)="logout()">
+                <span nz-icon nzType="logout"></span>
+                Logout
+              </li>
+            </ul>
+          </nz-dropdown-menu>
+        </div>
+      </div>
+    </nz-header>
+    <nz-content>
+      <div class="inner-content">
+        <router-outlet></router-outlet>
+      </div>
+    </nz-content>
+  </nz-layout>
+</nz-layout>
+

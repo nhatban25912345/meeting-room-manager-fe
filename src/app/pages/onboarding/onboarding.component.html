@@ -1,0 +1,121 @@
+<div class="onboarding-container">
+  <div class="page-header">
+    <h2>Theo dõi Phòng Họp</h2>
+    <p>Quản lý và theo dõi trạng thái đặt phòng họp</p>
+  </div>
+
+  <nz-card>
+    <nz-tabset [(nzSelectedIndex)]="selectedIndex">
+      <nz-tab nzTitle="Chờ Phê Duyệt">
+        <nz-table
+          #pendingTable
+          [nzData]="pendingBookings"
+          [nzLoading]="loading"
+          [nzPageSize]="10"
+        >
+          <thead>
+            <tr>
+              <th>Mã đặt phòng</th>
+              <th>Phòng họp</th>
+              <th>Người đặt</th>
+              <th>Ngày họp</th>
+              <th>Thời gian</th>
+              <th>Trạng thái</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let booking of pendingTable.data">
+              <td>{{ booking.id }}</td>
+              <td>{{ booking.roomName }}</td>
+              <td>{{ booking.userName }}</td>
+              <td>{{ booking.date | date: 'dd/MM/yyyy' }}</td>
+              <td>{{ booking.startTime }} - {{ booking.endTime }}</td>
+              <td>
+                <nz-tag [nzColor]="'orange'">Chờ phê duyệt</nz-tag>
+              </td>
+              <td>
+                <button nz-button nzType="primary" nzSize="small" (click)="approveBooking(booking.id)">
+                  <span nz-icon nzType="check"></span>
+                  Phê duyệt
+                </button>
+                <button nz-button nzDanger nzSize="small" (click)="rejectBooking(booking.id)" style="margin-left: 8px;">
+                  <span nz-icon nzType="close"></span>
+                  Từ chối
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </nz-tab>
+
+      <nz-tab nzTitle="Đã Phê Duyệt">
+        <nz-table
+          #approvedTable
+          [nzData]="approvedBookings"
+          [nzLoading]="loading"
+          [nzPageSize]="10"
+        >
+          <thead>
+            <tr>
+              <th>Mã đặt phòng</th>
+              <th>Phòng họp</th>
+              <th>Người đặt</th>
+              <th>Ngày họp</th>
+              <th>Thời gian</th>
+              <th>Trạng thái</th>
+              <th>Người phê duyệt</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let booking of approvedTable.data">
+              <td>{{ booking.id }}</td>
+              <td>{{ booking.roomName }}</td>
+              <td>{{ booking.userName }}</td>
+              <td>{{ booking.date | date: 'dd/MM/yyyy' }}</td>
+              <td>{{ booking.startTime }} - {{ booking.endTime }}</td>
+              <td>
+                <nz-tag [nzColor]="'green'">Đã phê duyệt</nz-tag>
+              </td>
+              <td>{{ booking.approvedBy || '-' }}</td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </nz-tab>
+
+      <nz-tab nzTitle="Đã Từ Chối">
+        <nz-table
+          #rejectedTable
+          [nzData]="rejectedBookings"
+          [nzLoading]="loading"
+          [nzPageSize]="10"
+        >
+          <thead>
+            <tr>
+              <th>Mã đặt phòng</th>
+              <th>Phòng họp</th>
+              <th>Người đặt</th>
+              <th>Ngày họp</th>
+              <th>Thời gian</th>
+              <th>Trạng thái</th>
+              <th>Lý do</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let booking of rejectedTable.data">
+              <td>{{ booking.id }}</td>
+              <td>{{ booking.roomName }}</td>
+              <td>{{ booking.userName }}</td>
+              <td>{{ booking.date | date: 'dd/MM/yyyy' }}</td>
+              <td>{{ booking.startTime }} - {{ booking.endTime }}</td>
+              <td>
+                <nz-tag [nzColor]="'red'">Đã từ chối</nz-tag>
+              </td>
+              <td>{{ booking.rejectReason || '-' }}</td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </nz-tab>
+    </nz-tabset>
+  </nz-card>
+</div>
