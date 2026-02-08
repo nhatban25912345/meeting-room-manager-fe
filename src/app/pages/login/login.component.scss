@@ -167,9 +167,17 @@ nz-form-label {
   margin-bottom: 8px;
 }
 
+input[nz-input] {
+  height: 40px;
+  padding: 20px 12px;
+  font-size: 16px;
+}
+
 nz-input-group {
   input {
-    padding: 8px 12px;
+    padding: 20px 12px;
+    height: 40px;
+    font-size: 16px;
   }
 }
 

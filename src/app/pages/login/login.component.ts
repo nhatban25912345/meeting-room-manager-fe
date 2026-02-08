@@ -76,4 +76,9 @@ export class LoginComponent {
       });
     }
   }
+
+  onFeatureGoing(): void {
+    // show a message that this feature is not implemented yet
+    this.message.info('Tính năng này đang được phát triển.');
+  }
 }

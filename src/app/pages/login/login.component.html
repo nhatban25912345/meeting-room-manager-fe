@@ -23,7 +23,7 @@
         <p class="subtitle">Quản lý phòng họp hiệu quả và chuyên nghiệp</p>
       </div>
 
-      <button nz-button nzBlock nzSize="large" class="google-btn">
+      <button nz-button nzBlock nzSize="large" class="google-btn" (click)="onFeatureGoing()">
         <span nz-icon nzType="google" nzTheme="outline"></span>
         Tiếp tục với Google
       </button>
@@ -34,7 +34,7 @@
         <nz-form-item>
           <nz-form-label [nzSpan]="24">Email</nz-form-label>
           <nz-form-control [nzSpan]="24" nzErrorTip="Vui lòng nhập email!">
-            <input nz-input formControlName="email" placeholder="mail@abc.com" type="email" />
+            <input nz-input formControlName="email" placeholder="abc@gmail.com" type="email" />
           </nz-form-control>
         </nz-form-item>
 
@@ -59,9 +59,9 @@
           </nz-form-control>
         </nz-form-item>
 
-        <div class="form-footer">
+        <div class="form-footer" >
           <label nz-checkbox formControlName="remember">Ghi nhớ đăng nhập</label>
-          <a class="forgot-password">Quên mật khẩu?</a>
+          <a class="forgot-password" (click)="onFeatureGoing()">Quên mật khẩu?</a>
         </div>
 
         <button nz-button nzType="primary" nzBlock nzSize="large" [nzLoading]="loading">
@@ -69,7 +69,7 @@
         </button>
       </form>
 
-      <div class="register-link">
+      <div class="register-link" (click)="onFeatureGoing()">
         Chưa có tài khoản? <a>Đăng ký ngay</a>
       </div>
     </div>
