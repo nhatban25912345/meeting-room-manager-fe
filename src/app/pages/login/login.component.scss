@@ -8,11 +8,24 @@
 .login-left {
   flex: 1;
   position: relative;
-  background: linear-gradient(135deg, #d4f1f9 0%, #b8e8f5 50%, #9fd9eb 100%);
+  background: url('/assets/img/medium-shot-people-sitting-table.jpg') center/cover no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 40px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    // background: linear-gradient(135deg, rgba(212, 241, 249, 0.85) 0%, rgba(184, 232, 245, 0.85) 50%, rgba(159, 217, 235, 0.85) 100%);
+    background-color: black;
+    opacity: 0.6;
+    z-index: 0;
+  }
 }
 
 .login-decoration {
@@ -72,7 +85,7 @@
     font-weight: 700;
     margin-bottom: 16px;
     line-height: 1.2;
-    color: #1a7ba8;
+    color: #ffffff;
   }
 
   p {
@@ -103,8 +116,10 @@
   .logo {
     margin-bottom: 24px;
 
-    nz-avatar {
-      background: linear-gradient(135deg, #4ab8e4 0%, #2a98c4 100%);
+    img {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
     }
   }
 
@@ -125,17 +140,18 @@
 .google-btn {
   margin-bottom: 24px;
   background: #fff;
-  border: 1px solid #ddd;
-  color: #333;
+  border: 1px solid #4285f4;
+  color: #4285f4;
   font-weight: 500;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
+  height: 48px;
 
   &:hover {
-    border-color: #4ab8e4;
-    color: #4ab8e4;
+    border-color: #3367d6;
+    color: #3367d6;
   }
 }
 
