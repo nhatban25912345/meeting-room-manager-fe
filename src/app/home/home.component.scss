@@ -7,23 +7,49 @@
 
 .app-layout {
   height: 100vh;
+  display: flex;
 }
 
 .menu-sidebar {
-  position: relative;
-  z-index: 10;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 100;
   min-height: 100vh;
   box-shadow: 2px 0 6px rgba(0, 21, 41, 0.35);
+  overflow-y: auto;
+}
+
+// Main content area (the inner nz-layout)
+.app-layout > nz-layout {
+  margin-left: 200px;
+  transition: margin-left 0.2s;
+  min-height: 100vh;
+  flex: 1;
+}
+
+// When sidebar is collapsed
+.app-layout.sidebar-collapsed > nz-layout {
+  margin-left: 80px;
 }
 
 .sidebar-logo {
   position: relative;
   height: 64px;
-  padding-left: 24px;
+  padding: 12px 16px;
   overflow: hidden;
-  line-height: 64px;
   background: #001529;
   transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
 
   h1 {
     display: inline-block;
@@ -39,9 +65,11 @@
 nz-header {
   padding: 0;
   width: 100%;
-  z-index: 2;
+  z-index: 50;
   background: #fff;
   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+  position: sticky;
+  top: 0;
 }
 
 .app-header {
@@ -74,12 +102,9 @@ nz-header {
 }
 
 nz-content {
-  margin: 24px;
-}
-
-.inner-content {
-  padding: 24px;
-  background: #fff;
-  min-height: 360px;
-  border-radius: 4px;
+  margin: 0;
+  padding: 8px;
+  background: #f0f2f5;
+  min-height: calc(100vh - 64px);
+  overflow-x: hidden;
 }
