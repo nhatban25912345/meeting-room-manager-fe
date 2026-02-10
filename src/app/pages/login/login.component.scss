@@ -8,11 +8,18 @@
 .login-left {
   flex: 1;
   position: relative;
-  background: url('/assets/img/medium-shot-people-sitting-table.jpg') center/cover no-repeat;
+  background-color: #1a1a1a;
+  background-image: url('/assets/img/medium-shot-people-sitting-table.jpg');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 40px;
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 
   &::before {
     content: '';
@@ -25,6 +32,8 @@
     background-color: black;
     opacity: 0.6;
     z-index: 0;
+    will-change: opacity;
+    transform: translateZ(0);
   }
 }
 
