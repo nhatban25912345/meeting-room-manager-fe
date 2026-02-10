@@ -4,6 +4,77 @@
     <p>Quản lý và theo dõi trạng thái đặt phòng họp</p>
   </div>
 
+  <!-- Room Statistics Cards -->
+  <div nz-row [nzGutter]="16" class="stats-row">
+    <div nz-col [nzSpan]="6">
+      <nz-card class="stat-card total-card">
+        <div class="stat-content">
+          <div class="stat-icon">
+            <span nz-icon nzType="home" nzTheme="outline"></span>
+          </div>
+          <div class="stat-details">
+            <nz-statistic 
+              [nzValue]="roomStats.total" 
+              [nzTitle]="'Tổng số phòng'"
+              [nzValueStyle]="{ color: '#1890ff', fontSize: '22px', fontWeight: '600' }">
+            </nz-statistic>
+          </div>
+        </div>
+      </nz-card>
+    </div>
+
+    <div nz-col [nzSpan]="6">
+      <nz-card class="stat-card available-card">
+        <div class="stat-content">
+          <div class="stat-icon available-icon">
+            <span nz-icon nzType="check-circle" nzTheme="outline"></span>
+          </div>
+          <div class="stat-details">
+            <nz-statistic 
+              [nzValue]="roomStats.available" 
+              [nzTitle]="'Phòng đang trống'"
+              [nzValueStyle]="{ color: '#52c41a', fontSize: '22px', fontWeight: '600' }">
+            </nz-statistic>
+          </div>
+        </div>
+      </nz-card>
+    </div>
+
+    <div nz-col [nzSpan]="6">
+      <nz-card class="stat-card occupied-card">
+        <div class="stat-content">
+          <div class="stat-icon occupied-icon">
+            <span nz-icon nzType="clock-circle" nzTheme="outline"></span>
+          </div>
+          <div class="stat-details">
+            <nz-statistic 
+              [nzValue]="roomStats.occupied" 
+              [nzTitle]="'Phòng đang hoạt động'"
+              [nzValueStyle]="{ color: '#faad14', fontSize: '22px', fontWeight: '600' }">
+            </nz-statistic>
+          </div>
+        </div>
+      </nz-card>
+    </div>
+
+    <div nz-col [nzSpan]="6">
+      <nz-card class="stat-card maintenance-card">
+        <div class="stat-content">
+          <div class="stat-icon maintenance-icon">
+            <span nz-icon nzType="tool" nzTheme="outline"></span>
+          </div>
+          <div class="stat-details">
+            <nz-statistic 
+              [nzValue]="roomStats.maintenance" 
+              [nzTitle]="'Đang bảo trì'"
+              [nzValueStyle]="{ color: '#ff4d4f', fontSize: '22px', fontWeight: '600' }">
+            </nz-statistic>
+          </div>
+        </div>
+      </nz-card>
+    </div>
+  </div>
+
   <nz-card>
     <nz-tabset [(nzSelectedIndex)]="selectedIndex">
       <nz-tab nzTitle="Chờ Phê Duyệt">

@@ -6,6 +6,8 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzStatisticModule } from 'ng-zorro-antd/statistic';
+import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzMessageService } from 'ng-zorro-antd/message';
 
 export interface MeetingBooking {
@@ -20,6 +22,13 @@ export interface MeetingBooking {
   rejectReason?: string;
 }
 
+export interface RoomStatistics {
+  total: number;
+  available: number;
+  occupied: number;
+  maintenance: number;
+}
+
 @Component({
   selector: 'app-onboarding',
   standalone: true,
@@ -30,7 +39,9 @@ export interface MeetingBooking {
     NzTabsModule,
     NzTagModule,
     NzButtonModule,
-    NzIconModule
+    NzIconModule,
+    NzStatisticModule,
+    NzGridModule
   ],
   templateUrl: './onboarding.component.html',
   styleUrls: ['./onboarding.component.scss']
@@ -41,11 +52,29 @@ export class OnboardingComponent implements OnInit {
   pendingBookings: MeetingBooking[] = [];
   approvedBookings: MeetingBooking[] = [];
   rejectedBookings: MeetingBooking[] = [];
+  
+  roomStats: RoomStatistics = {
+    total: 0,
+    available: 0,
+    occupied: 0,
+    maintenance: 0
+  };
 
   constructor(private message: NzMessageService) {}
 
   ngOnInit(): void {
     this.loadData();
+    this.loadRoomStatistics();
+  }
+
+  loadRoomStatistics(): void {
+    // TODO: Replace with actual API call
+    this.roomStats = {
+      total: 28,
+      available: 15,
+      occupied: 11,
+      maintenance: 2
+    };
   }
 
   loadData(): void {

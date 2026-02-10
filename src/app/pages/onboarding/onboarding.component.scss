@@ -15,6 +15,79 @@
     }
   }
 
+  .stats-row {
+    margin-bottom: 16px;
+  }
+
+  .stat-card {
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px rgba(0, 0, 0, 0.02);
+    transition: all 0.3s ease;
+
+    ::ng-deep .ant-card-body {
+      padding: 16px;
+    }
+
+    &:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .stat-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .stat-icon {
+        font-size: 28px;
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        background: #f0f5ff;
+        color: #1890ff;
+        flex-shrink: 0;
+      }
+
+      .stat-details {
+        flex: 1;
+        
+        ::ng-deep {
+          .ant-statistic-title {
+            font-size: 13px;
+            margin-bottom: 4px;
+          }
+          
+          .ant-statistic-content {
+            font-size: 22px !important;
+          }
+        }
+      }
+    }
+
+    &.total-card .stat-icon {
+      background: #f0f5ff;
+      color: #1890ff;
+    }
+
+    &.available-card .stat-icon {
+      background: #f6ffed;
+      color: #52c41a;
+    }
+
+    &.occupied-card .stat-icon {
+      background: #fffbe6;
+      color: #faad14;
+    }
+
+    &.maintenance-card .stat-icon {
+      background: #fff1f0;
+      color: #ff4d4f;
+    }
+  }
+
   nz-card {
     border-radius: 8px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px rgba(0, 0, 0, 0.02);

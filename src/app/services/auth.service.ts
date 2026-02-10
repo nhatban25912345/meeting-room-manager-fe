@@ -34,7 +34,7 @@ export class AuthService {
         const user: User = {
           id: '1',
           email: email,
-          name: 'User Name',
+          name: 'Admin',
           role: 'admin' // hoặc 'user', 'manager' tùy theo logic
         };
         localStorage.setItem('currentUser', JSON.stringify(user));
