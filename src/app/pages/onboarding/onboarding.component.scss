@@ -1,6 +1,9 @@
 .onboarding-container {
+  max-width: 100%;
+  padding: 0;
+  
   .page-header {
-    margin-bottom: 24px;
+    margin-bottom: 20px;
 
     h2 {
       font-size: 24px;
@@ -16,16 +19,24 @@
   }
 
   .stats-row {
-    margin-bottom: 16px;
+    margin-bottom: 20px;
+    margin-left: -6px !important;
+    margin-right: -6px !important;
+    
+    ::ng-deep .ant-col {
+      padding-left: 6px !important;
+      padding-right: 6px !important;
+    }
   }
 
   .stat-card {
     border-radius: 8px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px rgba(0, 0, 0, 0.02);
     transition: all 0.3s ease;
+    height: 100%;
 
     ::ng-deep .ant-card-body {
-      padding: 16px;
+      padding: 20px 16px;
     }
 
     &:hover {
@@ -36,12 +47,12 @@
     .stat-content {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
 
       .stat-icon {
-        font-size: 28px;
-        width: 48px;
-        height: 48px;
+        font-size: 24px;
+        width: 44px;
+        height: 44px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -53,15 +64,49 @@
 
       .stat-details {
         flex: 1;
+        min-width: 0;
         
-        ::ng-deep {
-          .ant-statistic-title {
-            font-size: 13px;
-            margin-bottom: 4px;
+        .stat-title {
+          font-size: 13px;
+          color: #666;
+          margin-bottom: 6px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        
+        .stat-value {
+          font-size: 32px;
+          font-weight: 600;
+          color: #333;
+          margin-bottom: 4px;
+          line-height: 1.2;
+        }
+        
+        .stat-trend {
+          font-size: 11px;
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          
+          &.positive {
+            color: #52c41a;
           }
           
-          .ant-statistic-content {
-            font-size: 22px !important;
+          &.negative {
+            color: #ff4d4f;
+          }
+          
+          &.neutral {
+            color: #888;
+          }
+          
+          span[nz-icon] {
+            font-size: 10px;
+            flex-shrink: 0;
           }
         }
       }
@@ -91,10 +136,18 @@
   nz-card {
     border-radius: 8px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px rgba(0, 0, 0, 0.02);
+    
+    ::ng-deep .ant-card-body {
+      overflow-x: auto;
+    }
   }
 
   nz-table {
     margin-top: 16px;
+    
+    ::ng-deep .ant-table {
+      overflow-x: auto;
+    }
   }
 
   button {

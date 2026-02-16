@@ -3,36 +3,56 @@
     <div class="sidebar-logo">
       <img src="assets/img/web-logo-title.png" alt="Logo" />
     </div>
-    <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
-      <li nz-submenu nzOpen nzTitle="Dashboard" nzIcon="dashboard">
-        <ul>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="/home/onboarding">Onboarding</a>
-          </li>
-          <li nz-menu-item nzMatchRouter *ngIf="hasAdminAccess">
-            <a routerLink="/home/analytics">Analytics</a>
-          </li>
-        </ul>
+    <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed" class="menu-list">
+      <!-- TRANG CHỦ Section -->
+      <li class="menu-section-title" *ngIf="!isCollapsed">
+        <span>TRANG CHỦ</span>
       </li>
-      <li nz-submenu nzTitle="Meeting Rooms" nzIcon="calendar">
-        <ul>
-          <li nz-menu-item nzMatchRouter *ngIf="hasManagerAccess">
-            <a routerLink="/home/bookings">Danh sách lịch họp</a>
-          </li>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="/home/rooms">Danh sách phòng</a>
-          </li>
-        </ul>
+      <li nz-menu-item nzMatchRouter>
+        <a routerLink="/home/onboarding">
+          <span nz-icon nzType="home" nzTheme="outline"></span>
+          <span>Trang chủ</span>
+        </a>
       </li>
-      <li nz-submenu nzTitle="Quản lý" nzIcon="setting" *ngIf="hasAdminAccess">
-        <ul>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="/home/users">Người dùng</a>
-          </li>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="/home/roles">Phân quyền</a>
-          </li>
-        </ul>
+
+      <!-- QUẢN LÝ Section -->
+      <li class="menu-section-title" *ngIf="!isCollapsed">
+        <span>QUẢN LÝ</span>
+      </li>
+      <li nz-menu-item nzMatchRouter *ngIf="hasManagerAccess">
+        <a routerLink="/home/bookings">
+          <span nz-icon nzType="calendar" nzTheme="outline"></span>
+          <span>Lịch họp</span>
+        </a>
+      </li>
+      <li nz-menu-item nzMatchRouter>
+        <a routerLink="/home/rooms">
+          <span nz-icon nzType="bank" nzTheme="outline"></span>
+          <span>Phòng họp</span>
+        </a>
+      </li>
+      <li nz-menu-item nzMatchRouter *ngIf="hasAdminAccess">
+        <a routerLink="/home/users">
+          <span nz-icon nzType="team" nzTheme="outline"></span>
+          <span>Người dùng</span>
+        </a>
+      </li>
+
+      <!-- HỆ THỐNG Section -->
+      <li class="menu-section-title" *ngIf="!isCollapsed && hasAdminAccess">
+        <span>HỆ THỐNG</span>
+      </li>
+      <li nz-menu-item nzMatchRouter *ngIf="hasAdminAccess">
+        <a routerLink="/home/analytics">
+          <span nz-icon nzType="bar-chart" nzTheme="outline"></span>
+          <span>Thống kê</span>
+        </a>
+      </li>
+      <li nz-menu-item nzMatchRouter *ngIf="hasAdminAccess">
+        <a routerLink="/home/roles">
+          <span nz-icon nzType="setting" nzTheme="outline"></span>
+          <span>Cài đặt</span>
+        </a>
       </li>
     </ul>
   </nz-sider>

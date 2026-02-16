@@ -10,14 +10,15 @@
       <nz-card class="stat-card total-card">
         <div class="stat-content">
           <div class="stat-icon">
-            <span nz-icon nzType="home" nzTheme="outline"></span>
+            <span nz-icon nzType="calendar" nzTheme="outline"></span>
           </div>
           <div class="stat-details">
-            <nz-statistic 
-              [nzValue]="roomStats.total" 
-              [nzTitle]="'Tổng số phòng'"
-              [nzValueStyle]="{ color: '#1890ff', fontSize: '22px', fontWeight: '600' }">
-            </nz-statistic>
+            <div class="stat-title">Tổng cuộc họp</div>
+            <div class="stat-value">156</div>
+            <div class="stat-trend positive">
+              <span nz-icon nzType="arrow-up"></span>
+              +12% so với tháng trước
+            </div>
           </div>
         </div>
       </nz-card>
@@ -27,14 +28,14 @@
       <nz-card class="stat-card available-card">
         <div class="stat-content">
           <div class="stat-icon available-icon">
-            <span nz-icon nzType="check-circle" nzTheme="outline"></span>
+            <span nz-icon nzType="video-camera" nzTheme="outline"></span>
           </div>
           <div class="stat-details">
-            <nz-statistic 
-              [nzValue]="roomStats.available" 
-              [nzTitle]="'Phòng đang trống'"
-              [nzValueStyle]="{ color: '#52c41a', fontSize: '22px', fontWeight: '600' }">
-            </nz-statistic>
+            <div class="stat-title">Đang diễn ra</div>
+            <div class="stat-value">3</div>
+            <div class="stat-trend neutral">
+              Hôm nay so với tháng trước
+            </div>
           </div>
         </div>
       </nz-card>
@@ -44,14 +45,15 @@
       <nz-card class="stat-card occupied-card">
         <div class="stat-content">
           <div class="stat-icon occupied-icon">
-            <span nz-icon nzType="clock-circle" nzTheme="outline"></span>
+            <span nz-icon nzType="warning" nzTheme="outline"></span>
           </div>
           <div class="stat-details">
-            <nz-statistic 
-              [nzValue]="roomStats.occupied" 
-              [nzTitle]="'Phòng đang hoạt động'"
-              [nzValueStyle]="{ color: '#faad14', fontSize: '22px', fontWeight: '600' }">
-            </nz-statistic>
+            <div class="stat-title">Sự cố phát sinh</div>
+            <div class="stat-value">23</div>
+            <div class="stat-trend negative">
+              <span nz-icon nzType="arrow-down"></span>
+              -8% so với tháng trước
+            </div>
           </div>
         </div>
       </nz-card>
@@ -61,14 +63,15 @@
       <nz-card class="stat-card maintenance-card">
         <div class="stat-content">
           <div class="stat-icon maintenance-icon">
-            <span nz-icon nzType="tool" nzTheme="outline"></span>
+            <span nz-icon nzType="team" nzTheme="outline"></span>
           </div>
           <div class="stat-details">
-            <nz-statistic 
-              [nzValue]="roomStats.maintenance" 
-              [nzTitle]="'Đang bảo trì'"
-              [nzValueStyle]="{ color: '#ff4d4f', fontSize: '22px', fontWeight: '600' }">
-            </nz-statistic>
+            <div class="stat-title">Đơn vị tham gia</div>
+            <div class="stat-value">48</div>
+            <div class="stat-trend positive">
+              <span nz-icon nzType="arrow-up"></span>
+              +5 so với tháng trước
+            </div>
           </div>
         </div>
       </nz-card>
