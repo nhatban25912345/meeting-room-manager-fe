@@ -33,7 +33,7 @@
       padding-left: 16px !important;
       transition: all 0.3s;
       width: calc(100% - 16px);
-      margin: 2px 8px;
+      margin: 4px 8px;
 
       &:hover {
         background: rgba(255, 255, 255, 0.08);
@@ -41,7 +41,7 @@
 
       &.ant-menu-item-selected {
         background: #1890ff !important;
-        
+
         &::after {
           display: none;
         }
@@ -175,7 +175,7 @@ nz-content {
   background: #f0f2f5;
   min-height: calc(100vh - 64px);
   overflow-x: hidden;
-  
+
   ::ng-deep > * {
     max-width: 100%;
   }
