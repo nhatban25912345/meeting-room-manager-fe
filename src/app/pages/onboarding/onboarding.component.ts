@@ -2,31 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzTableModule } from 'ng-zorro-antd/table';
-import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzTagModule } from 'ng-zorro-antd/tag';
-import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzStatisticModule } from 'ng-zorro-antd/statistic';
 import { NzGridModule } from 'ng-zorro-antd/grid';
-import { NzMessageService } from 'ng-zorro-antd/message';
 
-export interface MeetingBooking {
-  id: string;
-  roomName: string;
-  userName: string;
-  date: Date;
-  startTime: string;
-  endTime: string;
-  status: 'pending' | 'approved' | 'rejected';
-  approvedBy?: string;
-  rejectReason?: string;
-}
-
-export interface RoomStatistics {
-  total: number;
-  available: number;
-  occupied: number;
-  maintenance: number;
+export interface RecentMeeting {
+  name: string;
+  time: string;
+  type: string;
+  unit: string;
+  status: string;
 }
 
 @Component({
@@ -36,9 +22,7 @@ export interface RoomStatistics {
     CommonModule,
     NzCardModule,
     NzTableModule,
-    NzTabsModule,
     NzTagModule,
-    NzButtonModule,
     NzIconModule,
     NzStatisticModule,
     NzGridModule
@@ -47,140 +31,70 @@ export interface RoomStatistics {
   styleUrls: ['./onboarding.component.scss']
 })
 export class OnboardingComponent implements OnInit {
-  selectedIndex = 0;
   loading = false;
-  pendingBookings: MeetingBooking[] = [];
-  approvedBookings: MeetingBooking[] = [];
-  rejectedBookings: MeetingBooking[] = [];
-  
-  roomStats: RoomStatistics = {
-    total: 0,
-    available: 0,
-    occupied: 0,
-    maintenance: 0
-  };
-
-  constructor(private message: NzMessageService) {}
+  recentMeetings: RecentMeeting[] = [];
 
   ngOnInit(): void {
-    this.loadData();
-    this.loadRoomStatistics();
+    this.loadRecentMeetings();
   }
 
-  loadRoomStatistics(): void {
-    // TODO: Replace with actual API call
-    this.roomStats = {
-      total: 28,
-      available: 15,
-      occupied: 11,
-      maintenance: 2
-    };
-  }
-
-  loadData(): void {
+  loadRecentMeetings(): void {
     this.loading = true;
-    
     // Mô phỏng dữ liệu - thực tế sẽ call API
     setTimeout(() => {
-      this.pendingBookings = [
+      this.recentMeetings = [
         {
-          id: 'BK001',
-          roomName: 'Phòng họp A',
-          userName: 'Nguyễn Văn A',
-          date: new Date('2026-02-10'),
-          startTime: '09:00',
-          endTime: '11:00',
-          status: 'pending'
+          name: 'Hội nghị giao ban tháng 2',
+          time: '08:00 - 11:30',
+          type: 'Trực tuyến',
+          unit: '12 đơn vị',
+          status: 'Đang diễn ra'
         },
         {
-          id: 'BK002',
-          roomName: 'Phòng họp B',
-          userName: 'Trần Thị B',
-          date: new Date('2026-02-11'),
-          startTime: '14:00',
-          endTime: '16:00',
-          status: 'pending'
+          name: 'Họp triển khai kế hoạch Q1',
+          time: '14:00 - 16:00',
+          type: 'Trực tiếp',
+          unit: '8 đơn vị',
+          status: 'Đã duyệt'
         },
         {
-          id: 'BK003',
-          roomName: 'Phòng họp C',
-          userName: 'Lê Văn C',
-          date: new Date('2026-02-12'),
-          startTime: '10:00',
-          endTime: '12:00',
-          status: 'pending'
-        }
-      ];
-
-      this.approvedBookings = [
-        {
-          id: 'BK004',
-          roomName: 'Phòng họp A',
-          userName: 'Phạm Văn D',
-          date: new Date('2026-02-09'),
-          startTime: '09:00',
-          endTime: '10:30',
-          status: 'approved',
-          approvedBy: 'Admin'
+          name: 'Hội nghị tổng kết năm 2025',
+          time: '09:00 - 17:00',
+          type: 'Trực tuyến',
+          unit: '24 đơn vị',
+          status: 'Chờ duyệt'
         },
         {
-          id: 'BK005',
-          roomName: 'Phòng họp B',
-          userName: 'Hoàng Thị E',
-          date: new Date('2026-02-08'),
-          startTime: '13:00',
-          endTime: '15:00',
-          status: 'approved',
-          approvedBy: 'Manager'
-        }
-      ];
-
-      this.rejectedBookings = [
+          name: 'Họp ban chỉ đạo CNTT',
+          time: '15:00 - 16:30',
+          type: 'Kết hợp',
+          unit: '6 đơn vị',
+          status: 'Đã duyệt'
+        },
         {
-          id: 'BK006',
-          roomName: 'Phòng họp C',
-          userName: 'Đỗ Văn F',
-          date: new Date('2026-02-07'),
-          startTime: '16:00',
-          endTime: '18:00',
-          status: 'rejected',
-          rejectReason: 'Phòng đã được đặt trước'
+          name: 'Hội nghị sơ kết 6 tháng',
+          time: '08:30 - 12:00',
+          type: 'Trực tuyến',
+          unit: '18 đơn vị',
+          status: 'Nhập'
         }
       ];
-
-      this.loading = false;
-    }, 1000);
-  }
-
-  approveBooking(bookingId: string): void {
-    this.loading = true;
-    // Mô phỏng API call
-    setTimeout(() => {
-      const booking = this.pendingBookings.find(b => b.id === bookingId);
-      if (booking) {
-        booking.status = 'approved';
-        booking.approvedBy = 'Current User';
-        this.approvedBookings = [...this.approvedBookings, booking];
-        this.pendingBookings = this.pendingBookings.filter(b => b.id !== bookingId);
-        this.message.success('Đã phê duyệt đặt phòng thành công!');
-      }
       this.loading = false;
     }, 500);
   }
 
-  rejectBooking(bookingId: string): void {
-    this.loading = true;
-    // Mô phỏng API call
-    setTimeout(() => {
-      const booking = this.pendingBookings.find(b => b.id === bookingId);
-      if (booking) {
-        booking.status = 'rejected';
-        booking.rejectReason = 'Không phù hợp';
-        this.rejectedBookings = [...this.rejectedBookings, booking];
-        this.pendingBookings = this.pendingBookings.filter(b => b.id !== bookingId);
-        this.message.warning('Đã từ chối đặt phòng!');
-      }
-      this.loading = false;
-    }, 500);
+  getStatusColor(status: string): string {
+    switch (status) {
+      case 'Đang diễn ra':
+        return 'green';
+      case 'Đã duyệt':
+        return 'blue';
+      case 'Chờ duyệt':
+        return 'orange';
+      case 'Nhập':
+        return 'default';
+      default:
+        return 'default';
+    }
   }
 }

@@ -79,117 +79,40 @@
   </div>
 
   <nz-card>
-    <nz-tabset [(nzSelectedIndex)]="selectedIndex">
-      <nz-tab nzTitle="Chờ Phê Duyệt">
-        <nz-table
-          #pendingTable
-          [nzData]="pendingBookings"
-          [nzLoading]="loading"
-          [nzPageSize]="10"
-        >
-          <thead>
-            <tr>
-              <th>Mã đặt phòng</th>
-              <th>Phòng họp</th>
-              <th>Người đặt</th>
-              <th>Ngày họp</th>
-              <th>Thời gian</th>
-              <th>Trạng thái</th>
-              <th>Hành động</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let booking of pendingTable.data">
-              <td>{{ booking.id }}</td>
-              <td>{{ booking.roomName }}</td>
-              <td>{{ booking.userName }}</td>
-              <td>{{ booking.date | date: 'dd/MM/yyyy' }}</td>
-              <td>{{ booking.startTime }} - {{ booking.endTime }}</td>
-              <td>
-                <nz-tag [nzColor]="'orange'">Chờ phê duyệt</nz-tag>
-              </td>
-              <td>
-                <button nz-button nzType="primary" nzSize="small" (click)="approveBooking(booking.id)">
-                  <span nz-icon nzType="check"></span>
-                  Phê duyệt
-                </button>
-                <button nz-button nzDanger nzSize="small" (click)="rejectBooking(booking.id)" style="margin-left: 8px;">
-                  <span nz-icon nzType="close"></span>
-                  Từ chối
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </nz-table>
-      </nz-tab>
-
-      <nz-tab nzTitle="Đã Phê Duyệt">
-        <nz-table
-          #approvedTable
-          [nzData]="approvedBookings"
-          [nzLoading]="loading"
-          [nzPageSize]="10"
-        >
-          <thead>
-            <tr>
-              <th>Mã đặt phòng</th>
-              <th>Phòng họp</th>
-              <th>Người đặt</th>
-              <th>Ngày họp</th>
-              <th>Thời gian</th>
-              <th>Trạng thái</th>
-              <th>Người phê duyệt</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let booking of approvedTable.data">
-              <td>{{ booking.id }}</td>
-              <td>{{ booking.roomName }}</td>
-              <td>{{ booking.userName }}</td>
-              <td>{{ booking.date | date: 'dd/MM/yyyy' }}</td>
-              <td>{{ booking.startTime }} - {{ booking.endTime }}</td>
-              <td>
-                <nz-tag [nzColor]="'green'">Đã phê duyệt</nz-tag>
-              </td>
-              <td>{{ booking.approvedBy || '-' }}</td>
-            </tr>
-          </tbody>
-        </nz-table>
-      </nz-tab>
-
-      <nz-tab nzTitle="Đã Từ Chối">
-        <nz-table
-          #rejectedTable
-          [nzData]="rejectedBookings"
-          [nzLoading]="loading"
-          [nzPageSize]="10"
-        >
-          <thead>
-            <tr>
-              <th>Mã đặt phòng</th>
-              <th>Phòng họp</th>
-              <th>Người đặt</th>
-              <th>Ngày họp</th>
-              <th>Thời gian</th>
-              <th>Trạng thái</th>
-              <th>Lý do</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let booking of rejectedTable.data">
-              <td>{{ booking.id }}</td>
-              <td>{{ booking.roomName }}</td>
-              <td>{{ booking.userName }}</td>
-              <td>{{ booking.date | date: 'dd/MM/yyyy' }}</td>
-              <td>{{ booking.startTime }} - {{ booking.endTime }}</td>
-              <td>
-                <nz-tag [nzColor]="'red'">Đã từ chối</nz-tag>
-              </td>
-              <td>{{ booking.rejectReason || '-' }}</td>
-            </tr>
-          </tbody>
-        </nz-table>
-      </nz-tab>
-    </nz-tabset>
+    <div class="card-header">
+      <span nz-icon nzType="clock-circle" nzTheme="outline" class="header-icon"></span>
+      <span class="header-title">Cuộc họp gần đây</span>
+    </div>
+    <nz-table
+      [nzData]="recentMeetings"
+      [nzLoading]="loading"
+      [nzPageSize]="10"
+      [nzShowPagination]="false"
+    >
+      <thead>
+        <tr>
+          <th>Tên cuộc họp</th>
+          <th>Thời gian</th>
+          <th>Loại</th>
+          <th>Đơn vị</th>
+          <th>Trạng thái</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let meeting of recentMeetings">
+          <td>{{ meeting.name }}</td>
+          <td>{{ meeting.time }}</td>
+          <td>{{ meeting.type }}</td>
+          <td>{{ meeting.unit }}</td>
+          <td>
+            <nz-tag 
+              [nzColor]="getStatusColor(meeting.status)"
+              class="status-tag">
+              {{ meeting.status }}
+            </nz-tag>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
   </nz-card>
 </div>

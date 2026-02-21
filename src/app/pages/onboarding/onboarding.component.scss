@@ -139,20 +139,59 @@
     
     ::ng-deep .ant-card-body {
       overflow-x: auto;
+      padding: 0;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid #f0f0f0;
+
+      .header-icon {
+        font-size: 18px;
+        color: #1890ff;
+      }
+
+      .header-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+      }
     }
   }
 
   nz-table {
-    margin-top: 16px;
-    
-    ::ng-deep .ant-table {
-      overflow-x: auto;
-    }
-  }
+    ::ng-deep {
+      .ant-table {
+        overflow-x: auto;
+      }
 
-  button {
-    & + button {
-      margin-left: 8px;
+      .ant-table-thead > tr > th {
+        background: #fafafa;
+        color: #8c8c8c;
+        font-weight: 500;
+        font-size: 13px;
+        padding: 16px 24px;
+      }
+
+      .ant-table-tbody > tr > td {
+        padding: 16px 24px;
+        color: #333;
+        font-size: 14px;
+      }
+
+      .ant-table-tbody > tr:hover > td {
+        background: #fafafa;
+      }
+    }
+
+    .status-tag {
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
     }
   }
 }
