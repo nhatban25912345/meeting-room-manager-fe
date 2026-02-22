@@ -20,6 +20,12 @@
         <span>QUẢN LÝ</span>
       </li>
       <li nz-menu-item nzMatchRouter *ngIf="hasManagerAccess">
+        <a routerLink="/home/plan-management">
+          <span nz-icon nzType="schedule" nzTheme="outline"></span>
+          <span>Quản lý kế hoạch</span>
+        </a>
+      </li>
+      <li nz-menu-item nzMatchRouter *ngIf="hasManagerAccess">
         <a routerLink="/home/bookings">
           <span nz-icon nzType="calendar" nzTheme="outline"></span>
           <span>Lịch họp</span>

@@ -40,6 +40,11 @@ export const routes: Routes = [
         data: { roles: ['admin', 'manager'] }
       },
       {
+        path: 'plan-management',
+        loadComponent: () => import('./pages/plan-management/plan-management.component').then(m => m.PlanManagementComponent),
+        data: { roles: ['admin', 'manager'] }
+      },
+      {
         path: 'users',
         loadComponent: () => import('./pages/welcome/welcome.component').then(m => m.WelcomeComponent),
         data: { roles: ['admin'] }
