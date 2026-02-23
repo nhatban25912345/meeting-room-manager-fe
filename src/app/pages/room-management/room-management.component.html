@@ -1,0 +1,128 @@
+<div class="room-management-container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <div class="header-left">
+        <h1 class="page-title">Quản lý phòng họp</h1>
+        <p class="page-subtitle">Danh sách và trạng thái phòng họp</p>
+      </div>
+      <div class="header-right">
+        <button nz-button nzType="primary" nzSize="large" (click)="onAddRoom()">
+          <span nz-icon nzType="plus" nzTheme="outline"></span>
+          Thêm phòng họp
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table Card -->
+  <div class="table-card">
+    <!-- Table Header -->
+    <div class="table-header">
+      <div class="table-header-left">
+        <h3 class="table-title">Danh sách phòng họp ({{ filteredRooms.length }})</h3>
+      </div>
+      <div class="table-header-right">
+        <nz-input-group [nzPrefix]="prefixIconSearch" class="search-input">
+          <input 
+            type="text" 
+            nz-input 
+            placeholder="Tìm kiếm..." 
+            [(ngModel)]="searchText"
+            (ngModelChange)="onSearch()"
+          />
+        </nz-input-group>
+        <ng-template #prefixIconSearch>
+          <span nz-icon nzType="search"></span>
+        </ng-template>
+
+        <nz-select 
+          [(ngModel)]="filterStatus" 
+          (ngModelChange)="onFilterChange()"
+          class="filter-select"
+          nzPlaceHolder="Tất cả">
+          <nz-option nzValue="all" nzLabel="Tất cả"></nz-option>
+          <nz-option nzValue="available" nzLabel="Trống"></nz-option>
+          <nz-option nzValue="in-use" nzLabel="Đang sử dụng"></nz-option>
+          <nz-option nzValue="maintenance" nzLabel="Bảo trì"></nz-option>
+        </nz-select>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <nz-table 
+      #basicTable 
+      [nzData]="filteredRooms"
+      [nzShowPagination]="false"
+      [nzBordered]="false">
+      <thead>
+        <tr>
+          <th>Phòng họp</th>
+          <th>Sức chứa</th>
+          <th>Vị trí</th>
+          <th>Thiết bị</th>
+          <th>Trạng thái</th>
+          <th nzWidth="120px" nzAlign="center">Thao tác</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let room of basicTable.data">
+          <td>
+            <div class="room-info">
+              <strong>{{ room.id }}</strong> - {{ room.name }}
+            </div>
+          </td>
+          <td>
+            <span nz-icon nzType="team" nzTheme="outline" class="capacity-icon"></span>
+            {{ room.capacity }} người
+          </td>
+          <td>Tầng {{ room.floor }}</td>
+          <td>
+            <div class="equipment-tags">
+              <nz-tag *ngFor="let item of room.equipment" [nzColor]="'blue'">
+                {{ item }}
+              </nz-tag>
+            </div>
+          </td>
+          <td>
+            <nz-tag [nzColor]="getStatusColor(room.status)">
+              {{ getStatusText(room.status) }}
+            </nz-tag>
+          </td>
+          <td nzAlign="center">
+            <div class="action-buttons">
+              <button 
+                nz-button 
+                nzType="text" 
+                nzSize="small"
+                (click)="onViewRoom(room)"
+                nz-tooltip
+                nzTooltipTitle="Xem chi tiết">
+                <span nz-icon nzType="eye" nzTheme="outline"></span>
+              </button>
+              <button 
+                nz-button 
+                nzType="text" 
+                nzSize="small"
+                (click)="onEditRoom(room)"
+                nz-tooltip
+                nzTooltipTitle="Chỉnh sửa">
+                <span nz-icon nzType="edit" nzTheme="outline"></span>
+              </button>
+              <button 
+                nz-button 
+                nzType="text" 
+                nzSize="small"
+                nzDanger
+                (click)="onDeleteRoom(room)"
+                nz-tooltip
+                nzTooltipTitle="Xóa">
+                <span nz-icon nzType="delete" nzTheme="outline"></span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+</div>

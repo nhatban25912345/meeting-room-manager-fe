@@ -32,7 +32,7 @@ export const routes: Routes = [
       },
       {
         path: 'rooms',
-        loadComponent: () => import('./pages/welcome/welcome.component').then(m => m.WelcomeComponent)
+        loadComponent: () => import('./pages/room-management/room-management.component').then(m => m.RoomManagementComponent)
       },
       {
         path: 'bookings',
