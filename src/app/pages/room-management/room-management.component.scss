@@ -203,6 +203,26 @@
         gap: 12px;
         align-items: center;
 
+        .sort-controls {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+
+          .sort-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: rgba(0, 0, 0, 0.65);
+            margin: 0;
+            white-space: nowrap;
+          }
+
+          .sort-select {
+            ::ng-deep .ant-select-selector {
+              border-radius: 6px;
+            }
+          }
+        }
+
         .search-input {
           width: 240px;
 
@@ -244,6 +264,12 @@
             strong {
               font-weight: 600;
               color: rgba(0, 0, 0, 0.85);
+            }
+            
+            .room-name {
+              font-size: 13px;
+              color: rgba(0, 0, 0, 0.65);
+              margin-top: 4px;
             }
           }
 

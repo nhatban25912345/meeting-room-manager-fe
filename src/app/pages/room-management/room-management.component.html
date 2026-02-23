@@ -125,15 +125,45 @@
       <div class="table-header-left">
         <h3 class="table-title">Danh sách phòng họp ({{ filteredRooms.length }})</h3>
       </div>
+      <div class="table-header-right">
+        <div class="sort-controls">
+          <label class="sort-label">Sắp xếp theo:</label>
+          <nz-select
+            [(ngModel)]="sortField"
+            (ngModelChange)="onSortChange()"
+            nzPlaceHolder="Chọn cột"
+            class="sort-select"
+            style="width: 160px;">
+            <nz-option
+              *ngFor="let option of sortFieldOptions"
+              [nzValue]="option.value"
+              [nzLabel]="option.label">
+            </nz-option>
+          </nz-select>
+          <nz-select
+            [(ngModel)]="sortOrder"
+            (ngModelChange)="onSortChange()"
+            class="sort-select"
+            style="width: 120px;">
+            <nz-option
+              *ngFor="let option of sortOrderOptions"
+              [nzValue]="option.value"
+              [nzLabel]="option.label">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+            
     </div>
 
     <!-- Table -->
     <nz-table
       #basicTable
       [nzData]="filteredRooms"
+      [nzLoading]="loading"
       [nzShowPagination]="true"
       [nzBordered]="false"
-      [nzFrontPagination]="true"
+      [nzFrontPagination]="false"
       [nzPageIndex]="pageIndex"
       [nzPageSize]="pageSize"
       [nzTotal]="total"
@@ -147,7 +177,8 @@
           <th>Phòng họp</th>
           <th>Sức chứa</th>
           <th>Vị trí</th>
-          <th>Thiết bị</th>
+          <th>Đơn vị quản lý</th>
+          <th>Loại phòng</th>
           <th>Trạng thái</th>
           <th nzWidth="120px" nzAlign="center">Thao tác</th>
         </tr>
@@ -156,20 +187,20 @@
         <tr *ngFor="let room of basicTable.data">
           <td>
             <div class="room-info">
-              <strong>{{ room.id }}</strong> - {{ room.name }}
+              <strong>{{ room.roomCode }}</strong>
+              <div *ngIf="room.roomName" class="room-name">{{ room.roomName }}</div>
             </div>
           </td>
           <td>
             <span nz-icon nzType="team" nzTheme="outline" class="capacity-icon"></span>
             {{ room.capacity }} người
           </td>
-          <td>Tầng {{ room.floor }}</td>
+          <td>{{ room.location || '-' }}</td>
+          <td>{{ room.managementUnitName || '-' }}</td>
           <td>
-            <div class="equipment-tags">
-              <nz-tag *ngFor="let item of room.equipment" [nzColor]="'blue'">
-                {{ item }}
-              </nz-tag>
-            </div>
+            <nz-tag [nzColor]="room.roomType === 'OFFLINE' ? 'blue' : 'purple'">
+              {{ room.roomType === 'OFFLINE' ? 'Trực tiếp' : 'Trực tuyến' }}
+            </nz-tag>
           </td>
           <td>
             <nz-tag [nzColor]="getStatusColor(room.status)">
