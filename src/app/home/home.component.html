@@ -19,25 +19,25 @@
       <li class="menu-section-title" *ngIf="!isCollapsed">
         <span>QUẢN LÝ</span>
       </li>
-      <li nz-menu-item nzMatchRouter *ngIf="hasManagerAccess">
+      <li nz-menu-item nzMatchRouter *ngIf="canManagePlans">
         <a routerLink="/home/plan-management">
           <span nz-icon nzType="schedule" nzTheme="outline"></span>
           <span>Quản lý kế hoạch</span>
         </a>
       </li>
-      <li nz-menu-item nzMatchRouter *ngIf="hasManagerAccess">
+      <li nz-menu-item nzMatchRouter *ngIf="canViewMeetingCalendar">
         <a routerLink="/home/bookings">
           <span nz-icon nzType="calendar" nzTheme="outline"></span>
           <span>Lịch họp</span>
         </a>
       </li>
-      <li nz-menu-item nzMatchRouter>
+      <li nz-menu-item nzMatchRouter *ngIf="canViewRooms">
         <a routerLink="/home/rooms">
           <span nz-icon nzType="bank" nzTheme="outline"></span>
           <span>Phòng họp</span>
         </a>
       </li>
-      <li nz-menu-item nzMatchRouter *ngIf="hasAdminAccess">
+      <li nz-menu-item nzMatchRouter *ngIf="canManageUsers">
         <a routerLink="/home/users">
           <span nz-icon nzType="team" nzTheme="outline"></span>
           <span>Người dùng</span>
@@ -45,16 +45,16 @@
       </li>
 
       <!-- HỆ THỐNG Section -->
-      <li class="menu-section-title" *ngIf="!isCollapsed && hasAdminAccess">
+      <li class="menu-section-title" *ngIf="!isCollapsed && canViewDashboard">
         <span>HỆ THỐNG</span>
       </li>
-      <li nz-menu-item nzMatchRouter *ngIf="hasAdminAccess">
+      <li nz-menu-item nzMatchRouter *ngIf="canViewDashboard">
         <a routerLink="/home/analytics">
           <span nz-icon nzType="bar-chart" nzTheme="outline"></span>
           <span>Thống kê</span>
         </a>
       </li>
-      <li nz-menu-item nzMatchRouter *ngIf="hasAdminAccess">
+      <li nz-menu-item nzMatchRouter *ngIf="canAccessSettings">
         <a routerLink="/home/roles">
           <span nz-icon nzType="setting" nzTheme="outline"></span>
           <span>Cài đặt</span>
@@ -69,8 +69,8 @@
           <span class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></span>
         </span>
         <div class="header-right">
-          <span class="user-name">{{ currentUser?.name }}</span>
-          <nz-avatar [nzText]="currentUser?.name?.charAt(0) || 'U'" nzSize="default"></nz-avatar>
+          <span class="user-name">{{ currentUser?.username }}</span>
+          <nz-avatar [nzText]="currentUser?.username?.charAt(0) || 'U'" nzSize="default"></nz-avatar>
           <button nz-button nzType="text" nz-dropdown [nzDropdownMenu]="menu">
             <span nz-icon nzType="down"></span>
           </button>

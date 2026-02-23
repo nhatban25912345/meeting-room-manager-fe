@@ -32,9 +32,9 @@
 
       <form nz-form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <nz-form-item>
-          <nz-form-label [nzSpan]="24">Email</nz-form-label>
-          <nz-form-control [nzSpan]="24" nzErrorTip="Vui lòng nhập email!">
-            <input nz-input formControlName="email" placeholder="abc@gmail.com" type="email" />
+          <nz-form-label [nzSpan]="24">Tên đăng nhập</nz-form-label>
+          <nz-form-control [nzSpan]="24" nzErrorTip="Vui lòng nhập tên đăng nhập!">
+            <input nz-input formControlName="username" placeholder="manager01" type="text" />
           </nz-form-control>
         </nz-form-item>
 

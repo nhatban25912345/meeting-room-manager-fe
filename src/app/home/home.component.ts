@@ -28,8 +28,15 @@ import { AuthService, User } from '../services/auth.service';
 export class HomeComponent implements OnInit {
   isCollapsed = false;
   currentUser: User | null = null;
-  hasAdminAccess = false;
-  hasManagerAccess = false;
+  
+  // Permission-based access control
+  canViewHome = true; // Tất cả user đều xem được
+  canManagePlans = false;
+  canViewMeetingCalendar = false;
+  canViewRooms = false;
+  canManageUsers = false;
+  canViewDashboard = false;
+  canAccessSettings = false;
 
   constructor(
     private authService: AuthService,
@@ -38,8 +45,33 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentUser = this.authService.currentUserValue;
-    this.hasAdminAccess = this.authService.hasRole(['admin']);
-    this.hasManagerAccess = this.authService.hasRole(['admin', 'manager']);
+    this.checkPermissions();
+  }
+
+  private checkPermissions(): void {
+    // Quản lý kế hoạch - cần quyền tạo hoặc xem meeting
+    this.canManagePlans = this.authService.hasPermission('MEETING_CREATE') || 
+                          this.authService.hasPermission('MEETING_VIEW_LIST');
+    
+    // Lịch họp - cần quyền xem calendar
+    this.canViewMeetingCalendar = this.authService.hasPermission('MEETING_VIEW_CALENDAR_DAY') ||
+                                   this.authService.hasPermission('MEETING_VIEW_CALENDAR_WEEK') ||
+                                   this.authService.hasPermission('MEETING_VIEW_CALENDAR_MONTH') ||
+                                   this.authService.hasPermission('MEETING_VIEW_LIST');
+    
+    // Phòng họp - cần quyền xem room
+    this.canViewRooms = this.authService.hasPermission('ROOM_VIEW');
+    
+    // Người dùng - cần quyền xem user
+    this.canManageUsers = this.authService.hasPermission('USER_VIEW');
+    
+    // Thống kê - cần quyền xem dashboard hoặc báo cáo
+    this.canViewDashboard = this.authService.hasPermission('DASHBOARD_VIEW') ||
+                            this.authService.hasPermission('REPORT_VIEW_ROOM_USAGE') ||
+                            this.authService.hasPermission('REPORT_GENERATE');
+    
+    // Cài đặt - chỉ ADMIN (hoặc có thể thêm permission cụ thể)
+    this.canAccessSettings = this.authService.hasRole(['ADMIN']);
   }
 
   logout(): void {

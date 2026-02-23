@@ -41,8 +41,8 @@ export class LoginComponent {
     private message: NzMessageService
   ) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      username: ['', [Validators.required]],
+      password: ['', [Validators.required]],
       remember: [true]
     });
   }
@@ -50,20 +50,21 @@ export class LoginComponent {
   onSubmit(): void {
     if (this.loginForm.valid) {
       this.loading = true;
-      const { email, password } = this.loginForm.value;
+      const { username, password } = this.loginForm.value;
       
-      this.authService.login(email, password).subscribe({
-        next: (success) => {
-          if (success) {
-            this.message.success('Đăng nhập thành công!');
+      this.authService.login(username, password).subscribe({
+        next: (response) => {
+          if (response.status.statusCode === 'SUCCESS') {
+            this.message.success(response.status.displayMessage || 'Đăng nhập thành công!');
             this.router.navigate(['/home']);
           } else {
-            this.message.error('Email hoặc mật khẩu không đúng!');
+            this.message.error(response.status.displayMessage || 'Đăng nhập thất bại!');
           }
           this.loading = false;
         },
         error: (error) => {
-          this.message.error('Đã có lỗi xảy ra. Vui lòng thử lại!');
+          const errorMessage = error?.error?.status?.displayMessage || 'Đã có lỗi xảy ra. Vui lòng thử lại!';
+          this.message.error(errorMessage);
           this.loading = false;
         }
       });
