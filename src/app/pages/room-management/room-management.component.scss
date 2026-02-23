@@ -335,4 +335,24 @@
       }
     }
   }
+
+  // Modal Form Styles
+  .form-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 0;
+
+    .form-col-2 {
+      margin-bottom: 16px;
+    }
+  }
+
+  nz-form-item {
+    margin-bottom: 16px;
+
+    nz-form-label {
+      font-weight: 500;
+    }
+  }
 }

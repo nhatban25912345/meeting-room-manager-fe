@@ -1,0 +1,106 @@
+<nz-modal
+  [(nzVisible)]="visible"
+  (nzVisibleChange)="visibleChange.emit($event)"
+  nzTitle="Thêm phòng họp mới"
+  nzWidth="700px"
+  [nzMaskClosable]="false"
+  [nzClosable]="true"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="handleOk()"
+  [nzOkLoading]="isSubmitting"
+  nzOkText="Tạo phòng"
+  nzCancelText="Hủy">
+  <ng-container *nzModalContent>
+    <form nz-form [formGroup]="roomForm" nzLayout="vertical">
+      <div class="form-row">
+        <!-- Room Code -->
+        <nz-form-item class="form-col-2">
+          <nz-form-label nzRequired>Mã phòng</nz-form-label>
+          <nz-form-control nzErrorTip="Vui lòng nhập mã phòng!">
+            <input nz-input formControlName="roomCode" placeholder="VD: MR001" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <!-- Room Name -->
+        <nz-form-item class="form-col-2">
+          <nz-form-label nzRequired>Tên phòng</nz-form-label>
+          <nz-form-control nzErrorTip="Vui lòng nhập tên phòng!">
+            <input nz-input formControlName="roomName" placeholder="VD: Phòng họp lớn" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div class="form-row">
+        <!-- Location -->
+        <nz-form-item class="form-col-2">
+          <nz-form-label>Vị trí</nz-form-label>
+          <nz-form-control>
+            <input nz-input formControlName="location" placeholder="VD: Tầng 2" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <!-- Capacity -->
+        <nz-form-item class="form-col-2">
+          <nz-form-label nzRequired>Sức chứa</nz-form-label>
+          <nz-form-control nzErrorTip="Vui lòng nhập sức chứa!">
+            <nz-input-number formControlName="capacity" [nzMin]="1" [nzMax]="1000" 
+              nzPlaceHolder="VD: 10 người" style="width: 100%;"></nz-input-number>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div class="form-row">
+        <!-- Management Unit -->
+        <nz-form-item class="form-col-2">
+          <nz-form-label>Đơn vị quản lý</nz-form-label>
+          <nz-form-control>
+            <input nz-input formControlName="managementUnitName" placeholder="VD: Ban quản lý tòa nhà" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <!-- Transmission Config -->
+        <nz-form-item class="form-col-2">
+          <nz-form-label>Cấu hình truyền dẫn</nz-form-label>
+          <nz-form-control>
+            <input nz-input formControlName="transmissionConfig" placeholder="VD: Camera, Micro" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div class="form-row">
+        <!-- Room Type -->
+        <nz-form-item class="form-col-2">
+          <nz-form-label nzRequired>Loại phòng</nz-form-label>
+          <nz-form-control>
+            <nz-select formControlName="roomType" nzPlaceHolder="Chọn loại phòng">
+              <nz-option nzValue="OFFLINE" nzLabel="Trực tiếp"></nz-option>
+              <nz-option nzValue="ONLINE" nzLabel="Trực tuyến"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+
+        <!-- Status -->
+        <nz-form-item class="form-col-2">
+          <nz-form-label nzRequired>Trạng thái</nz-form-label>
+          <nz-form-control>
+            <nz-select formControlName="status" nzPlaceHolder="Chọn trạng thái">
+              <nz-option nzValue="AVAILABLE" nzLabel="Khả dụng"></nz-option>
+              <nz-option nzValue="IN_USE" nzLabel="Đang sử dụng"></nz-option>
+              <nz-option nzValue="MAINTENANCE" nzLabel="Bảo trì"></nz-option>
+              <nz-option nzValue="UNAVAILABLE" nzLabel="Không khả dụng"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <!-- Notes -->
+      <nz-form-item>
+        <nz-form-label>Ghi chú</nz-form-label>
+        <nz-form-control>
+          <textarea nz-input formControlName="notes" placeholder="Nhập ghi chú" 
+            [nzAutosize]="{ minRows: 3, maxRows: 6 }"></textarea>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
+</nz-modal>

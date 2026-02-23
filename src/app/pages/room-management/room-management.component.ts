@@ -1,18 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzSelectModule } from 'ng-zorro-antd/select';
-import { NzTagModule } from 'ng-zorro-antd/tag';
-import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
-import { NzModalModule } from 'ng-zorro-antd/modal';
-import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
-import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { RoomService, RoomData } from '../../services/room.service';
+import { AuthService } from '../../services/auth.service';
+import { RoomFilterComponent } from './room-filter/room-filter.component';
+import { RoomTableComponent } from './room-table/room-table.component';
+import { RoomFormModalComponent } from './room-form-modal/room-form-modal.component';
 
 interface FilterCriteria {
   roomCode: string;
@@ -27,26 +22,22 @@ interface FilterCriteria {
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
-    NzTableModule,
     NzButtonModule,
     NzIconModule,
-    NzInputModule,
-    NzSelectModule,
-    NzTagModule,
-    NzDropDownModule,
-    NzModalModule,
-    NzToolTipModule,
-    NzFormModule
+    RoomFilterComponent,
+    RoomTableComponent,
+    RoomFormModalComponent
   ],
   templateUrl: './room-management.component.html',
   styleUrl: './room-management.component.scss'
 })
 export class RoomManagementComponent implements OnInit {
-  searchText = '';
-  filterStatus = 'all';
   showFilterPanel = true;
   loading = false;
+  
+  // Modal state
+  isModalVisible = false;
+  isSubmitting = false;
   
   // Pagination
   pageIndex = 1;
@@ -107,11 +98,16 @@ export class RoomManagementComponent implements OnInit {
 
   constructor(
     private message: NzMessageService,
-    private roomService: RoomService
+    private roomService: RoomService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
     this.loadRooms();
+  }
+  
+  get currentUsername(): string {
+    return this.authService.currentUserValue?.username || 'admin';
   }
 
   loadRooms(): void {
@@ -142,6 +138,11 @@ export class RoomManagementComponent implements OnInit {
     });
   }
 
+  onFilterChange(): void {
+    this.pageIndex = 1;
+    this.loadRooms();
+  }
+
   onApplyFilter(): void {
     this.pageIndex = 1;
     this.loadRooms();
@@ -156,8 +157,6 @@ export class RoomManagementComponent implements OnInit {
       roomType: 'all',
       status: 'all'
     };
-    this.searchText = '';
-    this.filterStatus = 'all';
     this.sortField = 'roomCode';
     this.sortOrder = 'asc';
     this.pageIndex = 1;
@@ -167,6 +166,10 @@ export class RoomManagementComponent implements OnInit {
 
   onExportData(): void {
     this.message.info('Chức năng xuất dữ liệu đang được phát triển');
+  }
+
+  toggleFilterPanel(): void {
+    this.showFilterPanel = !this.showFilterPanel;
   }
 
   // Pagination handlers
@@ -181,37 +184,35 @@ export class RoomManagementComponent implements OnInit {
     this.loadRooms();
   }
 
-  toggleFilterPanel(): void {
-    this.showFilterPanel = !this.showFilterPanel;
-  }
-  
   onSortChange(): void {
     this.pageIndex = 1;
     this.loadRooms();
   }
 
-  getStatusText(status: string): string {
-    const statusMap: { [key: string]: string } = {
-      'AVAILABLE': 'Khả dụng',
-      'IN_USE': 'Đang sử dụng',
-      'MAINTENANCE': 'Bảo trì',
-      'UNAVAILABLE': 'Không khả dụng'
-    };
-    return statusMap[status] || status;
-  }
-
-  getStatusColor(status: string): string {
-    const colorMap: { [key: string]: string } = {
-      'AVAILABLE': 'success',
-      'IN_USE': 'warning',
-      'MAINTENANCE': 'error',
-      'UNAVAILABLE': 'default'
-    };
-    return colorMap[status] || 'default';
-  }
-
   onAddRoom(): void {
-    this.message.info('Chức năng đang được phát triển');
+    this.isModalVisible = true;
+  }
+  
+  handleModalCancel(): void {
+    this.isModalVisible = false;
+  }
+  
+  handleModalSubmit(formData: any): void {
+    this.isSubmitting = true;
+    
+    this.roomService.createRoom(formData).subscribe({
+      next: (response) => {
+        this.message.success('Tạo phòng họp thành công!');
+        this.isModalVisible = false;
+        this.isSubmitting = false;
+        this.loadRooms();
+      },
+      error: (error) => {
+        console.error('Error creating room:', error);
+        this.message.error(error.error?.status?.displayMessage || 'Không thể tạo phòng họp');
+        this.isSubmitting = false;
+      }
+    });
   }
 
   onViewRoom(room: RoomData): void {

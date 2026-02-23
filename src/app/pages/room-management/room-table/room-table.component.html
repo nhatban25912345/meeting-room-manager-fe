@@ -1,0 +1,128 @@
+<div class="table-card">
+  <!-- Table Header -->
+  <div class="table-header">
+    <div class="table-header-left">
+      <h3 class="table-title">Danh sách phòng họp ({{ rooms.length }})</h3>
+    </div>
+    <div class="table-header-right">
+      <div class="sort-controls">
+        <label class="sort-label">Sắp xếp theo:</label>
+        <nz-select
+          [ngModel]="sortField"
+          (ngModelChange)="onSortFieldChange($event)"
+          nzPlaceHolder="Chọn cột"
+          class="sort-select"
+          style="width: 160px;">
+          <nz-option
+            *ngFor="let option of sortFieldOptions"
+            [nzValue]="option.value"
+            [nzLabel]="option.label">
+          </nz-option>
+        </nz-select>
+        <nz-select
+          [ngModel]="sortOrder"
+          (ngModelChange)="onSortOrderChange($event)"
+          class="sort-select"
+          style="width: 120px;">
+          <nz-option
+            *ngFor="let option of sortOrderOptions"
+            [nzValue]="option.value"
+            [nzLabel]="option.label">
+          </nz-option>
+        </nz-select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <nz-table
+    #basicTable
+    [nzData]="rooms"
+    [nzLoading]="loading"
+    [nzShowPagination]="true"
+    [nzBordered]="false"
+    [nzFrontPagination]="false"
+    [nzPageIndex]="pageIndex"
+    [nzPageSize]="pageSize"
+    [nzTotal]="total"
+    [nzPageSizeOptions]="pageSizeOptions"
+    [nzShowSizeChanger]="true"
+    [nzShowTotal]="totalTemplate"
+    (nzPageIndexChange)="onPageIndexChange($event)"
+    (nzPageSizeChange)="onPageSizeChange($event)">
+    <thead>
+      <tr>
+        <th>Phòng họp</th>
+        <th>Sức chứa</th>
+        <th>Vị trí</th>
+        <th>Đơn vị quản lý</th>
+        <th>Loại phòng</th>
+        <th>Trạng thái</th>
+        <th nzWidth="120px" nzAlign="center">Thao tác</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let room of basicTable.data">
+        <td>
+          <div class="room-info">
+            <strong>{{ room.roomCode }}</strong>
+            <div *ngIf="room.roomName" class="room-name">{{ room.roomName }}</div>
+          </div>
+        </td>
+        <td>
+          <span nz-icon nzType="team" nzTheme="outline" class="capacity-icon"></span>
+          {{ room.capacity }} người
+        </td>
+        <td>{{ room.location || '-' }}</td>
+        <td>{{ room.managementUnitName || '-' }}</td>
+        <td>
+          <nz-tag [nzColor]="room.roomType === 'OFFLINE' ? 'blue' : 'purple'">
+            {{ room.roomType === 'OFFLINE' ? 'Trực tiếp' : 'Trực tuyến' }}
+          </nz-tag>
+        </td>
+        <td>
+          <nz-tag [nzColor]="getStatusColor(room.status)">
+            {{ getStatusText(room.status) }}
+          </nz-tag>
+        </td>
+        <td nzAlign="center">
+          <div class="action-buttons">
+            <button
+              nz-button
+              nzType="text"
+              nzSize="small"
+              (click)="onViewRoom(room)"
+              nz-tooltip
+              nzTooltipTitle="Xem chi tiết">
+              <span nz-icon nzType="eye" nzTheme="outline"></span>
+            </button>
+            <button
+              nz-button
+              nzType="text"
+              nzSize="small"
+              (click)="onEditRoom(room)"
+              nz-tooltip
+              nzTooltipTitle="Chỉnh sửa">
+              <span nz-icon nzType="edit" nzTheme="outline"></span>
+            </button>
+            <button
+              nz-button
+              nzType="text"
+              nzSize="small"
+              nzDanger
+              (click)="onDeleteRoom(room)"
+              nz-tooltip
+              nzTooltipTitle="Xóa">
+              <span nz-icon nzType="delete" nzTheme="outline"></span>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+
+  <!-- Pagination Total Template -->
+  <ng-template #totalTemplate let-total let-range="range">
+    Hiển thị {{ range[0] }}-{{ range[1] }} của {{ total }} phòng họp
+  </ng-template>
+</div>

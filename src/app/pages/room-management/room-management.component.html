@@ -15,237 +15,47 @@
     </div>
   </div>
 
-  <!-- Advanced Filter Panel -->
-  <div class="filter-panel" [class.collapsed]="!showFilterPanel">
-    <div class="filter-header">
-      <div class="filter-header-left">
-        <span nz-icon nzType="filter" nzTheme="outline" class="filter-icon"></span>
-        <h3>Điều kiện tìm kiếm</h3>
-      </div>
-      <button nz-button nzType="text" nzSize="small" (click)="toggleFilterPanel()">
-        <span nz-icon [nzType]="showFilterPanel ? 'up' : 'down'" nzTheme="outline"></span>
-      </button>
-    </div>
+  <!-- Filter Component -->
+  <app-room-filter
+    [filterCriteria]="filterCriteria"
+    [capacityRangeOptions]="capacityRangeOptions"
+    [roomTypeOptions]="roomTypeOptions"
+    [statusOptions]="statusOptions"
+    [showFilterPanel]="showFilterPanel"
+    (filterChange)="onFilterChange()"
+    (applyFilter)="onApplyFilter()"
+    (resetFilter)="onResetFilter()"
+    (exportData)="onExportData()"
+    (togglePanel)="toggleFilterPanel()">
+  </app-room-filter>
 
-    <div class="filter-content" *ngIf="showFilterPanel">
-      <div class="filter-grid">
-        <!-- Room Code -->
-        <div class="filter-item">
-          <label class="filter-label">Mã phòng</label>
-          <input
-            nz-input
-            placeholder="Nhập mã phòng (VD: P.101)"
-            [(ngModel)]="filterCriteria.roomCode"
-            (ngModelChange)="onApplyFilter()"
-          />
-        </div>
+  <!-- Table Component -->
+  <app-room-table
+    [rooms]="filteredRooms"
+    [loading]="loading"
+    [total]="total"
+    [pageIndex]="pageIndex"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="pageSizeOptions"
+    [(sortField)]="sortField"
+    [(sortOrder)]="sortOrder"
+    [sortFieldOptions]="sortFieldOptions"
+    [sortOrderOptions]="sortOrderOptions"
+    (pageIndexChange)="onPageIndexChange($event)"
+    (pageSizeChange)="onPageSizeChange($event)"
+    (sortChange)="onSortChange()"
+    (viewRoom)="onViewRoom($event)"
+    (editRoom)="onEditRoom($event)"
+    (deleteRoom)="onDeleteRoom($event)">
+  </app-room-table>
 
-        <!-- Room Name -->
-        <div class="filter-item">
-          <label class="filter-label">Tên phòng</label>
-          <input
-            nz-input
-            placeholder="Nhập tên phòng"
-            [(ngModel)]="filterCriteria.roomName"
-            (ngModelChange)="onApplyFilter()"
-          />
-        </div>
-
-        <!-- Capacity Range -->
-        <div class="filter-item">
-          <label class="filter-label">Sức chứa</label>
-          <nz-select
-            [(ngModel)]="filterCriteria.capacityRange"
-            (ngModelChange)="onApplyFilter()"
-            nzPlaceHolder="Chọn sức chứa"
-            class="filter-select">
-            <nz-option
-              *ngFor="let option of capacityRangeOptions"
-              [nzValue]="option.value"
-              [nzLabel]="option.label">
-            </nz-option>
-          </nz-select>
-        </div>
-
-        <!-- Room Type -->
-        <div class="filter-item">
-          <label class="filter-label">Loại phòng</label>
-          <nz-select
-            [(ngModel)]="filterCriteria.roomType"
-            (ngModelChange)="onApplyFilter()"
-            nzPlaceHolder="Chọn loại phòng"
-            class="filter-select">
-            <nz-option
-              *ngFor="let option of roomTypeOptions"
-              [nzValue]="option.value"
-              [nzLabel]="option.label">
-            </nz-option>
-          </nz-select>
-        </div>
-
-        <!-- Status -->
-        <div class="filter-item">
-          <label class="filter-label">Trạng thái</label>
-          <nz-select
-            [(ngModel)]="filterCriteria.status"
-            (ngModelChange)="onApplyFilter()"
-            nzPlaceHolder="Chọn trạng thái"
-            class="filter-select">
-            <nz-option
-              *ngFor="let option of statusOptions"
-              [nzValue]="option.value"
-              [nzLabel]="option.label">
-            </nz-option>
-          </nz-select>
-        </div>
-      </div>
-
-      <!-- Filter Actions -->
-      <div class="filter-actions">
-        <button nz-button nzType="primary" (click)="onApplyFilter()">
-          <span nz-icon nzType="search" nzTheme="outline"></span>
-          Tìm kiếm
-        </button>
-        <button nz-button (click)="onResetFilter()">
-          <span nz-icon nzType="reload" nzTheme="outline"></span>
-          Làm mới
-        </button>
-        <button nz-button nzType="default" (click)="onExportData()">
-          <span nz-icon nzType="download" nzTheme="outline"></span>
-          Xuất dữ liệu
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Table Card -->
-  <div class="table-card">
-    <!-- Table Header -->
-    <div class="table-header">
-      <div class="table-header-left">
-        <h3 class="table-title">Danh sách phòng họp ({{ filteredRooms.length }})</h3>
-      </div>
-      <div class="table-header-right">
-        <div class="sort-controls">
-          <label class="sort-label">Sắp xếp theo:</label>
-          <nz-select
-            [(ngModel)]="sortField"
-            (ngModelChange)="onSortChange()"
-            nzPlaceHolder="Chọn cột"
-            class="sort-select"
-            style="width: 160px;">
-            <nz-option
-              *ngFor="let option of sortFieldOptions"
-              [nzValue]="option.value"
-              [nzLabel]="option.label">
-            </nz-option>
-          </nz-select>
-          <nz-select
-            [(ngModel)]="sortOrder"
-            (ngModelChange)="onSortChange()"
-            class="sort-select"
-            style="width: 120px;">
-            <nz-option
-              *ngFor="let option of sortOrderOptions"
-              [nzValue]="option.value"
-              [nzLabel]="option.label">
-            </nz-option>
-          </nz-select>
-        </div>
-      </div>
-            
-    </div>
-
-    <!-- Table -->
-    <nz-table
-      #basicTable
-      [nzData]="filteredRooms"
-      [nzLoading]="loading"
-      [nzShowPagination]="true"
-      [nzBordered]="false"
-      [nzFrontPagination]="false"
-      [nzPageIndex]="pageIndex"
-      [nzPageSize]="pageSize"
-      [nzTotal]="total"
-      [nzPageSizeOptions]="pageSizeOptions"
-      [nzShowSizeChanger]="true"
-      [nzShowTotal]="totalTemplate"
-      (nzPageIndexChange)="onPageIndexChange($event)"
-      (nzPageSizeChange)="onPageSizeChange($event)">
-      <thead>
-        <tr>
-          <th>Phòng họp</th>
-          <th>Sức chứa</th>
-          <th>Vị trí</th>
-          <th>Đơn vị quản lý</th>
-          <th>Loại phòng</th>
-          <th>Trạng thái</th>
-          <th nzWidth="120px" nzAlign="center">Thao tác</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let room of basicTable.data">
-          <td>
-            <div class="room-info">
-              <strong>{{ room.roomCode }}</strong>
-              <div *ngIf="room.roomName" class="room-name">{{ room.roomName }}</div>
-            </div>
-          </td>
-          <td>
-            <span nz-icon nzType="team" nzTheme="outline" class="capacity-icon"></span>
-            {{ room.capacity }} người
-          </td>
-          <td>{{ room.location || '-' }}</td>
-          <td>{{ room.managementUnitName || '-' }}</td>
-          <td>
-            <nz-tag [nzColor]="room.roomType === 'OFFLINE' ? 'blue' : 'purple'">
-              {{ room.roomType === 'OFFLINE' ? 'Trực tiếp' : 'Trực tuyến' }}
-            </nz-tag>
-          </td>
-          <td>
-            <nz-tag [nzColor]="getStatusColor(room.status)">
-              {{ getStatusText(room.status) }}
-            </nz-tag>
-          </td>
-          <td nzAlign="center">
-            <div class="action-buttons">
-              <button
-                nz-button
-                nzType="text"
-                nzSize="small"
-                (click)="onViewRoom(room)"
-                nz-tooltip
-                nzTooltipTitle="Xem chi tiết">
-                <span nz-icon nzType="eye" nzTheme="outline"></span>
-              </button>
-              <button
-                nz-button
-                nzType="text"
-                nzSize="small"
-                (click)="onEditRoom(room)"
-                nz-tooltip
-                nzTooltipTitle="Chỉnh sửa">
-                <span nz-icon nzType="edit" nzTheme="outline"></span>
-              </button>
-              <button
-                nz-button
-                nzType="text"
-                nzSize="small"
-                nzDanger
-                (click)="onDeleteRoom(room)"
-                nz-tooltip
-                nzTooltipTitle="Xóa">
-                <span nz-icon nzType="delete" nzTheme="outline"></span>
-              </button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </nz-table>
-
-    <!-- Pagination Total Template -->
-    <ng-template #totalTemplate let-total let-range="range">
-      Hiển thị {{ range[0] }}-{{ range[1] }} của {{ total }} phòng họp
-    </ng-template>
-  </div>
+  <!-- Form Modal Component -->
+  <app-room-form-modal
+    [(visible)]="isModalVisible"
+    [isSubmitting]="isSubmitting"
+    [currentUsername]="currentUsername"
+    (onSubmit)="handleModalSubmit($event)"
+    (onCancel)="handleModalCancel()">
+  </app-room-form-modal>
 </div>
+

@@ -1,0 +1,101 @@
+<div class="filter-panel" [class.collapsed]="!showFilterPanel">
+  <div class="filter-header" (click)="onTogglePanel()">
+    <div class="filter-header-left">
+      <span nz-icon nzType="filter" nzTheme="outline" class="filter-icon"></span>
+      <h3>Điều kiện tìm kiếm</h3>
+    </div>
+    <button nz-button nzType="text" nzSize="small" (click)="onTogglePanel(); $event.stopPropagation()">
+      <span nz-icon [nzType]="showFilterPanel ? 'up' : 'down'" nzTheme="outline"></span>
+    </button>
+  </div>
+
+  <div class="filter-content" *ngIf="showFilterPanel">
+    <div class="filter-grid">
+      <!-- Room Code -->
+      <div class="filter-item">
+        <label class="filter-label">Mã phòng</label>
+        <input
+          nz-input
+          placeholder="Nhập mã phòng (VD: P.101)"
+          [(ngModel)]="filterCriteria.roomCode"
+          (ngModelChange)="onFilterChange()"
+        />
+      </div>
+
+      <!-- Room Name -->
+      <div class="filter-item">
+        <label class="filter-label">Tên phòng</label>
+        <input
+          nz-input
+          placeholder="Nhập tên phòng"
+          [(ngModel)]="filterCriteria.roomName"
+          (ngModelChange)="onFilterChange()"
+        />
+      </div>
+
+      <!-- Capacity Range -->
+      <div class="filter-item">
+        <label class="filter-label">Sức chứa</label>
+        <nz-select
+          [(ngModel)]="filterCriteria.capacityRange"
+          (ngModelChange)="onFilterChange()"
+          nzPlaceHolder="Chọn sức chứa"
+          class="filter-select">
+          <nz-option
+            *ngFor="let option of capacityRangeOptions"
+            [nzValue]="option.value"
+            [nzLabel]="option.label">
+          </nz-option>
+        </nz-select>
+      </div>
+
+      <!-- Room Type -->
+      <div class="filter-item">
+        <label class="filter-label">Loại phòng</label>
+        <nz-select
+          [(ngModel)]="filterCriteria.roomType"
+          (ngModelChange)="onFilterChange()"
+          nzPlaceHolder="Chọn loại phòng"
+          class="filter-select">
+          <nz-option
+            *ngFor="let option of roomTypeOptions"
+            [nzValue]="option.value"
+            [nzLabel]="option.label">
+          </nz-option>
+        </nz-select>
+      </div>
+
+      <!-- Status -->
+      <div class="filter-item">
+        <label class="filter-label">Trạng thái</label>
+        <nz-select
+          [(ngModel)]="filterCriteria.status"
+          (ngModelChange)="onFilterChange()"
+          nzPlaceHolder="Chọn trạng thái"
+          class="filter-select">
+          <nz-option
+            *ngFor="let option of statusOptions"
+            [nzValue]="option.value"
+            [nzLabel]="option.label">
+          </nz-option>
+        </nz-select>
+      </div>
+    </div>
+
+    <!-- Filter Actions -->
+    <div class="filter-actions">
+      <button nz-button nzType="primary" (click)="onApplyFilter()">
+        <span nz-icon nzType="search" nzTheme="outline"></span>
+        Tìm kiếm
+      </button>
+      <button nz-button (click)="onResetFilter()">
+        <span nz-icon nzType="reload" nzTheme="outline"></span>
+        Làm mới
+      </button>
+      <button nz-button nzType="default" (click)="onExportData()">
+        <span nz-icon nzType="download" nzTheme="outline"></span>
+        Xuất dữ liệu
+      </button>
+    </div>
+  </div>
+</div>
