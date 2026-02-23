@@ -7,6 +7,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { AuthService, User } from '../services/auth.service';
 
 @Component({
@@ -20,7 +21,8 @@ import { AuthService, User } from '../services/auth.service';
     NzIconModule,
     NzAvatarModule,
     NzDropDownModule,
-    NzButtonModule
+    NzButtonModule,
+    NzBadgeModule
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
@@ -28,6 +30,7 @@ import { AuthService, User } from '../services/auth.service';
 export class HomeComponent implements OnInit {
   isCollapsed = false;
   currentUser: User | null = null;
+  notificationCount = 3; // Số thông báo chưa đọc
   
   // Permission-based access control
   canViewHome = true; // Tất cả user đều xem được
@@ -46,6 +49,15 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.currentUser = this.authService.currentUserValue;
     this.checkPermissions();
+  }
+
+  getInitials(): string {
+    if (!this.currentUser?.fullName) return 'U';
+    const names = this.currentUser.fullName.split(' ');
+    if (names.length >= 2) {
+      return (names[names.length - 2].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase();
+    }
+    return names[0].charAt(0).toUpperCase();
   }
 
   private checkPermissions(): void {

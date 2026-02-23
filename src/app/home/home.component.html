@@ -69,25 +69,79 @@
           <span class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></span>
         </span>
         <div class="header-right">
-          <span class="user-name">{{ currentUser?.username }}</span>
-          <nz-avatar [nzText]="currentUser?.username?.charAt(0) || 'U'" nzSize="default"></nz-avatar>
-          <button nz-button nzType="text" nz-dropdown [nzDropdownMenu]="menu">
-            <span nz-icon nzType="down"></span>
+          <!-- Notification Button -->
+          <button nz-button nzType="text" class="notification-btn" nz-dropdown [nzDropdownMenu]="notificationMenu">
+            <nz-badge [nzCount]="notificationCount" [nzDot]="notificationCount > 0">
+              <span nz-icon nzType="bell" nzTheme="outline" class="notification-icon"></span>
+            </nz-badge>
           </button>
-          <nz-dropdown-menu #menu="nzDropdownMenu">
-            <ul nz-menu>
+          <nz-dropdown-menu #notificationMenu="nzDropdownMenu">
+            <div class="notification-dropdown">
+              <div class="notification-header">
+                <h4>Thông báo</h4>
+                <a>Đánh dấu đã đọc tất cả</a>
+              </div>
+              <div class="notification-list">
+                <div class="notification-item">
+                  <span nz-icon nzType="calendar" nzTheme="outline"></span>
+                  <div class="notification-content">
+                    <p class="notification-title">Cuộc họp sắp diễn ra</p>
+                    <p class="notification-time">5 phút trước</p>
+                  </div>
+                </div>
+                <div class="notification-item">
+                  <span nz-icon nzType="check-circle" nzTheme="outline"></span>
+                  <div class="notification-content">
+                    <p class="notification-title">Yêu cầu đặt phòng đã được duyệt</p>
+                    <p class="notification-time">2 giờ trước</p>
+                  </div>
+                </div>
+                <div class="notification-item">
+                  <span nz-icon nzType="info-circle" nzTheme="outline"></span>
+                  <div class="notification-content">
+                    <p class="notification-title">Thông báo bảo trì hệ thống</p>
+                    <p class="notification-time">1 ngày trước</p>
+                  </div>
+                </div>
+              </div>
+              <div class="notification-footer">
+                <a>Xem tất cả thông báo</a>
+              </div>
+            </div>
+          </nz-dropdown-menu>
+
+          <!-- User Info Dropdown -->
+          <div class="user-info-wrapper" nz-dropdown [nzDropdownMenu]="userMenu" nzTrigger="click">
+            <nz-avatar 
+              [nzText]="getInitials()" 
+              nzSize="default" 
+              [style.background-color]="'#1890ff'"
+              class="user-avatar">
+            </nz-avatar>
+            <div class="user-details">
+              <span class="user-name">{{ currentUser?.fullName || 'User' }}</span>
+              <span class="user-role">{{ currentUser?.jobTitle || 'Người dùng' }}</span>
+            </div>
+            <span nz-icon nzType="down" class="user-dropdown-icon"></span>
+          </div>
+          <nz-dropdown-menu #userMenu="nzDropdownMenu">
+            <ul nz-menu class="user-dropdown-menu">
               <li nz-menu-item>
-                <span nz-icon nzType="user"></span>
-                Profile
+                <span nz-icon nzType="user" nzTheme="outline"></span>
+                Thông tin cá nhân
               </li>
               <li nz-menu-item>
-                <span nz-icon nzType="setting"></span>
-                Settings
+                <span nz-icon nzType="setting" nzTheme="outline"></span>
+                Cài đặt tài khoản
+              </li>
+              <li nz-menu-item>
+                <span nz-icon nzType="lock" nzTheme="outline"></span>
+                Đổi mật khẩu
               </li>
               <li nz-menu-divider></li>
-              <li nz-menu-item (click)="logout()">
-                <span nz-icon nzType="logout"></span>
-                Logout
+              <li nz-menu-item (click)="logout()" class="logout-item">
+                <span nz-icon nzType="logout" nzTheme="outline"></span>
+                Đăng xuất
               </li>
             </ul>
           </nz-dropdown-menu>
