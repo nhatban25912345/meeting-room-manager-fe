@@ -46,7 +46,7 @@ export const routes: Routes = [
       },
       {
         path: 'users',
-        loadComponent: () => import('./pages/welcome/welcome.component').then(m => m.WelcomeComponent),
+        loadComponent: () => import('./pages/employee-management/employee-management.component').then(m => m.EmployeeManagementComponent),
         data: { roles: ['admin'] }
       },
       {

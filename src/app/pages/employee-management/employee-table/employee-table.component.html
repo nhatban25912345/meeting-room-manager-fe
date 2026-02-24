@@ -1,0 +1,70 @@
+<div class="employee-table-wrapper table-card">
+  <!-- Filter Bar -->
+  <div class="table-header">
+    <div class="table-header-left">
+      <h3 class="table-title">Danh sách nhân viên ({{ filteredEmployees.length }})</h3>
+    </div>
+    <div class="table-header-right">
+      <div class="sort-controls">
+        <label class="sort-label">Sắp xếp theo:</label>
+        <nz-select
+          [ngModel]="selectedRole"
+          nzPlaceHolder="Tất cả vai trò"
+          class="sort-select"
+          style="width: 160px;">
+          <nz-option
+            *ngFor="let option of roles"
+            [nzValue]="option"
+            [nzLabel]="option">
+          </nz-option>
+        </nz-select>
+        <nz-select
+          [ngModel]="selectedStatus"
+          nzPlaceHolder="Tất cả"
+          class="sort-select"
+          style="width: 120px;">
+          <nz-option
+            *ngFor="let option of statuses"
+            [nzValue]="option"
+            [nzLabel]="option">
+          </nz-option>
+        </nz-select>
+      </div>
+    </div>
+  </div>
+  
+  <nz-table [nzData]="filteredEmployees" [nzShowPagination]="false" class="employee-table">
+    <thead>
+      <tr>
+        <th style="width: 100px">Nhân viên</th>
+        <th>Họ tên</th>
+        <th>Vai trò</th>
+        <th>Đơn vị</th>
+        <th>Điện thoại</th>
+        <th>Trạng thái</th>
+        <th>Thao tác</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let emp of filteredEmployees">
+        <td>
+          <nz-avatar [nzText]="emp.id" [style.background-color]="'hsl(215, 80%, 42%)'" nzSize="default"></nz-avatar>
+        </td>
+        <td>{{ emp.name }}</td>
+        <td>{{ emp.role }}</td>
+        <td>{{ emp.department }}</td>
+        <td>{{ emp.phone }}</td>
+        <td>
+          <nz-tag *ngIf="emp.status === 'Sẵn sàng'" nzColor="#d6f5e7" style="color: #389e6b; border: none;">Sẵn sàng</nz-tag>
+          <nz-tag *ngIf="emp.status === 'Đang bận'" nzColor="#fff7e6" style="color: #e6a23c; border: none;">Đang bận</nz-tag>
+          <nz-tag *ngIf="emp.status === 'Nghỉ phép'" nzColor="#e6f0fa" style="color: #8c8c8c; border: none;">Nghỉ phép</nz-tag>
+        </td>
+        <td>
+          <button nz-button nzType="text" nzSize="small"><span nz-icon nzType="eye"></span></button>
+          <button nz-button nzType="text" nzSize="small"><span nz-icon nzType="edit"></span></button>
+          <button nz-button nzType="text" nzSize="small"><span nz-icon nzType="delete"></span></button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>

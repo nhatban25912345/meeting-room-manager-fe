@@ -1,0 +1,22 @@
+<div class="employee-management-container">
+  <!-- Header Card -->
+  <div class="employee-header-card">
+    <div class="header-content">
+      <div class="header-left">
+        <h1 class="page-title">Quản lý nhân viên</h1>
+        <p class="page-subtitle">Danh sách nhân viên hỗ trợ cuộc họp</p>
+      </div>
+      <div class="header-right">
+        <button nz-button nzType="primary" nzSize="large" class="add-employee-btn">
+          <span nz-icon nzType="plus" nzTheme="outline"></span>
+          Thêm nhân viên
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Employee List Card -->
+  <div class="employee-table-card">
+    <app-employee-table (employeeCountChange)="employeeCount = $event"></app-employee-table>
+  </div>
+</div>

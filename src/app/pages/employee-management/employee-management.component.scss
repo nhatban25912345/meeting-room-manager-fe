@@ -1,0 +1,69 @@
+.employee-management-container {
+
+  .employee-header-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+    overflow: hidden;
+    margin-bottom: 24px;
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px;
+      .header-left {
+        .page-title {
+          margin: 0;
+          font-size: 24px;
+          font-weight: 600;
+          color: #262626;
+        }
+        .page-subtitle {
+          margin: 4px 0 0 0;
+          font-size: 14px;
+          color: #8c8c8c;
+        }
+      }
+      .header-right {
+        display: flex;
+        align-items: center;
+        .add-employee-btn {
+          background: hsl(215, 80%, 42%) !important;
+          color: #fff !important;
+          border: none !important;
+          border-radius: 6px;
+          font-weight: 600;
+          font-size: 16px;
+          padding: 0 24px;
+          height: 48px;
+          box-shadow: 0 2px 8px rgba(33, 80, 168, 0.12);
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          transition: background 0.3s;
+        }
+        .add-employee-btn:hover, .add-employee-btn:focus {
+          background: hsl(215, 80%, 36%) !important;
+          color: #fff !important;
+        }
+      }
+    }
+  }
+
+  .employee-table-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+    overflow: hidden;
+    margin-top: 0;
+    .employee-table-header {
+      padding: 20px 24px 0 24px;
+      .table-title {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+        color: rgba(0, 0, 0, 0.85);
+      }
+    }
+  }
+}
