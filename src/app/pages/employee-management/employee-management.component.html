@@ -19,10 +19,20 @@
   <app-employee-filter
     [filterCriteria]="filterCriteria"
     (resetFilter)="onResetFilter()"
+    (applyFilter)="onApplyFilter()"
   ></app-employee-filter>
 
   <!-- Employee List Card -->
   <div class="employee-table-card">
-    <app-employee-table (employeeCountChange)="employeeCount = $event"></app-employee-table>
+    <app-employee-table
+      [users]="users"
+      [total]="total"
+      [page]="page"
+      [size]="size"
+      [loading]="loading"
+      (pageChange)="onPageChange($event)"
+      (pageSizeChange)="onPageSizeChange($event)"
+      (employeeCountChange)="employeeCount = $event"
+    ></app-employee-table>
   </div>
 </div>

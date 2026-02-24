@@ -2,7 +2,7 @@
   <!-- Filter Bar -->
   <div class="table-header">
     <div class="table-header-left">
-      <h3 class="table-title">Danh sách nhân viên ({{ filteredEmployees.length }})</h3>
+      <h3 class="table-title">Danh sách nhân viên ({{ users.length }})</h3>
     </div>
     <div class="table-header-right">
       <div class="sort-controls">
@@ -32,17 +32,17 @@
       </div>
     </div>
   </div>
-  
+
   <nz-table
-    [nzData]="filteredEmployees"
+    [nzData]="users"
     [nzShowPagination]="true"
-    [nzPageIndex]="pageIndex"
-    [nzPageSize]="pageSize"
+    [nzPageIndex]="page + 1"
+    [nzPageSize]="size"
     [nzTotal]="total"
-    [nzPageSizeOptions]="pageSizeOptions"
     [nzShowSizeChanger]="true"
     [nzShowTotal]="totalTemplate"
-    (nzPageIndexChange)="onPageIndexChange($event)"
+    [nzLoading]="loading"
+    (nzPageIndexChange)="onPageIndexChange($event - 1)"
     (nzPageSizeChange)="onPageSizeChange($event)"
     class="employee-table">
     <thead>
@@ -57,18 +57,21 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let emp of filteredEmployees">
+      <tr *ngFor="let emp of users">
         <td>
-          <nz-avatar [nzText]="emp.id" [style.background-color]="'hsl(215, 80%, 42%)'" nzSize="default"></nz-avatar>
+          <nz-avatar [nzText]="emp.userId || emp.id" [style.background-color]="'hsl(215, 80%, 42%)'" nzSize="default"></nz-avatar>
         </td>
-        <td>{{ emp.name }}</td>
-        <td>{{ emp.role }}</td>
-        <td>{{ emp.department }}</td>
-        <td>{{ emp.phone }}</td>
+        <td>{{ emp.fullName || emp.name }}</td>
+        <td>{{ emp.roleCode || emp.role }}</td>
+        <td>{{ emp.unitCode || emp.department }}</td>
+        <td>{{ emp.phoneNumber || emp.phone }}</td>
         <td>
-          <nz-tag *ngIf="emp.status === 'Sẵn sàng'" nzColor="#d6f5e7" style="color: #389e6b; border: none;">Sẵn sàng</nz-tag>
-          <nz-tag *ngIf="emp.status === 'Đang bận'" nzColor="#fff7e6" style="color: #e6a23c; border: none;">Đang bận</nz-tag>
-          <nz-tag *ngIf="emp.status === 'Nghỉ phép'" nzColor="#e6f0fa" style="color: #8c8c8c; border: none;">Nghỉ phép</nz-tag>
+          <ng-container [ngSwitch]="emp.status">
+            <nz-tag *ngSwitchCase="1" nzColor="#d6f5e7" style="color: #389e6b; border: none;">Đang làm việc</nz-tag>
+            <nz-tag *ngSwitchCase="2" nzColor="#fff7e6" style="color: #e6a23c; border: none;">Đang bận</nz-tag>
+            <nz-tag *ngSwitchCase="0" nzColor="#e6f0fa" style="color: #8c8c8c; border: none;">Đã nghỉ việc</nz-tag>
+            <nz-tag *ngSwitchDefault nzColor="#e6f0fa" style="color: #8c8c8c; border: none;">Không rõ</nz-tag>
+          </ng-container>
         </td>
         <td>
           <button nz-button nzType="text" nzSize="small"><span nz-icon nzType="eye"></span></button>
