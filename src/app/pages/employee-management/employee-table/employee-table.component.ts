@@ -80,6 +80,6 @@ export class EmployeeTableComponent implements OnInit {
     this.pageSize = size;
     this.pageIndex = 1;
   }
-  roles = ['Tất cả', 'Quản trị viên', 'Kỹ thuật viên', 'Điều phối viên', 'Thư ký'];
-  statuses = ['Tất cả', 'Sẵn sàng', 'Đang bận', 'Nghỉ phép'];
+  roles = ['Tất cả', 'Quản trị viên', 'Quản lý', 'Nhân viên'];
+  statuses = ['Tất cả', 'Đang làm việc', 'Đã nghỉ việc', 'Đang bận'];
 }

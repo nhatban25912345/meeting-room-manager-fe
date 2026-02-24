@@ -15,6 +15,12 @@
     </div>
   </div>
 
+  <!-- Employee Filter -->
+  <app-employee-filter
+    [filterCriteria]="filterCriteria"
+    (resetFilter)="onResetFilter()"
+  ></app-employee-filter>
+
   <!-- Employee List Card -->
   <div class="employee-table-card">
     <app-employee-table (employeeCountChange)="employeeCount = $event"></app-employee-table>

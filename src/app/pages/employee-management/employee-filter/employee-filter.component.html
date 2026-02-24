@@ -1,0 +1,139 @@
+<div class="filter-panel" [class.collapsed]="!showFilterPanel">
+	<div class="filter-header" (click)="onTogglePanel()">
+		<div class="filter-header-left">
+			<span nz-icon nzType="filter" nzTheme="outline" class="filter-icon"></span>
+			<h3>Điều kiện tìm kiếm</h3>
+		</div>
+		<button nz-button nzType="text" nzSize="small" (click)="onTogglePanel(); $event.stopPropagation()">
+			<span nz-icon [nzType]="showFilterPanel ? 'up' : 'down'" nzTheme="outline"></span>
+		</button>
+	</div>
+
+	<div class="filter-content" *ngIf="showFilterPanel">
+		<div class="filter-grid">
+			<!-- User ID -->
+			<div class="filter-item">
+				<label class="filter-label">Mã nhân viên</label>
+				<input
+					nz-input
+					placeholder="Nhập mã nhân viên"
+					[(ngModel)]="filterCriteria.user_id"
+					(ngModelChange)="onFilterChange()"
+				/>
+			</div>
+
+			<!-- Full Name -->
+			<div class="filter-item">
+				<label class="filter-label">Họ và tên</label>
+				<input
+					nz-input
+					placeholder="Nhập họ và tên"
+					[(ngModel)]="filterCriteria.full_name"
+					(ngModelChange)="onFilterChange()"
+				/>
+			</div>
+
+			<!-- Phone Number -->
+			<div class="filter-item">
+				<label class="filter-label">Số điện thoại</label>
+				<input
+					nz-input
+					placeholder="Nhập số điện thoại"
+					[(ngModel)]="filterCriteria.phone_number"
+					(ngModelChange)="onFilterChange()"
+				/>
+			</div>
+
+			<!-- Email -->
+			<div class="filter-item">
+				<label class="filter-label">Email</label>
+				<input
+					nz-input
+					placeholder="Nhập email"
+					[(ngModel)]="filterCriteria.email"
+					(ngModelChange)="onFilterChange()"
+				/>
+			</div>
+
+			<!-- Unit Code -->
+			<div class="filter-item">
+				<label class="filter-label">Phòng ban</label>
+				<nz-select
+					[(ngModel)]="filterCriteria.unit_code"
+					(ngModelChange)="onFilterChange()"
+					nzPlaceHolder="Chọn phòng ban"
+					class="filter-select">
+					<nz-option
+						*ngFor="let option of unitCodeOptions"
+						[nzValue]="option.value"
+						[nzLabel]="option.label">
+					</nz-option>
+				</nz-select>
+			</div>
+
+			<!-- Job Title -->
+			<div class="filter-item">
+				<label class="filter-label">Chức vụ</label>
+				<nz-select
+					[(ngModel)]="filterCriteria.job_title"
+					(ngModelChange)="onFilterChange()"
+					nzPlaceHolder="Chọn chức vụ"
+					class="filter-select">
+					<nz-option
+						*ngFor="let option of jobTitleOptions"
+						[nzValue]="option.value"
+						[nzLabel]="option.label">
+					</nz-option>
+				</nz-select>
+			</div>
+
+			<!-- Role Code -->
+			<div class="filter-item">
+				<label class="filter-label">Vai trò</label>
+				<nz-select
+					[(ngModel)]="filterCriteria.role_code"
+					(ngModelChange)="onFilterChange()"
+					nzPlaceHolder="Chọn vai trò"
+					class="filter-select">
+					<nz-option
+						*ngFor="let option of roleCodeOptions"
+						[nzValue]="option.value"
+						[nzLabel]="option.label">
+					</nz-option>
+				</nz-select>
+			</div>
+
+			<!-- Status -->
+			<div class="filter-item">
+				<label class="filter-label">Trạng thái</label>
+				<nz-select
+					[(ngModel)]="filterCriteria.status"
+					(ngModelChange)="onFilterChange()"
+					nzPlaceHolder="Chọn trạng thái"
+					class="filter-select">
+					<nz-option
+						*ngFor="let option of statusOptions"
+						[nzValue]="option.value"
+						[nzLabel]="option.label">
+					</nz-option>
+				</nz-select>
+			</div>
+		</div>
+
+		<!-- Filter Actions -->
+		<div class="filter-actions">
+			<button nz-button nzType="primary" (click)="onApplyFilter()">
+				<span nz-icon nzType="search" nzTheme="outline"></span>
+				Tìm kiếm
+			</button>
+			<button nz-button (click)="onResetFilter()">
+				<span nz-icon nzType="reload" nzTheme="outline"></span>
+				Làm mới
+			</button>
+			<button nz-button nzType="default" (click)="onExportData()">
+				<span nz-icon nzType="download" nzTheme="outline"></span>
+				Xuất dữ liệu
+			</button>
+		</div>
+	</div>
+</div>
