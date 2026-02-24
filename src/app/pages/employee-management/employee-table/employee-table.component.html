@@ -33,7 +33,18 @@
     </div>
   </div>
   
-  <nz-table [nzData]="filteredEmployees" [nzShowPagination]="false" class="employee-table">
+  <nz-table
+    [nzData]="filteredEmployees"
+    [nzShowPagination]="true"
+    [nzPageIndex]="pageIndex"
+    [nzPageSize]="pageSize"
+    [nzTotal]="total"
+    [nzPageSizeOptions]="pageSizeOptions"
+    [nzShowSizeChanger]="true"
+    [nzShowTotal]="totalTemplate"
+    (nzPageIndexChange)="onPageIndexChange($event)"
+    (nzPageSizeChange)="onPageSizeChange($event)"
+    class="employee-table">
     <thead>
       <tr>
         <th style="width: 100px">Nhân viên</th>
@@ -67,4 +78,9 @@
       </tr>
     </tbody>
   </nz-table>
+
+  <!-- Pagination Total Template -->
+  <ng-template #totalTemplate let-total let-range="range">
+    Hiển thị {{ range[0] }}-{{ range[1] }} của {{ total }} nhân viên
+  </ng-template>
 </div>

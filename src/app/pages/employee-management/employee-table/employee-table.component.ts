@@ -37,9 +37,16 @@ interface Employee {
 })
 export class EmployeeTableComponent implements OnInit {
     @Output() employeeCountChange = new EventEmitter<number>();
-    ngOnInit(): void {
-      this.employeeCountChange.emit(this.filteredEmployees.length);
-    }
+  // Pagination state
+  pageIndex = 1;
+  pageSize = 5;
+  pageSizeOptions = [5, 10, 20, 50];
+  total = 0;
+
+  ngOnInit(): void {
+    this.total = this.filteredEmployees.length;
+    this.employeeCountChange.emit(this.total);
+  }
   employees: Employee[] = [
     { id: 'A', name: 'Nguyễn Văn A', role: 'Quản trị viên', department: 'Văn phòng Bộ', phone: '0901-xxx-xxx', status: 'Sẵn sàng' },
     { id: 'B', name: 'Trần Thị B', role: 'Kỹ thuật viên', department: 'Cục CNTT', phone: '0902-xxx-xxx', status: 'Sẵn sàng' },
@@ -57,8 +64,21 @@ export class EmployeeTableComponent implements OnInit {
       (this.selectedStatus === 'Tất cả' || e.status === this.selectedStatus) &&
       (e.name.toLowerCase().includes(this.searchText.toLowerCase()) || e.phone.includes(this.searchText))
     );
-    this.employeeCountChange.emit(filtered.length);
-    return filtered;
+    this.total = filtered.length;
+    this.employeeCountChange.emit(this.total);
+    // Pagination
+    const start = (this.pageIndex - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    return filtered.slice(start, end);
+  }
+
+  onPageIndexChange(index: number) {
+    this.pageIndex = index;
+  }
+
+  onPageSizeChange(size: number) {
+    this.pageSize = size;
+    this.pageIndex = 1;
   }
   roles = ['Tất cả', 'Quản trị viên', 'Kỹ thuật viên', 'Điều phối viên', 'Thư ký'];
   statuses = ['Tất cả', 'Sẵn sàng', 'Đang bận', 'Nghỉ phép'];
