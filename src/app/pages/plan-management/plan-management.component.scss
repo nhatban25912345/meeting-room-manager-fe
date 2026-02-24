@@ -1,4 +1,28 @@
 .plan-management-container {
+    .schedule-btn {
+      background: hsl(215, 80%, 42%) !important;
+      color: #fff !important;
+      border: none !important;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 16px;
+      padding: 0 20px;
+      height: 40px;
+      box-shadow: 0 2px 8px rgba(33, 80, 168, 0.12);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.3s;
+    }
+    .schedule-btn:hover, .schedule-btn:focus {
+      background: hsl(215, 80%, 36%) !important;
+      color: #fff !important;
+    }
+    .schedule-btn-text {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
   padding: 24px;
   background: #f0f2f5;
   min-height: 100vh;
