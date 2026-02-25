@@ -18,21 +18,16 @@
   <!-- Employee Filter -->
   <app-employee-filter
     [filterCriteria]="filterCriteria"
-    (resetFilter)="onResetFilter()"
     (applyFilter)="onApplyFilter()"
+    (resetFilter)="onResetFilter()"
+    (exportData)="onExportData()"
   ></app-employee-filter>
 
   <!-- Employee List Card -->
   <div class="employee-table-card">
     <app-employee-table
-      [users]="users"
-      [total]="total"
-      [page]="page"
-      [size]="size"
-      [loading]="loading"
-      (pageChange)="onPageChange($event)"
-      (pageSizeChange)="onPageSizeChange($event)"
-      (employeeCountChange)="employeeCount = $event"
-    ></app-employee-table>
+      [filterCriteria]="filterCriteria"
+      (employeeCountChange)="employeeCount = $event">
+    </app-employee-table>
   </div>
 </div>

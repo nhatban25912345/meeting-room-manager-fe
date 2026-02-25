@@ -2,7 +2,7 @@
   <!-- Filter Bar -->
   <div class="table-header">
     <div class="table-header-left">
-      <h3 class="table-title">Danh sách nhân viên ({{ users.length }})</h3>
+      <h3 class="table-title">Danh sách nhân viên ({{ total }})</h3>
     </div>
     <div class="table-header-right">
       <div class="sort-controls">
@@ -34,44 +34,45 @@
   </div>
 
   <nz-table
-    [nzData]="users"
+    [nzData]="employees"
+    [nzLoading]="loading"
     [nzShowPagination]="true"
-    [nzPageIndex]="page + 1"
-    [nzPageSize]="size"
+    [nzPageIndex]="pageIndex"
+    [nzPageSize]="pageSize"
     [nzTotal]="total"
+    [nzPageSizeOptions]="pageSizeOptions"
     [nzShowSizeChanger]="true"
     [nzShowTotal]="totalTemplate"
-    [nzLoading]="loading"
-    (nzPageIndexChange)="onPageIndexChange($event - 1)"
+    [nzFrontPagination]="false"
+    (nzPageIndexChange)="onPageIndexChange($event)"
     (nzPageSizeChange)="onPageSizeChange($event)"
     class="employee-table">
     <thead>
       <tr>
         <th style="width: 100px">Nhân viên</th>
         <th>Họ tên</th>
-        <th>Vai trò</th>
+        <th>Chức danh</th>
         <th>Đơn vị</th>
+        <th>Email</th>
         <th>Điện thoại</th>
         <th>Trạng thái</th>
         <th>Thao tác</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let emp of users">
+      <tr *ngFor="let emp of employees">
         <td>
-          <nz-avatar [nzText]="emp.userId || emp.id" [style.background-color]="'hsl(215, 80%, 42%)'" nzSize="default"></nz-avatar>
+          <nz-avatar [nzText]="emp.userId.toString()" [style.background-color]="'hsl(215, 80%, 42%)'" nzSize="default"></nz-avatar>
         </td>
-        <td>{{ emp.fullName || emp.name }}</td>
-        <td>{{ emp.roleCode || emp.role }}</td>
-        <td>{{ emp.unitCode || emp.department }}</td>
-        <td>{{ emp.phoneNumber || emp.phone }}</td>
+        <td>{{ emp.fullName }}</td>
+        <td>{{ emp.jobTitle }}</td>
+        <td>{{ emp.unitCode }}</td>
+        <td>{{ emp.email }}</td>
+        <td>{{ emp.phoneNumber }}</td>
         <td>
-          <ng-container [ngSwitch]="emp.status">
-            <nz-tag *ngSwitchCase="1" nzColor="#d6f5e7" style="color: #389e6b; border: none;">Đang làm việc</nz-tag>
-            <nz-tag *ngSwitchCase="2" nzColor="#fff7e6" style="color: #e6a23c; border: none;">Đang bận</nz-tag>
-            <nz-tag *ngSwitchCase="0" nzColor="#e6f0fa" style="color: #8c8c8c; border: none;">Đã nghỉ việc</nz-tag>
-            <nz-tag *ngSwitchDefault nzColor="#e6f0fa" style="color: #8c8c8c; border: none;">Không rõ</nz-tag>
-          </ng-container>
+          <nz-tag [nzColor]="getStatusTag(emp.status).color" [style.border]="'none'">
+            {{ getStatusTag(emp.status).text }}
+          </nz-tag>
         </td>
         <td>
           <button nz-button nzType="text" nzSize="small"><span nz-icon nzType="eye"></span></button>
