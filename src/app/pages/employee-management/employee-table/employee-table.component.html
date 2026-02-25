@@ -75,9 +75,18 @@
           </nz-tag>
         </td>
         <td>
-          <button nz-button nzType="text" nzSize="small"><span nz-icon nzType="eye"></span></button>
-          <button nz-button nzType="text" nzSize="small"><span nz-icon nzType="edit"></span></button>
-          <button nz-button nzType="text" nzSize="small"><span nz-icon nzType="delete"></span></button>
+          <button nz-button nzType="text" nzSize="small" title="Xem chi tiết">
+            <span nz-icon nzType="eye"></span>
+          </button>
+          <button nz-button nzType="text" nzSize="small" title="Chỉnh sửa">
+            <span nz-icon nzType="edit"></span>
+          </button>
+          <button nz-button nzType="text" nzSize="small" title="Phân quyền" (click)="openPermissionModal(emp)">
+            <span nz-icon nzType="team"></span>
+          </button>
+          <button nz-button nzType="text" nzSize="small" nzDanger title="Xóa">
+            <span nz-icon nzType="delete"></span>
+          </button>
         </td>
       </tr>
     </tbody>
@@ -88,3 +97,12 @@
     Hiển thị {{ range[0] }}-{{ range[1] }} của {{ total }} nhân viên
   </ng-template>
 </div>
+
+<!-- Permission Modal -->
+<app-permission-modal
+  [(visible)]="permissionModalVisible"
+  [selectedUser]="selectedEmployee"
+  [isSubmitting]="isSubmittingPermission"
+  (onSubmit)="handlePermissionChange($event)"
+  (onCancel)="closePermissionModal()">
+</app-permission-modal>

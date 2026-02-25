@@ -1,0 +1,73 @@
+<nz-modal
+  [(nzVisible)]="visible"
+  (nzVisibleChange)="visibleChange.emit($event)"
+  [nzTitle]="modalTitle"
+  nzWidth="600px"
+  [nzMaskClosable]="false"
+  [nzClosable]="true"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="handleOk()"
+  [nzOkLoading]="isSubmitting"
+  nzOkText="Phân quyền"
+  nzCancelText="Hủy">
+  
+  <ng-template #modalTitle>
+    <div class="modal-title-wrapper">
+      <span nz-icon nzType="team" nzTheme="outline" style="margin-right: 8px;"></span>
+      Phân quyền người dùng
+    </div>
+  </ng-template>
+
+  <ng-container *nzModalContent>
+    <div class="user-info" *ngIf="selectedUser">
+      <div class="info-row">
+        <span class="info-label">Người dùng:</span>
+        <span class="info-value">{{ selectedUser.fullName }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Email:</span>
+        <span class="info-value">{{ selectedUser.email }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Đơn vị:</span>
+        <span class="info-value">{{ selectedUser.unitCode }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Quyền hiện tại:</span>
+        <span class="info-value current-role">{{ selectedUser.roleCode }}</span>
+      </div>
+    </div>
+
+    <nz-divider></nz-divider>
+
+    <form nz-form [formGroup]="permissionForm" nzLayout="vertical">
+      <nz-form-item>
+        <nz-form-label nzRequired>Chọn quyền mới</nz-form-label>
+        <nz-form-control nzErrorTip="Vui lòng chọn quyền!">
+          <nz-select 
+            formControlName="roleCode" 
+            nzPlaceHolder="Chọn quyền cho người dùng"
+            nzShowSearch>
+            <nz-option 
+              *ngFor="let role of roleOptions" 
+              [nzValue]="role.value" 
+              [nzLabel]="role.label">
+              <div class="role-option">
+                <div class="role-name">{{ role.label }}</div>
+                <div class="role-desc">{{ role.description }}</div>
+              </div>
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-alert
+        nzType="info"
+        nzShowIcon
+        nzMessage="Lưu ý"
+        nzDescription="Việc thay đổi quyền sẽ ảnh hưởng đến khả năng truy cập và thao tác của người dùng trong hệ thống. Vui lòng cân nhắc kỹ trước khi thực hiện."
+        style="margin-top: 16px;">
+      </nz-alert>
+    </form>
+  </ng-container>
+</nz-modal>

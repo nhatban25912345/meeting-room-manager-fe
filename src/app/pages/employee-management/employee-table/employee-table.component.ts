@@ -11,6 +11,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzMessageModule, NzMessageService } from 'ng-zorro-antd/message';
 import { UserService } from '../services/user.service';
 import { AuthService } from '../../../services/auth.service';
+import { PermissionModalComponent, PermissionChangeData } from '../permission-modal/permission-modal.component';
 
 interface Employee {
   userId: number;
@@ -36,7 +37,8 @@ interface Employee {
     NzTagModule,
     NzButtonModule,
     NzIconModule,
-    NzMessageModule
+    NzMessageModule,
+    PermissionModalComponent
   ],
   templateUrl: './employee-table.component.html',
   styleUrls: ['./employee-table.component.scss']
@@ -57,6 +59,17 @@ export class EmployeeTableComponent implements OnInit {
   loading = false;
 
   employees: Employee[] = [];
+
+  // Permission modal state
+  permissionModalVisible = false;
+  selectedEmployee: Employee | null = null;
+  isSubmittingPermission = false;
+
+  searchText = '';
+  selectedRole = 'Tất cả';
+  selectedStatus = 'Tất cả';
+  roles = ['Tất cả', 'Quản trị viên', 'Quản lý', 'Nhân viên'];
+  statuses = ['Tất cả', 'Đang làm việc', 'Đã nghỉ việc', 'Đang bận'];
 
   ngOnInit(): void {
     this.loadEmployees();
@@ -134,9 +147,29 @@ export class EmployeeTableComponent implements OnInit {
     }
   }
 
-  searchText = '';
-  selectedRole = 'Tất cả';
-  selectedStatus = 'Tất cả';
-  roles = ['Tất cả', 'Quản trị viên', 'Quản lý', 'Nhân viên'];
-  statuses = ['Tất cả', 'Đang làm việc', 'Đã nghỉ việc', 'Đang bận'];
+  // Permission modal methods
+  openPermissionModal(employee: Employee): void {
+    this.selectedEmployee = employee;
+    this.permissionModalVisible = true;
+  }
+
+  closePermissionModal(): void {
+    this.permissionModalVisible = false;
+    this.selectedEmployee = null;
+  }
+
+  handlePermissionChange(data: PermissionChangeData): void {
+    this.isSubmittingPermission = true;
+    
+    // TODO: Call API to update user permission
+    console.log('Updating permission:', data);
+    
+    // Simulate API call
+    setTimeout(() => {
+      this.isSubmittingPermission = false;
+      this.message.success(`Đã cập nhật quyền thành công cho người dùng ${data.userId}`);
+      this.closePermissionModal();
+      this.loadEmployees(); // Reload data after permission change
+    }, 1000);
+  }
 }
