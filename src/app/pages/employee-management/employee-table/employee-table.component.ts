@@ -165,18 +165,36 @@ export class EmployeeTableComponent implements OnInit {
   }
 
   handlePermissionChange(data: PermissionChangeData): void {
+    const token = this.authService.getAccessToken();
+    if (!token) {
+      this.message.error('Không tìm thấy token xác thực');
+      return;
+    }
+
     this.isSubmittingPermission = true;
-    
-    // TODO: Call API to update user permission
-    console.log('Updating permission:', data);
-    
-    // Simulate API call
-    setTimeout(() => {
-      this.isSubmittingPermission = false;
-      this.message.success(`Đã cập nhật quyền thành công cho người dùng ${data.userId}`);
-      this.closePermissionModal();
-      this.loadEmployees(); // Reload data after permission change
-    }, 1000);
+
+    const request = {
+      userId: data.userId,
+      roleCode: data.roleCode
+    };
+
+    this.userService.updateUserRole(request, token).subscribe({
+      next: (response) => {
+        this.isSubmittingPermission = false;
+        if (response.status?.statusCode === 'SUCCESS') {
+        this.message.success(`Đã cập nhật quyền thành công cho người dùng ${data.userId}`);
+          this.closePermissionModal();
+          this.loadEmployees(); // Reload data after permission change
+        } else {
+          this.message.error('Lỗi khi cập nhật quyền');
+        }
+      },
+      error: (error) => {
+        this.isSubmittingPermission = false;
+        console.error('Error updating permission:', error);
+        this.message.error(`Lỗi khi cập nhật quyền cho người dùng ${data.userId}`);
+      }
+    });
   }
 
   // Detail modal methods

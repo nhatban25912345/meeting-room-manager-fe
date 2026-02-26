@@ -31,9 +31,25 @@ export interface UserSearchResponse {
   };
 }
 
+export interface UpdateRoleRequest {
+  userId: number;
+  roleCode: string;
+}
+
+export interface UpdateRoleResponse {
+  status: {
+    errorCode: string;
+    errorMessage: string;
+    statusCode: string;
+    responseTime: string;
+    displayMessage: string;
+  };
+  data: any;
+}
+
 @Injectable({ providedIn: 'root' })
 export class UserService {
-  private apiUrl = `${environment.apiUrl}/user/search`;
+  private baseUrl = `${environment.apiUrl}/user`;
 
   constructor(private http: HttpClient) {}
 
@@ -54,6 +70,18 @@ export class UserService {
       'Authorization': `Bearer ${token}`
     });
 
-    return this.http.post<UserSearchResponse>(this.apiUrl, filter, { params, headers });
+    return this.http.post<UserSearchResponse>(`${this.baseUrl}/search`, filter, { params, headers });
+  }
+
+  updateUserRole(
+    request: UpdateRoleRequest,
+    token: string
+  ): Observable<UpdateRoleResponse> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.put<UpdateRoleResponse>(`${this.baseUrl}/update-role`, request, { headers });
   }
 }
