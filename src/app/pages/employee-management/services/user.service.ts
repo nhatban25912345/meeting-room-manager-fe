@@ -14,6 +14,22 @@ export interface UserSearchFilter {
   status?: number;
 }
 
+export interface ParticipantUser {
+  userId: number;
+  fullName: string;
+}
+
+export interface ParticipantsResponse {
+  status: {
+    errorCode: string;
+    errorMessage: string;
+    statusCode: string;
+    responseTime: string;
+    displayMessage: string;
+  };
+  data: ParticipantUser[];
+}
+
 export interface UserSearchResponse {
   status: {
     errorCode: string;
@@ -83,5 +99,10 @@ export class UserService {
     });
 
     return this.http.put<UpdateRoleResponse>(`${this.baseUrl}/update-role`, request, { headers });
+  }
+
+  // Get all active users for participant selection
+  getAllParticipants(): Observable<ParticipantsResponse> {
+    return this.http.get<ParticipantsResponse>(`${this.baseUrl}/active`);
   }
 }

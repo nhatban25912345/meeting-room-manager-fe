@@ -73,13 +73,15 @@ export class MeetingFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private message: NzMessageService,
-    private roomService: RoomService
+    private roomService: RoomService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
     this.initForm();
     this.setupValidators();
     this.loadAvailableRooms();
+    this.loadParticipants();
   }
 
   initForm(): void {
@@ -127,6 +129,23 @@ export class MeetingFormComponent implements OnInit {
       error: (error) => {
         console.error('Error loading available rooms:', error);
         this.message.error('Không thể tải danh sách phòng họp');
+      }
+    });
+  }
+
+  loadParticipants(): void {
+    this.userService.getAllParticipants().subscribe({
+      next: (response: any) => {
+        if (response.status.statusCode === 'SUCCESS' && response.data) {
+          this.participantOptions = response.data.map((user: any) => ({
+            value: user.userId,
+            label: `${user.fullName} (${user.userId})`
+          }));
+        }
+      },
+      error: (error: any) => {
+        console.error('Error loading participants:', error);
+        this.message.error('Không thể tải danh sách nhân viên');
       }
     });
   }
