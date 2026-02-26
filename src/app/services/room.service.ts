@@ -76,6 +76,16 @@ export interface RoomSearchRequest {
   sort?: string;
 }
 
+export interface AvailableRoom {
+  roomCode: string;
+  roomName: string;
+}
+
+export interface AvailableRoomsResponse {
+  status: ApiStatus;
+  data: AvailableRoom[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -125,5 +135,11 @@ export class RoomService {
 
   deleteRoom(roomId: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/api/meeting-room/${roomId}`);
+  }
+
+  getAvailableRooms(): Observable<AvailableRoomsResponse> {
+    return this.http.get<AvailableRoomsResponse>(
+      `${this.apiUrl}/api/meeting-room/available`
+    );
   }
 }

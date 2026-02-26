@@ -10,6 +10,8 @@ import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzUploadModule } from 'ng-zorro-antd/upload';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { RoomService } from '../../../services/room.service';
+import { UserService } from '../../employee-management/services/user.service';
 
 @Component({
   selector: 'app-meeting-form',
@@ -34,12 +36,8 @@ export class MeetingFormComponent implements OnInit {
   showFilterPanel = true;
 
   // Dropdown options
-  roomCodeOptions = [
-    { value: 'P.101', label: 'P.101 - Phòng họp A' },
-    { value: 'P.102', label: 'P.102 - Phòng họp B' },
-    { value: 'P.201', label: 'P.201 - Phòng họp C' },
-    { value: 'P.202', label: 'P.202 - Phòng họp VIP' }
-  ];
+  roomCodeOptions: Array<{ value: string; label: string }> = [];
+  participantOptions: Array<{ value: number; label: string }> = [];
 
   organizingUnitOptions = [
     { value: 'van-phong-bo', label: 'Văn phòng Bộ' },
@@ -74,12 +72,14 @@ export class MeetingFormComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private message: NzMessageService
+    private message: NzMessageService,
+    private roomService: RoomService
   ) {}
 
   ngOnInit(): void {
     this.initForm();
     this.setupValidators();
+    this.loadAvailableRooms();
   }
 
   initForm(): void {
@@ -97,6 +97,7 @@ export class MeetingFormComponent implements OnInit {
       contactEmail: ['', [Validators.required, Validators.email]],
       meetingType: [null, [Validators.required]],
       conclusionUnit: [null],
+      participants: [[], [Validators.required]],
       attachedFile: [null],
       preparationTask: [null]
     });
@@ -107,9 +108,26 @@ export class MeetingFormComponent implements OnInit {
     this.meetingForm.get('startTime')?.valueChanges.subscribe(() => {
       this.validateTimeRange();
     });
-    
+
     this.meetingForm.get('endTime')?.valueChanges.subscribe(() => {
       this.validateTimeRange();
+    });
+  }
+
+  loadAvailableRooms(): void {
+    this.roomService.getAvailableRooms().subscribe({
+      next: (response) => {
+        if (response.status.statusCode === 'SUCCESS' && response.data) {
+          this.roomCodeOptions = response.data.map(room => ({
+            value: room.roomCode,
+            label: `${room.roomCode} - ${room.roomName}`
+          }));
+        }
+      },
+      error: (error) => {
+        console.error('Error loading available rooms:', error);
+        this.message.error('Không thể tải danh sách phòng họp');
+      }
     });
   }
 
@@ -118,16 +136,16 @@ export class MeetingFormComponent implements OnInit {
     if (!control.value) {
       return null;
     }
-    
+
     const selectedDate = new Date(control.value);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     selectedDate.setHours(0, 0, 0, 0);
-    
+
     if (selectedDate < today) {
       return { dateInPast: true };
     }
-    
+
     return null;
   }
 
@@ -135,11 +153,11 @@ export class MeetingFormComponent implements OnInit {
   validateTimeRange(): void {
     const startTime = this.meetingForm.get('startTime')?.value;
     const endTime = this.meetingForm.get('endTime')?.value;
-    
+
     if (startTime && endTime) {
       const start = new Date(startTime);
       const end = new Date(endTime);
-      
+
       if (end <= start) {
         this.meetingForm.get('endTime')?.setErrors({ endTimeBeforeStart: true });
       } else {

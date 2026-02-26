@@ -59,7 +59,7 @@
         <div nz-row [nzGutter]="16">
           <div nz-col [nzSpan]="12">
             <nz-form-item>
-              <nz-form-label nzRequired>Mã Phòng họp</nz-form-label>
+              <nz-form-label nzRequired>Phòng họp</nz-form-label>
               <nz-form-control nzErrorTip="Vui lòng chọn phòng họp!">
                 <nz-select 
                   formControlName="roomCode" 
@@ -78,8 +78,8 @@
 
           <div nz-col [nzSpan]="12">
             <nz-form-item>
-              <nz-form-label nzRequired>Tên đơn vị tổ chức cuộc họp</nz-form-label>
-              <nz-form-control nzErrorTip="Vui lòng chọn đơn vị tổ chức!">
+              <nz-form-label nzRequired>Tên đơn vị chủ trì</nz-form-label>
+              <nz-form-control nzErrorTip="Vui lòng chọn đơn vị chủ trì!">
                 <nz-select 
                   formControlName="organizingUnit" 
                   nzPlaceHolder="Chọn cơ quan chủ trì"
@@ -237,7 +237,36 @@
           </div>
         </div>
 
-        <!-- Row 6: Note (Optional) -->
+        <!-- Row 6: Participants (Required) -->
+        <div nz-row [nzGutter]="16">
+          <div nz-col [nzSpan]="24">
+            <nz-form-item>
+              <nz-form-label nzRequired>Nhân viên tham gia</nz-form-label>
+              <nz-form-control nzErrorTip="Vui lòng chọn ít nhất một nhân viên!">
+                <nz-select
+                  formControlName="participants"
+                  nzMode="multiple"
+                  nzPlaceHolder="Chọn nhân viên tham gia họp"
+                  nzShowSearch
+                  nzAllowClear
+                  [nzMaxTagCount]="3"
+                  [nzMaxTagPlaceholder]="maxTagPlaceholder"
+                >
+                  <nz-option
+                    *ngFor="let option of participantOptions"
+                    [nzValue]="option.value"
+                    [nzLabel]="option.label"
+                  ></nz-option>
+                </nz-select>
+                <ng-template #maxTagPlaceholder let-selectedList>
+                  + {{ selectedList.length }} nhân viên
+                </ng-template>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+
+        <!-- Row 7: Note (Optional) -->
         <div nz-row [nzGutter]="16">
           <div nz-col [nzSpan]="24">
             <nz-form-item>
@@ -254,7 +283,7 @@
           </div>
         </div>
 
-        <!-- Row 7: Conclusion Unit (Optional) -->
+        <!-- Row 8: Conclusion Unit (Optional) -->
         <div nz-row [nzGutter]="16">
           <div nz-col [nzSpan]="24">
             <nz-form-item>
@@ -277,7 +306,7 @@
           </div>
         </div>
 
-        <!-- Row 8: File Attachments (Optional) -->
+        <!-- Row 9: File Attachments (Optional) -->
         <div nz-row [nzGutter]="16">
           <div nz-col [nzSpan]="12">
             <nz-form-item>
