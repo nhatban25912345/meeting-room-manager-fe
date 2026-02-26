@@ -116,7 +116,6 @@ export class EmployeeTableComponent implements OnInit {
           this.employees = response.data.content || [];
           this.total = response.data.totalElements || 0;
           this.employeeCountChange.emit(this.total);
-          this.message.success('Đã áp dụng bộ lọc');
         } else {
           this.message.error(response.status?.displayMessage || 'Lỗi khi tải dữ liệu');
         }

@@ -1,18 +1,21 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EmployeeTableComponent } from './employee-table/employee-table.component';
 import { EmployeeFilterComponent } from "./employee-filter/employee-filter.component";
+import { NzMessageModule, NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-employee-management',
   standalone: true,
-  imports: [CommonModule, EmployeeTableComponent, EmployeeFilterComponent],
+  imports: [CommonModule, EmployeeTableComponent, EmployeeFilterComponent, NzMessageModule],
   templateUrl: './employee-management.component.html',
   styleUrls: ['./employee-management.component.scss']
 })
 export class EmployeeManagementComponent {
   @ViewChild(EmployeeTableComponent) employeeTable!: EmployeeTableComponent;
-
+  
+  private message = inject(NzMessageService);
+  
   employeeCount = 0;
 
   filterCriteria = {
@@ -30,6 +33,7 @@ export class EmployeeManagementComponent {
     if (this.employeeTable) {
       this.employeeTable.pageIndex = 1; // Reset to first page when applying filter
       this.employeeTable.loadEmployees();
+      this.message.success('Đã áp dụng bộ lọc');
     }
   }
 
