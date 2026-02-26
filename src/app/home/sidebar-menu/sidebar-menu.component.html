@@ -1,0 +1,67 @@
+<div class="sidebar-logo">
+  <img src="assets/img/web-logo-title.png" alt="Logo" />
+</div>
+<ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed" class="menu-list">
+  <!-- TRANG CHỦ Section -->
+  <li class="menu-section-title" *ngIf="!isCollapsed">
+    <span>TRANG CHỦ</span>
+  </li>
+  <li nz-menu-item nzMatchRouter>
+    <a routerLink="/home/onboarding">
+      <span nz-icon nzType="home" nzTheme="outline"></span>
+      <span>Trang chủ</span>
+    </a>
+  </li>
+
+  <!-- QUẢN LÝ Section -->
+  <li class="menu-section-title" *ngIf="!isCollapsed">
+    <span>QUẢN LÝ</span>
+  </li>
+  <li nz-menu-item nzMatchRouter *ngIf="canManagePlans">
+    <a routerLink="/home/plan-management">
+      <span nz-icon nzType="schedule" nzTheme="outline"></span>
+      <span>Quản lý kế hoạch</span>
+    </a>
+  </li>
+  <li nz-menu-item nzMatchRouter *ngIf="canScheduleMeeting">
+    <a routerLink="/home/bookings-new">
+      <span nz-icon nzType="form" nzTheme="outline"></span>
+      <span>Lên lịch họp</span>
+    </a>
+  </li>
+  <li nz-menu-item nzMatchRouter *ngIf="canViewMeetingCalendar">
+    <a routerLink="/home/bookings">
+      <span nz-icon nzType="calendar" nzTheme="outline"></span>
+      <span>Lịch họp</span>
+    </a>
+  </li>
+  <li nz-menu-item nzMatchRouter *ngIf="canViewRooms">
+    <a routerLink="/home/rooms">
+      <span nz-icon nzType="bank" nzTheme="outline"></span>
+      <span>Quản lý phòng họp</span>
+    </a>
+  </li>
+  <li nz-menu-item nzMatchRouter *ngIf="canManageUsers">
+    <a routerLink="/home/users">
+      <span nz-icon nzType="team" nzTheme="outline"></span>
+      <span>Quản lý nhân viên</span>
+    </a>
+  </li>
+
+  <!-- HỆ THỐNG Section -->
+  <li class="menu-section-title" *ngIf="!isCollapsed && canViewDashboard">
+    <span>HỆ THỐNG</span>
+  </li>
+  <li nz-menu-item nzMatchRouter *ngIf="canViewDashboard">
+    <a routerLink="/home/analytics">
+      <span nz-icon nzType="bar-chart" nzTheme="outline"></span>
+      <span>Thống kê</span>
+    </a>
+  </li>
+  <li nz-menu-item nzMatchRouter *ngIf="canAccessSettings">
+    <a routerLink="/home/roles">
+      <span nz-icon nzType="setting" nzTheme="outline"></span>
+      <span>Cài đặt</span>
+    </a>
+  </li>
+</ul>

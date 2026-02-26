@@ -24,68 +24,6 @@
     .ant-menu-dark {
       background: #001529;
     }
-
-    .ant-menu-item {
-      height: 48px;
-      line-height: 48px;
-      // margin: 4px 8px;
-      border-radius: 8px;
-      padding-left: 16px !important;
-      transition: all 0.3s;
-      width: calc(100% - 16px);
-      margin: 4px 8px;
-
-      &:hover {
-        background: rgba(255, 255, 255, 0.08);
-      }
-
-      &.ant-menu-item-selected {
-        background: #1890ff !important;
-
-        &::after {
-          display: none;
-        }
-
-        a {
-          color: #fff;
-        }
-
-        span[nz-icon] {
-          color: #fff;
-        }
-      }
-
-      a {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        color: rgba(255, 255, 255, 0.65);
-
-        span[nz-icon] {
-          font-size: 18px;
-        }
-      }
-    }
-
-    .ant-menu-inline-collapsed > .ant-menu-item {
-      padding-left: 24px !important;
-      text-align: center;
-    }
-  }
-
-  .menu-section-title {
-    padding: 16px 16px 8px 16px;
-    font-size: 12px;
-    color: rgba(255, 255, 255, 0.45);
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    cursor: default;
-    user-select: none;
-    margin: 8px 0;
-
-    &:first-of-type {
-      margin-top: 0;
-    }
   }
 }
 
@@ -100,35 +38,6 @@
 // When sidebar is collapsed
 .app-layout.sidebar-collapsed > nz-layout {
   margin-left: 80px;
-}
-
-.sidebar-logo {
-  position: relative;
-  height: 64px;
-  padding: 12px 16px;
-  overflow: hidden;
-  background: #001529;
-  transition: all 0.3s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-
-  img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-  }
-
-  h1 {
-    display: inline-block;
-    margin: 0;
-    color: #fff;
-    font-weight: 600;
-    font-size: 20px;
-    font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
-    vertical-align: middle;
-  }
 }
 
 nz-header {
