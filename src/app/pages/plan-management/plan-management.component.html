@@ -16,36 +16,36 @@
     <nz-tab>
       <a *nzTabLink nz-tab-link>
         <span nz-icon nzType="check-circle" nzTheme="outline"></span>
-        Đã phê duyệt
-        <nz-badge [nzCount]="tabCounts.approved" [nzShowZero]="true"></nz-badge>
+        Đã phê duyệt ({{ tabCounts.approved }})
+        <!-- <nz-badge [nzCount]="tabCounts.approved" [nzShowZero]="true"></nz-badge> -->
       </a>
     </nz-tab>
     <nz-tab>
       <a *nzTabLink nz-tab-link>
         <span nz-icon nzType="clock-circle" nzTheme="outline"></span>
-        Chờ phê duyệt
-        <nz-badge [nzCount]="tabCounts.pending" [nzShowZero]="true"></nz-badge>
+        Chờ phê duyệt ({{ tabCounts.pending }})
+        <!-- <nz-badge [nzCount]="tabCounts.pending" [nzShowZero]="true"></nz-badge> -->
       </a>
     </nz-tab>
     <nz-tab>
       <a *nzTabLink nz-tab-link>
         <span nz-icon nzType="close-circle" nzTheme="outline"></span>
-        Từ chối
-        <nz-badge [nzCount]="tabCounts.rejected" [nzShowZero]="true"></nz-badge>
+        Từ chối ({{ tabCounts.rejected }})
+        <!-- <nz-badge [nzCount]="tabCounts.rejected" [nzShowZero]="true"></nz-badge> -->
       </a>
     </nz-tab>
     <nz-tab>
       <a *nzTabLink nz-tab-link>
         <span nz-icon nzType="delete" nzTheme="outline"></span>
-        Đã xóa
-        <nz-badge [nzCount]="tabCounts.deleted" [nzShowZero]="true"></nz-badge>
+        Đã xóa ({{ tabCounts.deleted }})
+        <!-- <nz-badge [nzCount]="tabCounts.deleted" [nzShowZero]="true"></nz-badge> -->
       </a>
     </nz-tab>
     <nz-tab>
       <a *nzTabLink nz-tab-link>
         <span nz-icon nzType="file" nzTheme="outline"></span>
-        Lưu nháp
-        <nz-badge [nzCount]="tabCounts.draft" [nzShowZero]="true"></nz-badge>
+        Lưu nháp ({{ tabCounts.draft }})
+        <!-- <nz-badge [nzCount]="tabCounts.draft" [nzShowZero]="true"></nz-badge> -->
       </a>
     </nz-tab>
   </nz-tabset>
