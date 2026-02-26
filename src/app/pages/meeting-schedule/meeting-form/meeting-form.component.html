@@ -1,0 +1,337 @@
+<div class="meeting-form-container">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <h2 class="page-title">Lên lịch họp</h2>
+      <p class="page-subtitle">Tạo kế hoạch cuộc họp mới và gửi phê duyệt</p>
+    </div>
+  </div>
+
+  <!-- Form Panel -->
+  <div class="form-panel" [class.collapsed]="!showFilterPanel">
+    <div class="form-header" (click)="onTogglePanel()">
+      <div class="form-header-left">
+        <span nz-icon nzType="form" nzTheme="outline" class="form-icon"></span>
+        <h3>Thông tin cơ bản</h3>
+      </div>
+      <button nz-button nzType="text" nzSize="small" (click)="onTogglePanel(); $event.stopPropagation()">
+        <span nz-icon [nzType]="showFilterPanel ? 'up' : 'down'" nzTheme="outline"></span>
+      </button>
+    </div>
+
+    <div class="form-content" *ngIf="showFilterPanel">
+      <form nz-form [formGroup]="meetingForm" nzLayout="vertical">
+        <!-- Row 1: Subject and Content -->
+        <div nz-row [nzGutter]="16">
+          <div nz-col [nzSpan]="24">
+            <nz-form-item>
+              <nz-form-label nzRequired>Chủ đề cuộc họp</nz-form-label>
+              <nz-form-control nzErrorTip="Vui lòng nhập chủ đề cuộc họp!">
+                <input 
+                  nz-input 
+                  formControlName="subject" 
+                  placeholder="Nhập tiêu đề cuộc họp..."
+                  maxlength="200"
+                />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+
+        <div nz-row [nzGutter]="16">
+          <div nz-col [nzSpan]="24">
+            <nz-form-item>
+              <nz-form-label nzRequired>Nội dung</nz-form-label>
+              <nz-form-control nzErrorTip="Vui lòng nhập nội dung cuộc họp!">
+                <textarea 
+                  nz-input 
+                  formControlName="content" 
+                  placeholder="Nhập lý do tổ chức cuộc họp..."
+                  [nzAutosize]="{ minRows: 3, maxRows: 6 }"
+                  maxlength="1000"
+                ></textarea>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+
+        <!-- Row 2: Room Code and Organizing Unit -->
+        <div nz-row [nzGutter]="16">
+          <div nz-col [nzSpan]="12">
+            <nz-form-item>
+              <nz-form-label nzRequired>Mã Phòng họp</nz-form-label>
+              <nz-form-control nzErrorTip="Vui lòng chọn phòng họp!">
+                <nz-select 
+                  formControlName="roomCode" 
+                  nzPlaceHolder="Chọn phòng họp"
+                  nzShowSearch
+                >
+                  <nz-option 
+                    *ngFor="let option of roomCodeOptions" 
+                    [nzValue]="option.value" 
+                    [nzLabel]="option.label"
+                  ></nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+          <div nz-col [nzSpan]="12">
+            <nz-form-item>
+              <nz-form-label nzRequired>Tên đơn vị tổ chức cuộc họp</nz-form-label>
+              <nz-form-control nzErrorTip="Vui lòng chọn đơn vị tổ chức!">
+                <nz-select 
+                  formControlName="organizingUnit" 
+                  nzPlaceHolder="Chọn cơ quan chủ trì"
+                  nzShowSearch
+                >
+                  <nz-option 
+                    *ngFor="let option of organizingUnitOptions" 
+                    [nzValue]="option.value" 
+                    [nzLabel]="option.label"
+                  ></nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+
+        <!-- Row 3: Meeting Date and Time -->
+        <div nz-row [nzGutter]="16">
+          <div nz-col [nzSpan]="8">
+            <nz-form-item>
+              <nz-form-label nzRequired>Ngày họp</nz-form-label>
+              <nz-form-control
+                [nzErrorTip]="meetingDateErrorTpl"
+              >
+                <nz-date-picker 
+                  formControlName="meetingDate" 
+                  nzPlaceHolder="mm/dd/yyyy"
+                  nzFormat="dd-MM-yyyy"
+                  style="width: 100%"
+                ></nz-date-picker>
+                <ng-template #meetingDateErrorTpl let-control>
+                  <ng-container *ngIf="control.hasError('required')">
+                    Vui lòng chọn ngày họp!
+                  </ng-container>
+                  <ng-container *ngIf="control.hasError('dateInPast')">
+                    Ngày họp không được là ngày trong quá khứ!
+                  </ng-container>
+                </ng-template>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+          <div nz-col [nzSpan]="8">
+            <nz-form-item>
+              <nz-form-label nzRequired>Giờ bắt đầu</nz-form-label>
+              <nz-form-control nzErrorTip="Vui lòng chọn giờ bắt đầu!">
+                <nz-time-picker 
+                  formControlName="startTime" 
+                  nzPlaceHolder="08:00 AM"
+                  nzFormat="HH:mm"
+                  [nzUse12Hours]="true"
+                  style="width: 100%"
+                ></nz-time-picker>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+          <div nz-col [nzSpan]="8">
+            <nz-form-item>
+              <nz-form-label nzRequired>Giờ kết thúc</nz-form-label>
+              <nz-form-control
+                [nzErrorTip]="endTimeErrorTpl"
+              >
+                <nz-time-picker 
+                  formControlName="endTime" 
+                  nzPlaceHolder="11:30 AM"
+                  nzFormat="HH:mm"
+                  [nzUse12Hours]="true"
+                  style="width: 100%"
+                ></nz-time-picker>
+                <ng-template #endTimeErrorTpl let-control>
+                  <ng-container *ngIf="control.hasError('required')">
+                    Vui lòng chọn giờ kết thúc!
+                  </ng-container>
+                  <ng-container *ngIf="control.hasError('endTimeBeforeStart')">
+                    Giờ kết thúc phải sau giờ bắt đầu!
+                  </ng-container>
+                </ng-template>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+
+        <!-- Row 4: Meeting Type and Recurring Schedule -->
+        <div nz-row [nzGutter]="16">
+          <div nz-col [nzSpan]="12">
+            <nz-form-item>
+              <nz-form-label nzRequired>Loại lịch họp</nz-form-label>
+              <nz-form-control nzErrorTip="Vui lòng chọn loại lịch họp!">
+                <nz-select 
+                  formControlName="meetingType" 
+                  nzPlaceHolder="Chọn loại lịch họp"
+                >
+                  <nz-option 
+                    *ngFor="let option of meetingTypeOptions" 
+                    [nzValue]="option.value" 
+                    [nzLabel]="option.label"
+                  ></nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+          <div nz-col [nzSpan]="12">
+            <nz-form-item>
+              <nz-form-label nzRequired>Đặt lịch định kỳ</nz-form-label>
+              <nz-form-control nzErrorTip="Vui lòng chọn loại định kỳ!">
+                <nz-select 
+                  formControlName="recurringSchedule" 
+                  nzPlaceHolder="Chọn loại định kỳ"
+                >
+                  <nz-option 
+                    *ngFor="let option of recurringScheduleOptions" 
+                    [nzValue]="option.value" 
+                    [nzLabel]="option.label"
+                  ></nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+
+        <!-- Row 5: Dress Code and Contact Email -->
+        <div nz-row [nzGutter]="16">
+          <div nz-col [nzSpan]="12">
+            <nz-form-item>
+              <nz-form-label nzRequired>Trang phục</nz-form-label>
+              <nz-form-control nzErrorTip="Vui lòng chọn trang phục!">
+                <nz-select 
+                  formControlName="dressCode" 
+                  nzPlaceHolder="Chọn trang phục"
+                >
+                  <nz-option 
+                    *ngFor="let option of dressCodeOptions" 
+                    [nzValue]="option.value" 
+                    [nzLabel]="option.label"
+                  ></nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+          <div nz-col [nzSpan]="12">
+            <nz-form-item>
+              <nz-form-label nzRequired>Đầu mối liên hệ</nz-form-label>
+              <nz-form-control nzErrorTip="Vui lòng nhập email hợp lệ!">
+                <input 
+                  nz-input 
+                  formControlName="contactEmail" 
+                  placeholder="email@example.com"
+                  type="email"
+                />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+
+        <!-- Row 6: Note (Optional) -->
+        <div nz-row [nzGutter]="16">
+          <div nz-col [nzSpan]="24">
+            <nz-form-item>
+              <nz-form-label>Ghi chú</nz-form-label>
+              <nz-form-control>
+                <textarea 
+                  nz-input 
+                  formControlName="note" 
+                  placeholder="Nhập ghi chú (nếu có)..."
+                  [nzAutosize]="{ minRows: 2, maxRows: 4 }"
+                ></textarea>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+
+        <!-- Row 7: Conclusion Unit (Optional) -->
+        <div nz-row [nzGutter]="16">
+          <div nz-col [nzSpan]="24">
+            <nz-form-item>
+              <nz-form-label>Đơn vị viết kết luận</nz-form-label>
+              <nz-form-control>
+                <nz-select 
+                  formControlName="conclusionUnit" 
+                  nzPlaceHolder="Chọn đơn vị viết kết luận (tùy chọn)"
+                  nzShowSearch
+                  nzAllowClear
+                >
+                  <nz-option 
+                    *ngFor="let option of conclusionUnitOptions" 
+                    [nzValue]="option.value" 
+                    [nzLabel]="option.label"
+                  ></nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+
+        <!-- Row 8: File Attachments (Optional) -->
+        <div nz-row [nzGutter]="16">
+          <div nz-col [nzSpan]="12">
+            <nz-form-item>
+              <nz-form-label>File đính kèm</nz-form-label>
+              <nz-form-control>
+                <nz-upload
+                  nzAction="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                  [nzBeforeUpload]="beforeUpload"
+                  (nzChange)="handleAttachmentChange($event)"
+                >
+                  <button nz-button>
+                    <span nz-icon nzType="upload"></span>
+                    Chọn file đính kèm
+                  </button>
+                </nz-upload>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+          <div nz-col [nzSpan]="12">
+            <nz-form-item>
+              <nz-form-label>Nhiệm vụ chuẩn bị</nz-form-label>
+              <nz-form-control>
+                <nz-upload
+                  nzAction="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                  [nzBeforeUpload]="beforeUpload"
+                  (nzChange)="handlePreparationChange($event)"
+                >
+                  <button nz-button>
+                    <span nz-icon nzType="upload"></span>
+                    Chọn file nhiệm vụ
+                  </button>
+                </nz-upload>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+          <button nz-button nzType="primary" (click)="onSubmit()">
+            <span nz-icon nzType="send" nzTheme="outline"></span>
+            Gửi duyệt
+          </button>
+          <button nz-button nzType="default" (click)="onSaveDraft()">
+            <span nz-icon nzType="save" nzTheme="outline"></span>
+            Lưu nháp
+          </button>
+          <button nz-button nzType="default" nzDanger (click)="onCancel()">
+            <span nz-icon nzType="close" nzTheme="outline"></span>
+            Hủy bỏ
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

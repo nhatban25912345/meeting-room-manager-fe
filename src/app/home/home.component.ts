@@ -35,6 +35,7 @@ export class HomeComponent implements OnInit {
   // Permission-based access control
   canViewHome = true; // Tất cả user đều xem được
   canManagePlans = false;
+  canScheduleMeeting = false;
   canViewMeetingCalendar = false;
   canViewRooms = false;
   canManageUsers = false;
@@ -64,6 +65,9 @@ export class HomeComponent implements OnInit {
     // Quản lý kế hoạch - cần quyền tạo hoặc xem meeting
     this.canManagePlans = this.authService.hasPermission('MEETING_CREATE') || 
                           this.authService.hasPermission('MEETING_VIEW_LIST');
+    
+    // Lên lịch họp - cần quyền tạo meeting
+    this.canScheduleMeeting = this.authService.hasPermission('MEETING_CREATE');
     
     // Lịch họp - cần quyền xem calendar
     this.canViewMeetingCalendar = this.authService.hasPermission('MEETING_VIEW_CALENDAR_DAY') ||

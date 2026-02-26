@@ -25,6 +25,12 @@
           <span>Quản lý kế hoạch</span>
         </a>
       </li>
+      <li nz-menu-item nzMatchRouter *ngIf="canScheduleMeeting">
+        <a routerLink="/home/bookings-new">
+          <span nz-icon nzType="form" nzTheme="outline"></span>
+          <span>Lên lịch họp</span>
+        </a>
+      </li>
       <li nz-menu-item nzMatchRouter *ngIf="canViewMeetingCalendar">
         <a routerLink="/home/bookings">
           <span nz-icon nzType="calendar" nzTheme="outline"></span>

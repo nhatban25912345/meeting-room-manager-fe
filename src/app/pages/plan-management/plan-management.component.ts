@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
@@ -114,7 +115,10 @@ export class PlanManagementComponent implements OnInit {
 
   filteredPlans: MeetingPlan[] = [];
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.initForm();
@@ -174,7 +178,7 @@ export class PlanManagementComponent implements OnInit {
 
   createNewPlan(): void {
     // Navigate to create new plan page
-    console.log('Create new plan');
+    this.router.navigate(['/home/bookings/new']);
   }
 
   viewPlan(plan: MeetingPlan): void {

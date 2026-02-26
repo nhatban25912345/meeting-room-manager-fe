@@ -1,0 +1,218 @@
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzUploadModule } from 'ng-zorro-antd/upload';
+import { NzMessageService } from 'ng-zorro-antd/message';
+
+@Component({
+  selector: 'app-meeting-form',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    NzFormModule,
+    NzInputModule,
+    NzSelectModule,
+    NzButtonModule,
+    NzDatePickerModule,
+    NzTimePickerModule,
+    NzIconModule,
+    NzUploadModule
+  ],
+  templateUrl: './meeting-form.component.html',
+  styleUrl: './meeting-form.component.scss'
+})
+export class MeetingFormComponent implements OnInit {
+  meetingForm!: FormGroup;
+  showFilterPanel = true;
+
+  // Dropdown options
+  roomCodeOptions = [
+    { value: 'P.101', label: 'P.101 - Phòng họp A' },
+    { value: 'P.102', label: 'P.102 - Phòng họp B' },
+    { value: 'P.201', label: 'P.201 - Phòng họp C' },
+    { value: 'P.202', label: 'P.202 - Phòng họp VIP' }
+  ];
+
+  organizingUnitOptions = [
+    { value: 'van-phong-bo', label: 'Văn phòng Bộ' },
+    { value: 'vu-ke-hoach', label: 'Vụ Kế hoạch' },
+    { value: 'vu-tai-chinh', label: 'Vụ Tài chính' },
+    { value: 'vu-to-chuc', label: 'Vụ Tổ chức' }
+  ];
+
+  recurringScheduleOptions = [
+    { value: 'none', label: 'Không định kỳ' },
+    { value: 'daily', label: 'Hàng ngày' },
+    { value: 'weekly', label: 'Hàng tuần' },
+    { value: 'monthly', label: 'Hàng tháng' }
+  ];
+
+  dressCodeOptions = [
+    { value: 'casual', label: 'Thường phục' },
+    { value: 'formal', label: 'Trang trọng' },
+    { value: 'business', label: 'Công sở' }
+  ];
+
+  meetingTypeOptions = [
+    { value: 'non-recurring', label: 'Không định kỳ' },
+    { value: 'recurring', label: 'Định kỳ' }
+  ];
+
+  conclusionUnitOptions = [
+    { value: 'van-phong-bo', label: 'Văn phòng Bộ' },
+    { value: 'vu-ke-hoach', label: 'Vụ Kế hoạch' },
+    { value: 'vu-tai-chinh', label: 'Vụ Tài chính' }
+  ];
+
+  constructor(
+    private fb: FormBuilder,
+    private message: NzMessageService
+  ) {}
+
+  ngOnInit(): void {
+    this.initForm();
+    this.setupValidators();
+  }
+
+  initForm(): void {
+    this.meetingForm = this.fb.group({
+      subject: ['', [Validators.required, Validators.maxLength(200)]],
+      content: ['', [Validators.required, Validators.maxLength(1000)]],
+      roomCode: [null, [Validators.required]],
+      startTime: [null, [Validators.required]],
+      endTime: [null, [Validators.required]],
+      meetingDate: [null, [Validators.required, this.dateNotInPastValidator]],
+      organizingUnit: [null, [Validators.required]],
+      note: [''],
+      recurringSchedule: [null, [Validators.required]],
+      dressCode: [null, [Validators.required]],
+      contactEmail: ['', [Validators.required, Validators.email]],
+      meetingType: [null, [Validators.required]],
+      conclusionUnit: [null],
+      attachedFile: [null],
+      preparationTask: [null]
+    });
+  }
+
+  setupValidators(): void {
+    // Listen to changes in date and time fields to validate time range
+    this.meetingForm.get('startTime')?.valueChanges.subscribe(() => {
+      this.validateTimeRange();
+    });
+    
+    this.meetingForm.get('endTime')?.valueChanges.subscribe(() => {
+      this.validateTimeRange();
+    });
+  }
+
+  // Custom validator: Date must not be in the past
+  dateNotInPastValidator(control: AbstractControl): ValidationErrors | null {
+    if (!control.value) {
+      return null;
+    }
+    
+    const selectedDate = new Date(control.value);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    selectedDate.setHours(0, 0, 0, 0);
+    
+    if (selectedDate < today) {
+      return { dateInPast: true };
+    }
+    
+    return null;
+  }
+
+  // Validate that end time is after start time
+  validateTimeRange(): void {
+    const startTime = this.meetingForm.get('startTime')?.value;
+    const endTime = this.meetingForm.get('endTime')?.value;
+    
+    if (startTime && endTime) {
+      const start = new Date(startTime);
+      const end = new Date(endTime);
+      
+      if (end <= start) {
+        this.meetingForm.get('endTime')?.setErrors({ endTimeBeforeStart: true });
+      } else {
+        // Clear the custom error if times are valid
+        const endTimeControl = this.meetingForm.get('endTime');
+        if (endTimeControl?.hasError('endTimeBeforeStart')) {
+          endTimeControl.setErrors(null);
+        }
+      }
+    }
+  }
+
+  onTogglePanel(): void {
+    this.showFilterPanel = !this.showFilterPanel;
+  }
+
+  onSubmit(): void {
+    if (this.meetingForm.valid) {
+      const formValue = {
+        ...this.meetingForm.getRawValue()
+      };
+      console.log('Form submitted:', formValue);
+      this.message.success('Gửi duyệt lịch họp thành công!');
+      // TODO: Call API to submit the meeting schedule
+    } else {
+      Object.values(this.meetingForm.controls).forEach(control => {
+        if (control.invalid) {
+          control.markAsDirty();
+          control.updateValueAndValidity({ onlySelf: true });
+        }
+      });
+      this.message.error('Vui lòng điền đầy đủ thông tin bắt buộc!');
+    }
+  }
+
+  onSaveDraft(): void {
+    const formValue = {
+      ...this.meetingForm.getRawValue()
+    };
+    console.log('Draft saved:', formValue);
+    this.message.success('Lưu nháp thành công!');
+    // TODO: Call API to save draft
+  }
+
+  onCancel(): void {
+    this.meetingForm.reset();
+    this.message.info('Đã hủy bỏ thao tác');
+  }
+
+  // File upload handlers
+  beforeUpload = (file: any): boolean => {
+    const isLt10M = file.size / 1024 / 1024 < 10;
+    if (!isLt10M) {
+      this.message.error('Kích thước file không được vượt quá 10MB!');
+    }
+    return isLt10M;
+  };
+
+  handleAttachmentChange(info: any): void {
+    if (info.file.status === 'done') {
+      this.message.success(`${info.file.name} đã được tải lên thành công`);
+      this.meetingForm.patchValue({ attachedFile: info.file });
+    } else if (info.file.status === 'error') {
+      this.message.error(`${info.file.name} tải lên thất bại.`);
+    }
+  }
+
+  handlePreparationChange(info: any): void {
+    if (info.file.status === 'done') {
+      this.message.success(`${info.file.name} đã được tải lên thành công`);
+      this.meetingForm.patchValue({ preparationTask: info.file });
+    } else if (info.file.status === 'error') {
+      this.message.error(`${info.file.name} tải lên thất bại.`);
+    }
+  }
+}
