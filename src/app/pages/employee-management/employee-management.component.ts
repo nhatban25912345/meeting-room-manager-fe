@@ -44,10 +44,6 @@ export class EmployeeManagementComponent {
       role_code: null,
       status: null
     };
-    if (this.employeeTable) {
-      this.employeeTable.pageIndex = 1;
-      this.employeeTable.loadEmployees();
-    }
   }
 
   onExportData() {

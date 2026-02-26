@@ -12,6 +12,7 @@ import { NzMessageModule, NzMessageService } from 'ng-zorro-antd/message';
 import { UserService } from '../services/user.service';
 import { AuthService } from '../../../services/auth.service';
 import { PermissionModalComponent, PermissionChangeData } from '../permission-modal/permission-modal.component';
+import { EmployeeDetailModalComponent } from '../employee-detail-modal/employee-detail-modal.component';
 
 interface Employee {
   userId: number;
@@ -38,7 +39,8 @@ interface Employee {
     NzButtonModule,
     NzIconModule,
     NzMessageModule,
-    PermissionModalComponent
+    PermissionModalComponent,
+    EmployeeDetailModalComponent
   ],
   templateUrl: './employee-table.component.html',
   styleUrls: ['./employee-table.component.scss']
@@ -64,6 +66,10 @@ export class EmployeeTableComponent implements OnInit {
   permissionModalVisible = false;
   selectedEmployee: Employee | null = null;
   isSubmittingPermission = false;
+
+  // Detail modal state
+  detailModalVisible = false;
+  detailEmployee: Employee | null = null;
 
   searchText = '';
   selectedRole = 'Tất cả';
@@ -171,5 +177,16 @@ export class EmployeeTableComponent implements OnInit {
       this.closePermissionModal();
       this.loadEmployees(); // Reload data after permission change
     }, 1000);
+  }
+
+  // Detail modal methods
+  openDetailModal(employee: Employee): void {
+    this.detailEmployee = employee;
+    this.detailModalVisible = true;
+  }
+
+  closeDetailModal(): void {
+    this.detailModalVisible = false;
+    this.detailEmployee = null;
   }
 }

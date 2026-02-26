@@ -1,0 +1,84 @@
+<nz-modal
+  [(nzVisible)]="visible"
+  (nzVisibleChange)="visibleChange.emit($event)"
+  [nzTitle]="modalTitle"
+  nzWidth="700px"
+  [nzMaskClosable]="true"
+  [nzClosable]="true"
+  [nzFooter]="modalFooter"
+  (nzOnCancel)="handleClose()">
+  
+  <ng-template #modalTitle>
+    <div class="modal-title-wrapper">
+      <span nz-icon nzType="user" nzTheme="outline" style="margin-right: 8px;"></span>
+      Chi tiết thông tin nhân viên
+    </div>
+  </ng-template>
+
+  <ng-container *nzModalContent>
+    <div class="employee-detail-content" *ngIf="employee">
+      <!-- Avatar and Basic Info -->
+      <div class="employee-header">
+        <nz-avatar 
+          [nzText]="employee.userId.toString()" 
+          [nzSize]="64"
+          [style.background-color]="'hsl(215, 80%, 42%)'">
+        </nz-avatar>
+        <div class="employee-header-info">
+          <h2 class="employee-name">{{ employee.fullName }}</h2>
+          <div class="employee-meta">
+            <span class="employee-id">ID: {{ employee.userId }}</span>
+            <nz-tag [nzColor]="getStatusInfo(employee.status).color" style="margin-left: 8px;">
+              {{ getStatusInfo(employee.status).text }}
+            </nz-tag>
+          </div>
+        </div>
+      </div>
+
+      <nz-divider></nz-divider>
+
+      <!-- Detailed Information -->
+      <nz-descriptions nzBordered [nzColumn]="1" nzSize="middle">
+        <nz-descriptions-item nzTitle="Họ và tên">
+          <strong>{{ employee.fullName }}</strong>
+        </nz-descriptions-item>
+        
+        <nz-descriptions-item nzTitle="Mã nhân viên">
+          {{ employee.userId }}
+        </nz-descriptions-item>
+        
+        <nz-descriptions-item nzTitle="Chức danh">
+          {{ employee.jobTitle }}
+        </nz-descriptions-item>
+        
+        <nz-descriptions-item nzTitle="Email">
+          <a href="mailto:{{ employee.email }}">{{ employee.email }}</a>
+        </nz-descriptions-item>
+        
+        <nz-descriptions-item nzTitle="Số điện thoại">
+          <a href="tel:{{ employee.phoneNumber }}">{{ employee.phoneNumber }}</a>
+        </nz-descriptions-item>
+        
+        <nz-descriptions-item nzTitle="Đơn vị">
+          {{ employee.unitCode }}
+        </nz-descriptions-item>
+        
+        <nz-descriptions-item nzTitle="Vai trò hệ thống">
+          <nz-tag [nzColor]="'blue'">{{ getRoleLabel(employee.roleCode) }}</nz-tag>
+        </nz-descriptions-item>
+        
+        <nz-descriptions-item nzTitle="Trạng thái làm việc">
+          <nz-tag [nzColor]="getStatusInfo(employee.status).color">
+            {{ getStatusInfo(employee.status).text }}
+          </nz-tag>
+        </nz-descriptions-item>
+      </nz-descriptions>
+    </div>
+  </ng-container>
+
+  <ng-template #modalFooter>
+    <button nz-button nzType="primary" (click)="handleClose()">
+      Đóng
+    </button>
+  </ng-template>
+</nz-modal>
