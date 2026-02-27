@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
@@ -74,7 +75,8 @@ export class MeetingFormComponent implements OnInit {
     private fb: FormBuilder,
     private message: NzMessageService,
     private roomService: RoomService,
-    private userService: UserService
+    private userService: UserService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -122,7 +124,7 @@ export class MeetingFormComponent implements OnInit {
         if (response.status.statusCode === 'SUCCESS' && response.data) {
           this.roomCodeOptions = response.data.map(room => ({
             value: room.roomCode,
-            label: `${room.roomCode} - ${room.roomName}`
+            label: `${room.roomCode} - ${room.roomName} - ${room.location}`
           }));
         }
       },
@@ -199,8 +201,12 @@ export class MeetingFormComponent implements OnInit {
         ...this.meetingForm.getRawValue()
       };
       console.log('Form submitted:', formValue);
-      this.message.success('Gửi duyệt lịch họp thành công!');
       // TODO: Call API to submit the meeting schedule
+      // When API returns success (HTTP 200), navigate to plan management
+      this.message.success('Tạo mới lịch họp thành công!');
+      setTimeout(() => {
+        this.router.navigate(['/home/plan-management']);
+      }, 1000);
     } else {
       Object.values(this.meetingForm.controls).forEach(control => {
         if (control.invalid) {
@@ -222,8 +228,7 @@ export class MeetingFormComponent implements OnInit {
   }
 
   onCancel(): void {
-    this.meetingForm.reset();
-    this.message.info('Đã hủy bỏ thao tác');
+    this.router.navigate(['/home/plan-management']);
   }
 
   // File upload handlers

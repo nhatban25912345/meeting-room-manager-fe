@@ -79,6 +79,7 @@ export interface RoomSearchRequest {
 export interface AvailableRoom {
   roomCode: string;
   roomName: string;
+  location: string;
 }
 
 export interface AvailableRoomsResponse {
