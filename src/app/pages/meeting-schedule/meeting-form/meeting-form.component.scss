@@ -114,7 +114,8 @@
             color: rgba(0, 0, 0, 0.85);
             height: auto;
 
-            &::before {
+            // Chỉ hiển thị dấu * cho label có class ant-form-item-required
+            &.ant-form-item-required::before {
               display: inline-block;
               margin-right: 4px;
               color: #ff4d4f;

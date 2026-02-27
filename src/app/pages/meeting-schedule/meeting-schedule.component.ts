@@ -67,6 +67,7 @@ export class MeetingScheduleComponent implements OnInit {
   meetingGroups: MeetingGroup[] = [];
   loading = false;
   totalMeetings = 0;
+  showFilterPanel = false;
 
   statusOptions = [
     { label: 'Chờ duyệt', value: 'pending', color: 'blue' },
@@ -190,9 +191,33 @@ export class MeetingScheduleComponent implements OnInit {
     this.loadMeetingSchedules();
   }
 
-  advancedSearch(): void {
-    console.log('Advanced search');
-    // Implement advanced search modal
+  toggleFilterPanel(): void {
+    this.showFilterPanel = !this.showFilterPanel;
+  }
+
+  resetFilter(): void {
+    this.searchForm.reset({
+      roomType: 'all',
+      meetingOwner: '',
+      participants: '',
+      participatingUnit: '',
+      timeFrom: null,
+      timeTo: null,
+      createdFrom: null,
+      createdTo: null,
+      scheduleType: '',
+      usageStatus: '',
+      searchMember: '',
+      searchType: '',
+      status: null,
+      meetingType: null
+    });
+    this.loadMeetingSchedules();
+  }
+
+  exportData(): void {
+    console.log('Exporting data');
+    // Implement export functionality
   }
 
   toggleGroup(group: MeetingGroup): void {

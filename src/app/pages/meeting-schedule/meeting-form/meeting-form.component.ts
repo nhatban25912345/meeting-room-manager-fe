@@ -96,7 +96,7 @@ export class MeetingFormComponent implements OnInit {
       meetingDate: [null, [Validators.required, this.dateNotInPastValidator]],
       organizingUnit: [null, [Validators.required]],
       note: [''],
-      recurringSchedule: [null, [Validators.required]],
+      recurringSchedule: [null],
       dressCode: [null, [Validators.required]],
       contactEmail: ['', [Validators.required, Validators.email]],
       meetingType: [null, [Validators.required]],

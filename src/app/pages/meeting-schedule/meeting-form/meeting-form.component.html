@@ -182,8 +182,8 @@
 
           <div nz-col [nzSpan]="12">
             <nz-form-item>
-              <nz-form-label nzRequired>Đặt lịch định kỳ</nz-form-label>
-              <nz-form-control nzErrorTip="Vui lòng chọn loại định kỳ!">
+              <nz-form-label>Đặt lịch định kỳ</nz-form-label>
+              <nz-form-control>
                 <nz-select 
                   formControlName="recurringSchedule" 
                   nzPlaceHolder="Chọn loại định kỳ"
@@ -345,7 +345,7 @@
         <!-- Form Actions -->
         <div class="form-actions">
           <button nz-button nzType="primary" (click)="onSubmit()">
-            <span nz-icon nzType="save" nzTheme="outline"></span>
+            <span nz-icon nzType="plus" nzTheme="outline"></span>
             Tạo mới
           </button>
           <button nz-button nzType="default" nzDanger (click)="onCancel()">
