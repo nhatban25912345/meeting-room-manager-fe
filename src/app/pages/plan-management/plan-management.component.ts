@@ -64,7 +64,7 @@ export class PlanManagementComponent implements OnInit {
     pending: 2,
     rejected: 1,
     deleted: 1,
-    draft: 1
+    newPlans: 1
   };
 
   // Meeting plans data
@@ -97,7 +97,7 @@ export class PlanManagementComponent implements OnInit {
     }
   ];
 
-  draftPlans: MeetingPlan[] = [
+    newMeetingPlans: MeetingPlan[] = [
     {
       id: '3',
       title: 'Hội nghị sơ kết 6 tháng đầu năm',
@@ -108,7 +108,7 @@ export class PlanManagementComponent implements OnInit {
       date: '2026-03-01',
       time: '08:30 - 12:00',
       duration: '18 Giờ 5 phút và gia',
-      status: 'Nháp',
+      status: 'Tạo mới',
       statusColor: 'default'
     }
   ];
@@ -150,8 +150,8 @@ export class PlanManagementComponent implements OnInit {
       case 3: // Đã xóa
         this.filteredPlans = this.meetingPlans.filter(p => p.status === 'Đã xóa');
         break;
-      case 4: // Lưu nháp
-        this.filteredPlans = this.draftPlans;
+      case 4: // Tạo mới
+          this.filteredPlans = this.newMeetingPlans;
         break;
       default:
         this.filteredPlans = this.meetingPlans;

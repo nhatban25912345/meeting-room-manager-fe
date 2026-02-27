@@ -212,13 +212,13 @@ export class MeetingFormComponent implements OnInit {
     }
   }
 
-  onSaveDraft(): void {
+  onCreateNewPlan(): void {
     const formValue = {
       ...this.meetingForm.getRawValue()
     };
-    console.log('Draft saved:', formValue);
-    this.message.success('Lưu nháp thành công!');
-    // TODO: Call API to save draft
+    console.log('New plan saved:', formValue);
+    this.message.success('Tạo mới thành công!');
+    // TODO: Call API to save new plan
   }
 
   onCancel(): void {

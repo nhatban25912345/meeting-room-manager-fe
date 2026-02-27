@@ -9,14 +9,11 @@
 
   <!-- Form Panel -->
   <div class="form-panel" [class.collapsed]="!showFilterPanel">
-    <div class="form-header" (click)="onTogglePanel()">
+    <div class="form-header">
       <div class="form-header-left">
         <span nz-icon nzType="form" nzTheme="outline" class="form-icon"></span>
         <h3>Thông tin cơ bản</h3>
       </div>
-      <button nz-button nzType="text" nzSize="small" (click)="onTogglePanel(); $event.stopPropagation()">
-        <span nz-icon [nzType]="showFilterPanel ? 'up' : 'down'" nzTheme="outline"></span>
-      </button>
     </div>
 
     <div class="form-content" *ngIf="showFilterPanel">
@@ -351,9 +348,9 @@
             <span nz-icon nzType="send" nzTheme="outline"></span>
             Gửi duyệt
           </button>
-          <button nz-button nzType="default" (click)="onSaveDraft()">
+          <button nz-button nzType="default" (click)="onCreateNewPlan()">
             <span nz-icon nzType="save" nzTheme="outline"></span>
-            Lưu nháp
+            Tạo mới
           </button>
           <button nz-button nzType="default" nzDanger (click)="onCancel()">
             <span nz-icon nzType="close" nzTheme="outline"></span>
