@@ -83,49 +83,73 @@
     class="plan-table">
     <thead>
       <tr>
-        <th nzWidth="280px">Tên cuộc họp</th>
-        <th nzWidth="100px">Cấp</th>
-        <th nzWidth="120px">Loại</th>
-        <th nzWidth="180px">Cơ quan chủ trì</th>
-        <th nzWidth="150px">Chủ trì</th>
-        <th nzWidth="120px">Ngày</th>
-        <th nzWidth="150px">Thời gian</th>
-        <th nzWidth="120px">Trạng thái</th>
-        <th nzWidth="150px" nzAlign="center">Thao tác</th>
+        <th nzWidth="150px">Thời gian họp</th>
+        <th nzWidth="180px">Địa điểm</th>
+        <th nzWidth="220px">Chủ đề cuộc họp</th>
+        <th nzWidth="150px">Người chủ trì</th>
+        <th nzWidth="160px">Đơn vị tổ chức</th>
+        <th nzWidth="100px">Trạng thái</th>
+        <th nzWidth="120px">Trang phục</th>
+        <th nzWidth="180px">Ghi chú</th>
+        <th nzWidth="120px" nzAlign="center">Thao tác</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let plan of planTable.data">
         <td>
-          <div class="meeting-title">
-            {{ plan.title }}
-            <div class="meeting-duration">{{ plan.duration }}</div>
+          <div class="meeting-time">
+            <div class="meeting-date">{{ plan.meetingDate }}</div>
+            <div class="meeting-hours">{{ plan.time }}</div>
           </div>
         </td>
-        <td>{{ plan.level }}</td>
         <td>
-          <span nz-icon [nzType]="plan.type === 'Trực tuyến' ? 'video-camera' : 'team'" nzTheme="outline"></span>
-          {{ plan.type }}
+          <div class="location-cell">{{ plan.location }}</div>
         </td>
-        <td>{{ plan.hostOrganization }}</td>
-        <td>{{ plan.host }}</td>
-        <td>{{ plan.date | date: 'yyyy-MM-dd' }}</td>
-        <td>{{ plan.time }}</td>
         <td>
-          <nz-tag [nzColor]="plan.statusColor">{{ plan.status }}</nz-tag>
+          <div class="text-cell">{{ plan.title }}</div>
+        </td>
+        <td>{{ plan.organizer }}</td>
+        <td>{{ plan.organizingUnit }}</td>
+        <td>
+          <nz-tag [nzColor]="getStatusColor(plan.status)">
+            {{ getStatusLabel(plan.status) }}
+          </nz-tag>
+        </td>
+        <td>{{ plan.dressCode }}</td>
+        <td>
+          <div class="text-cell">{{ plan.notes || '-' }}</div>
         </td>
         <td nzAlign="center">
-          <nz-space>
-            <button *nzSpaceItem nz-button nzType="text" nzSize="small" (click)="viewPlan(plan)">
+          <div class="action-buttons">
+            <button
+              nz-button
+              nzType="text"
+              nzSize="small"
+              (click)="viewPlan(plan)"
+              nz-tooltip
+              nzTooltipTitle="Xem chi tiết">
               <span nz-icon nzType="eye" nzTheme="outline"></span>
             </button>
-            <button *nzSpaceItem nz-button nzType="text" nzSize="small" (click)="editPlan(plan)">
+            <button
+              nz-button
+              nzType="text"
+              nzSize="small"
+              (click)="editPlan(plan)"
+              nz-tooltip
+              nzTooltipTitle="Chỉnh sửa">
               <span nz-icon nzType="edit" nzTheme="outline"></span>
             </button>
-            <button *nzSpaceItem nz-button nzType="text" nzSize="small" nzDanger (click)="deletePlan(plan)">
+            <button
+              nz-button
+              nzType="text"
+              nzSize="small"
+              nzDanger
+              (click)="deletePlan(plan)"
+              nz-tooltip
+              nzTooltipTitle="Xóa">
               <span nz-icon nzType="delete" nzTheme="outline"></span>
             </button>
-          </nz-space>
+          </div>
         </td>
       </tr>
     </tbody>

@@ -149,28 +149,64 @@
       }
     }
 
-    .meeting-title {
-      font-weight: 500;
-      color: #262626;
+    .location-cell,
+    .text-cell {
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      line-height: 1.4;
+      font-size: 13px;
+    }
 
-      .meeting-duration {
-        font-size: 12px;
-        color: #8c8c8c;
-        margin-top: 4px;
-        font-weight: 400;
+    .meeting-time {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      .meeting-date {
+        font-weight: 600;
+        color: #262626;
+        font-size: 13px;
+      }
+
+      .meeting-hours {
+        color: #595959;
+        font-size: 13px;
       }
     }
 
-    nz-space {
-      ::ng-deep .ant-space-item {
-        button {
-          padding: 4px 8px;
-          
-          &:hover {
-            background: #f0f0f0;
-          }
+    .action-buttons {
+      display: flex;
+      gap: 4px;
+      justify-content: center;
+      align-items: center;
+
+      button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        padding: 0;
+        border-radius: 4px;
+
+        span[nz-icon] {
+          font-size: 16px;
+        }
+
+        &:hover {
+          background: rgba(0, 0, 0, 0.04);
         }
       }
+    }
+
+    nz-tag {
+      margin: 0;
+      font-size: 12px;
     }
   }
 }

@@ -14,19 +14,20 @@ import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 
 interface MeetingPlan {
   id: string;
-  title: string;
-  level: string;
-  type: string;
-  hostOrganization: string;
-  host: string;
-  date: string;
+  meetingDate: string;
   time: string;
+  location: string;
+  title: string;
+  organizer: string;
+  organizingUnit: string;
   status: string;
   statusColor: string;
-  duration: string;
+  dressCode: string;
+  notes: string;
 }
 
 @Component({
@@ -47,7 +48,8 @@ interface MeetingPlan {
     NzCardModule,
     NzDropDownModule,
     NzBadgeModule,
-    NzSpaceModule
+    NzSpaceModule,
+    NzToolTipModule
   ],
   templateUrl: './plan-management.component.html',
   styleUrl: './plan-management.component.scss'
@@ -71,45 +73,45 @@ export class PlanManagementComponent implements OnInit {
   meetingPlans: MeetingPlan[] = [
     {
       id: '1',
-      title: 'Hội nghị giao ban tháng 2/2026',
-      level: 'Cấp Bộ',
-      type: 'Trực tuyến',
-      hostOrganization: 'Văn phòng Bộ',
-      host: 'Nguyễn Văn A',
-      date: '2026-02-15',
+      meetingDate: '15/02/2026',
       time: '08:00 - 11:30',
-      duration: '12 Giờ 5 phút và gia',
-      status: 'Đã duyệt',
-      statusColor: 'green'
+      location: 'P001',
+      title: 'Hội nghị giao ban tháng 2/2026',
+      organizer: 'Nguyễn Văn A',
+      organizingUnit: 'Văn phòng Bộ',
+      status: 'APPROVED',
+      statusColor: 'green',
+      dressCode: 'Vest',
+      notes: 'Toàn bộ cán bộ quản lý tham dự'
     },
     {
       id: '2',
-      title: 'Họp triển khai kế hoạch Q1/2026',
-      level: 'Cấp Vụ',
-      type: 'Trực tiếp',
-      hostOrganization: 'Vụ Kế hoạch',
-      host: 'Trần Thị B',
-      date: '2026-02-18',
+      meetingDate: '18/02/2026',
       time: '14:00 - 16:00',
-      duration: '8 Giờ 5 phút và gia',
-      status: 'Đã duyệt',
-      statusColor: 'green'
+      location: 'P002',
+      title: 'Họp triển khai kế hoạch Q1/2026',
+      organizer: 'Trần Thị B',
+      organizingUnit: 'Vụ Kế hoạch',
+      status: 'APPROVED',
+      statusColor: 'green',
+      dressCode: 'Công sở',
+      notes: 'Chuẩn bị tài liệu báo cáo'
     }
   ];
 
-    newMeetingPlans: MeetingPlan[] = [
+  newMeetingPlans: MeetingPlan[] = [
     {
       id: '3',
-      title: 'Hội nghị sơ kết 6 tháng đầu năm',
-      level: 'Cấp Bộ',
-      type: 'Trực tuyến',
-      hostOrganization: 'Văn phòng Bộ',
-      host: 'Nguyễn Văn A',
-      date: '2026-03-01',
+      meetingDate: '01/03/2026',
       time: '08:30 - 12:00',
-      duration: '18 Giờ 5 phút và gia',
-      status: 'Tạo mới',
-      statusColor: 'default'
+      location: 'P001',
+      title: 'Hội nghị sơ kết 6 tháng đầu năm',
+      organizer: 'Nguyễn Văn A',
+      organizingUnit: 'Văn phòng Bộ',
+      status: 'CREATED',
+      statusColor: 'default',
+      dressCode: 'Vest',
+      notes: ''
     }
   ];
 
@@ -139,19 +141,19 @@ export class PlanManagementComponent implements OnInit {
   updateFilteredPlans(): void {
     switch (this.selectedTab) {
       case 0: // Đã phê duyệt
-        this.filteredPlans = this.meetingPlans.filter(p => p.status === 'Đã duyệt');
+        this.filteredPlans = this.meetingPlans.filter(p => p.status === 'APPROVED');
         break;
       case 1: // Chờ phê duyệt
-        this.filteredPlans = this.meetingPlans.filter(p => p.status === 'Chờ duyệt');
+        this.filteredPlans = this.meetingPlans.filter(p => p.status === 'PENDING_APPROVAL');
         break;
       case 2: // Từ chối
-        this.filteredPlans = this.meetingPlans.filter(p => p.status === 'Từ chối');
+        this.filteredPlans = this.meetingPlans.filter(p => p.status === 'REJECTED');
         break;
       case 3: // Đã xóa
-        this.filteredPlans = this.meetingPlans.filter(p => p.status === 'Đã xóa');
+        this.filteredPlans = this.meetingPlans.filter(p => p.status === 'CANCELED');
         break;
       case 4: // Tạo mới
-          this.filteredPlans = this.newMeetingPlans;
+        this.filteredPlans = this.newMeetingPlans;
         break;
       default:
         this.filteredPlans = this.meetingPlans;
@@ -163,8 +165,8 @@ export class PlanManagementComponent implements OnInit {
     if (searchValue) {
       this.filteredPlans = this.filteredPlans.filter(plan =>
         plan.title.toLowerCase().includes(searchValue) ||
-        plan.host.toLowerCase().includes(searchValue) ||
-        plan.hostOrganization.toLowerCase().includes(searchValue)
+        plan.organizer.toLowerCase().includes(searchValue) ||
+        plan.organizingUnit.toLowerCase().includes(searchValue)
       );
     } else {
       this.updateFilteredPlans();
@@ -196,5 +198,27 @@ export class PlanManagementComponent implements OnInit {
   applyFilters(): void {
     // Apply additional filters
     this.search();
+  }
+
+  getStatusColor(status: string): string {
+    const statusMap: { [key: string]: string } = {
+      'CREATED': 'default',
+      'PENDING_APPROVAL': 'cyan',
+      'APPROVED': 'green',
+      'REJECTED': 'red',
+      'CANCELED': 'gray'
+    };
+    return statusMap[status] || 'default';
+  }
+
+  getStatusLabel(status: string): string {
+    const statusMap: { [key: string]: string } = {
+      'CREATED': 'Tạo mới',
+      'PENDING_APPROVAL': 'Chờ duyệt',
+      'APPROVED': 'Đã duyệt',
+      'REJECTED': 'Từ chối',
+      'CANCELED': 'Hủy'
+    };
+    return statusMap[status] || status;
   }
 }
