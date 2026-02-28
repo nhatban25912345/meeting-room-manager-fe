@@ -246,24 +246,31 @@ export class MeetingService {
   }
 
   /**
+   * Submit meeting for approval
+   */
+  submitForApproval(id: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/submit-for-approval/${id}`, {});
+  }
+
+  /**
    * Approve meeting
    */
   approveMeeting(id: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/${id}/approve`, {});
+    return this.http.post(`${this.apiUrl}/approve/${id}`, {});
   }
 
   /**
    * Reject meeting
    */
-  rejectMeeting(id: string, reason: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/${id}/reject`, { reason });
+  rejectMeeting(id: string, reason?: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/reject/${id}`, reason ? { reason } : {});
   }
 
   /**
    * Cancel meeting
    */
-  cancelMeeting(id: string, reason: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/${id}/cancel`, { reason });
+  cancelMeeting(id: string, reason?: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/cancel/${id}`, reason ? { reason } : {});
   }
 
   /**

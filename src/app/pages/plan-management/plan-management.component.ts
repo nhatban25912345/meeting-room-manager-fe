@@ -16,8 +16,10 @@ import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { NzMessageModule } from 'ng-zorro-antd/message';
+import { NzModalModule } from 'ng-zorro-antd/modal';
 import { MeetingService, MeetingData } from '../../services/meeting.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzModalService } from 'ng-zorro-antd/modal';
 
 interface MeetingPlan {
   id: string;
@@ -53,7 +55,8 @@ interface MeetingPlan {
     NzBadgeModule,
     NzSpaceModule,
     NzToolTipModule,
-    NzMessageModule
+    NzMessageModule,
+    NzModalModule
   ],
   templateUrl: './plan-management.component.html',
   styleUrl: './plan-management.component.scss'
@@ -88,7 +91,8 @@ export class PlanManagementComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private meetingService: MeetingService,
-    private message: NzMessageService
+    private message: NzMessageService,
+    private modal: NzModalService
   ) {}
 
   ngOnInit(): void {
@@ -208,23 +212,123 @@ export class PlanManagementComponent implements OnInit {
   }
 
   submitForApproval(plan: MeetingPlan): void {
-    console.log('Submit for approval:', plan);
-    // TODO: Call API to submit meeting for approval
+    this.modal.confirm({
+      nzTitle: 'Gửi phê duyệt',
+      nzContent: `Bạn có chắc chắn muốn gửi cuộc họp "${plan.title}" để phê duyệt?`,
+      nzOkText: 'Gửi',
+      nzCancelText: 'Hủy',
+      nzOnOk: () => {
+        this.loading = true;
+        this.meetingService.submitForApproval(plan.id).subscribe({
+          next: () => {
+            this.message.success('Gửi phê duyệt thành công');
+            this.loadMeetings();
+            this.loadTabCounts();
+          },
+          error: (error) => {
+            console.error('Error submitting for approval:', error);
+            this.message.error('Gửi phê duyệt thất bại');
+            this.loading = false;
+          }
+        });
+      }
+    });
   }
 
   approvePlan(plan: MeetingPlan): void {
-    console.log('Approve plan:', plan);
-    // TODO: Call API to approve meeting
+    this.modal.confirm({
+      nzTitle: 'Phê duyệt cuộc họp',
+      nzContent: `Bạn có chắc chắn muốn phê duyệt cuộc họp "${plan.title}"?`,
+      nzOkText: 'Phê duyệt',
+      nzCancelText: 'Hủy',
+      nzOnOk: () => {
+        this.loading = true;
+        this.meetingService.approveMeeting(plan.id).subscribe({
+          next: () => {
+            this.message.success('Phê duyệt thành công');
+            this.loadMeetings();
+            this.loadTabCounts();
+          },
+          error: (error) => {
+            console.error('Error approving meeting:', error);
+            this.message.error('Phê duyệt thất bại');
+            this.loading = false;
+          }
+        });
+      }
+    });
   }
 
   rejectPlan(plan: MeetingPlan): void {
-    console.log('Reject plan:', plan);
-    // TODO: Show reason input modal and call API to reject meeting
+    let rejectReason = '';
+    this.modal.confirm({
+      nzTitle: 'Từ chối cuộc họp',
+      nzContent: `
+        <p>Bạn có chắc chắn muốn từ chối cuộc họp "${plan.title}"?</p>
+        <nz-form-item>
+          <nz-form-label>Lý do từ chối (tùy chọn)</nz-form-label>
+          <textarea nz-input id="rejectReason" rows="3" placeholder="Nhập lý do từ chối..."></textarea>
+        </nz-form-item>
+      `,
+      nzOkText: 'Từ chối',
+      nzOkType: 'primary',
+      nzOkDanger: true,
+      nzCancelText: 'Hủy',
+      nzOnOk: () => {
+        const reasonInput = document.getElementById('rejectReason') as HTMLTextAreaElement;
+        rejectReason = reasonInput?.value || '';
+        
+        this.loading = true;
+        this.meetingService.rejectMeeting(plan.id, rejectReason).subscribe({
+          next: () => {
+            this.message.success('Từ chối cuộc họp thành công');
+            this.loadMeetings();
+            this.loadTabCounts();
+          },
+          error: (error) => {
+            console.error('Error rejecting meeting:', error);
+            this.message.error('Từ chối cuộc họp thất bại');
+            this.loading = false;
+          }
+        });
+      }
+    });
   }
 
   cancelPlan(plan: MeetingPlan): void {
-    console.log('Cancel plan:', plan);
-    // TODO: Show confirmation modal and call API to cancel meeting
+    let cancelReason = '';
+    this.modal.confirm({
+      nzTitle: 'Hủy cuộc họp',
+      nzContent: `
+        <p>Bạn có chắc chắn muốn hủy cuộc họp "${plan.title}"?</p>
+        <nz-form-item>
+          <nz-form-label>Lý do hủy (tùy chọn)</nz-form-label>
+          <textarea nz-input id="cancelReason" rows="3" placeholder="Nhập lý do hủy..."></textarea>
+        </nz-form-item>
+      `,
+      nzOkText: 'Hủy cuộc họp',
+      nzOkType: 'primary',
+      nzOkDanger: true,
+      nzCancelText: 'Đóng',
+      nzOnOk: () => {
+        const reasonInput = document.getElementById('cancelReason') as HTMLTextAreaElement;
+        cancelReason = reasonInput?.value || '';
+        
+        this.loading = true;
+        this.meetingService.cancelMeeting(plan.id, cancelReason).subscribe({
+          next: () => {
+            this.message.success('Hủy cuộc họp thành công');
+            this.loadMeetings();
+            this.loadTabCounts();
+          },
+          error: (error) => {
+            console.error('Error canceling meeting:', error);
+            this.message.error('Hủy cuộc họp thất bại');
+            this.loading = false;
+          }
+        });
+      }
+    });
   }
 
   applyFilters(): void {
