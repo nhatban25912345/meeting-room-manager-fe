@@ -15,6 +15,9 @@ import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { NzMessageModule } from 'ng-zorro-antd/message';
+import { MeetingService, MeetingData } from '../../services/meeting.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 interface MeetingPlan {
   id: string;
@@ -49,7 +52,8 @@ interface MeetingPlan {
     NzDropDownModule,
     NzBadgeModule,
     NzSpaceModule,
-    NzToolTipModule
+    NzToolTipModule,
+    NzMessageModule
   ],
   templateUrl: './plan-management.component.html',
   styleUrl: './plan-management.component.scss'
@@ -62,69 +66,35 @@ export class PlanManagementComponent implements OnInit {
   
   // Tab counts
   tabCounts = {
-    approved: 2,
-    pending: 2,
-    rejected: 1,
-    deleted: 1,
-    newPlans: 1
+    approved: 0,
+    pending: 0,
+    rejected: 0,
+    deleted: 0,
+    newPlans: 0
   };
 
-  // Meeting plans data
-  meetingPlans: MeetingPlan[] = [
-    {
-      id: '1',
-      meetingDate: '15/02/2026',
-      time: '08:00 - 11:30',
-      location: 'P001',
-      title: 'Hội nghị giao ban tháng 2/2026',
-      organizer: 'Nguyễn Văn A',
-      organizingUnit: 'Văn phòng Bộ',
-      status: 'APPROVED',
-      statusColor: 'green',
-      dressCode: 'Vest',
-      notes: 'Toàn bộ cán bộ quản lý tham dự'
-    },
-    {
-      id: '2',
-      meetingDate: '18/02/2026',
-      time: '14:00 - 16:00',
-      location: 'P002',
-      title: 'Họp triển khai kế hoạch Q1/2026',
-      organizer: 'Trần Thị B',
-      organizingUnit: 'Vụ Kế hoạch',
-      status: 'APPROVED',
-      statusColor: 'green',
-      dressCode: 'Công sở',
-      notes: 'Chuẩn bị tài liệu báo cáo'
-    }
-  ];
-
-  newMeetingPlans: MeetingPlan[] = [
-    {
-      id: '3',
-      meetingDate: '01/03/2026',
-      time: '08:30 - 12:00',
-      location: 'P001',
-      title: 'Hội nghị sơ kết 6 tháng đầu năm',
-      organizer: 'Nguyễn Văn A',
-      organizingUnit: 'Văn phòng Bộ',
-      status: 'CREATED',
-      statusColor: 'default',
-      dressCode: 'Vest',
-      notes: ''
-    }
-  ];
-
   filteredPlans: MeetingPlan[] = [];
+  
+  // Mapping tab index to status
+  private tabStatusMap: { [key: number]: string } = {
+    0: 'APPROVED',
+    1: 'PENDING',
+    2: 'REJECTED',
+    3: 'DELETED',
+    4: 'CREATED'
+  };
 
   constructor(
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private meetingService: MeetingService,
+    private message: NzMessageService
   ) {}
 
   ngOnInit(): void {
     this.initForm();
-    this.updateFilteredPlans();
+    this.loadMeetings();
+    this.loadTabCounts();
   }
 
   initForm(): void {
@@ -135,47 +105,91 @@ export class PlanManagementComponent implements OnInit {
 
   onTabChange(index: number): void {
     this.selectedTab = index;
-    this.updateFilteredPlans();
+    this.loadMeetings();
   }
 
-  updateFilteredPlans(): void {
-    switch (this.selectedTab) {
-      case 0: // Đã phê duyệt
-        this.filteredPlans = this.meetingPlans.filter(p => p.status === 'APPROVED');
-        break;
-      case 1: // Chờ phê duyệt
-        this.filteredPlans = this.meetingPlans.filter(p => p.status === 'PENDING_APPROVAL');
-        break;
-      case 2: // Từ chối
-        this.filteredPlans = this.meetingPlans.filter(p => p.status === 'REJECTED');
-        break;
-      case 3: // Đã xóa
-        this.filteredPlans = this.meetingPlans.filter(p => p.status === 'CANCELED');
-        break;
-      case 4: // Tạo mới
-        this.filteredPlans = this.newMeetingPlans;
-        break;
-      default:
-        this.filteredPlans = this.meetingPlans;
-    }
+  loadMeetings(): void {
+    this.loading = true;
+    const status = this.tabStatusMap[this.selectedTab];
+    
+    this.meetingService.listMeetings({
+      page: 0,
+      size: 100,
+      sort: 'createdAt,desc',
+      status: status
+    }).subscribe({
+      next: (response: any) => {
+        if (response.status.statusCode === 'SUCCESS' && response.data) {
+          this.filteredPlans = this.mapMeetingsToPlans(response.data.content);
+        }
+        this.loading = false;
+      },
+      error: (error: any) => {
+        console.error('Error loading meetings:', error);
+        this.message.error('Không thể tải danh sách cuộc họp');
+        this.loading = false;
+      }
+    });
+  }
+
+  loadTabCounts(): void {
+    // Load counts for each tab
+    Object.keys(this.tabStatusMap).forEach((tabIndex: any) => {
+      const status = this.tabStatusMap[tabIndex];
+      this.meetingService.listMeetings({
+        page: 0,
+        size: 1,
+        sort: 'createdAt,desc',
+        status: status
+      }).subscribe({
+        next: (response: any) => {
+          if (response.status.statusCode === 'SUCCESS' && response.data) {
+            const count = response.data.totalElements;
+            switch (parseInt(tabIndex)) {
+              case 0: this.tabCounts.approved = count; break;
+              case 1: this.tabCounts.pending = count; break;
+              case 2: this.tabCounts.rejected = count; break;
+              case 3: this.tabCounts.deleted = count; break;
+              case 4: this.tabCounts.newPlans = count; break;
+            }
+          }
+        },
+        error: (error: any) => {
+          console.error('Error loading tab counts:', error);
+        }
+      });
+    });
+  }
+
+  mapMeetingsToPlans(meetings: MeetingData[]): MeetingPlan[] {
+    return meetings.map(meeting => ({
+      id: meeting.id.toString(),
+      meetingDate: this.formatDate(meeting.meetingDate),
+      time: `${meeting.startTime.substring(0, 5)} - ${meeting.endTime.substring(0, 5)}`,
+      location: meeting.roomCode,
+      title: meeting.subject,
+      organizer: meeting.createdBy,
+      organizingUnit: meeting.organizerUnit,
+      status: meeting.status,
+      statusColor: this.getStatusColor(meeting.status),
+      dressCode: meeting.dressCode,
+      notes: meeting.note || ''
+    }));
+  }
+
+  formatDate(dateStr: string): string {
+    // Convert YYYY-MM-DD to DD/MM/YYYY
+    const [year, month, day] = dateStr.split('-');
+    return `${day}/${month}/${year}`;
   }
 
   search(): void {
-    const searchValue = this.searchForm.get('search')?.value?.toLowerCase() || '';
+    const searchValue = this.searchText?.toLowerCase() || '';
     if (searchValue) {
-      this.filteredPlans = this.filteredPlans.filter(plan =>
-        plan.title.toLowerCase().includes(searchValue) ||
-        plan.organizer.toLowerCase().includes(searchValue) ||
-        plan.organizingUnit.toLowerCase().includes(searchValue)
-      );
+      this.loadMeetings();
     } else {
-      this.updateFilteredPlans();
+      this.loadMeetings();
     }
-  }
-
-  clearSearch(): void {
-    this.searchForm.patchValue({ search: '' });
-    this.updateFilteredPlans();
   }
 
   createNewPlan(): void {

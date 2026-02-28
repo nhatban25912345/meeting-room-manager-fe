@@ -102,6 +102,27 @@ export interface CreateMeetingResponse {
   data: MeetingData;
 }
 
+export interface MeetingListRequest {
+  page: number;
+  size: number;
+  sort: string;
+  status?: string;
+}
+
+export interface MeetingListResponse {
+  status: ApiStatus;
+  data: {
+    content: MeetingData[];
+    totalElements: number;
+    totalPages: number;
+    size: number;
+    number: number;
+    first: boolean;
+    last: boolean;
+    empty: boolean;
+  };
+}
+
 // Grouped data interface
 export interface MeetingGroup {
   meetingDate: string; // Format: DD/MM/YYYY
@@ -243,5 +264,22 @@ export class MeetingService {
    */
   cancelMeeting(id: string, reason: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/${id}/cancel`, { reason });
+  }
+
+  /**
+   * List meetings by status with pagination
+   */
+  listMeetings(request: MeetingListRequest): Observable<MeetingListResponse> {
+    const body: any = {
+      page: request.page,
+      size: request.size,
+      sort: request.sort
+    };
+    
+    if (request.status) {
+      body.status = request.status;
+    }
+    
+    return this.http.post<MeetingListResponse>(`${this.apiUrl}/list`, body);
   }
 }
