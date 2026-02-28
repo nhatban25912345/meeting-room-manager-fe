@@ -67,7 +67,8 @@ export interface CreateUserRequest {
   username: string;
   password: string;
   email: string;
-  fullName: string;
+  firstName: string;
+  lastName: string;
   phoneNumber: string;
   unitCode: string;
   jobTitle: string;
@@ -132,7 +133,7 @@ export class UserService {
       'Authorization': `Bearer ${token}`
     });
 
-    return this.http.post<CreateUserResponse>(`${this.baseUrl}/create`, request, { headers });
+    return this.http.post<CreateUserResponse>(`${this.baseUrl}/register`, request, { headers });
   }
 
   // Get all active users for participant selection

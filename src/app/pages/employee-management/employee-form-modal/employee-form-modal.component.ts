@@ -13,7 +13,8 @@ export interface CreateEmployeeRequest {
   username: string;
   password: string;
   email: string;
-  fullName: string;
+  firstName: string;
+  lastName: string;
   phoneNumber: string;
   unitCode: string;
   jobTitle: string;
@@ -100,12 +101,7 @@ export class EmployeeFormModalComponent implements OnInit, OnChanges {
   handleSubmit(): void {
     if (this.employeeForm.valid) {
       const formValue = this.employeeForm.value;
-      const { firstName, lastName, ...rest } = formValue;
-      const requestData: CreateEmployeeRequest = {
-        ...rest,
-        fullName: `${firstName} ${lastName}`.trim()
-      };
-      this.onSubmit.emit(requestData);
+      this.onSubmit.emit(formValue);
     } else {
       Object.values(this.employeeForm.controls).forEach(control => {
         if (control.invalid) {
