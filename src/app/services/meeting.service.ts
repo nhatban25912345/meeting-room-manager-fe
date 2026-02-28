@@ -75,6 +75,33 @@ export interface MeetingDetailResponse {
   data: MeetingData;
 }
 
+// Create meeting request interface
+export interface CreateMeetingRequest {
+  subject: string;
+  content: string;
+  roomCode: string;
+  startTime: string; // Format: HH:mm:ss
+  endTime: string; // Format: HH:mm:ss
+  meetingDate: string; // Format: YYYY-MM-DD
+  organizerUnit: string;
+  meetingHost: string; // User ID
+  contactEmail: string;
+  dressCode: string;
+  scheduleType: string; // 'recurring' | 'non_recurring'
+  note?: string;
+  conclusionUnit?: string;
+  participantUserIds: string[]; // Array of user IDs
+  recurrencePattern?: string;
+  recurrenceEndDate?: string;
+  attachment?: string;
+  preparationTasks?: string;
+}
+
+export interface CreateMeetingResponse {
+  status: ApiStatus;
+  data: MeetingData;
+}
+
 // Grouped data interface
 export interface MeetingGroup {
   meetingDate: string; // Format: DD/MM/YYYY
@@ -179,8 +206,8 @@ export class MeetingService {
   /**
    * Create new meeting
    */
-  createMeeting(data: Partial<MeetingData>): Observable<any> {
-    return this.http.post(this.apiUrl, data);
+  createMeeting(data: CreateMeetingRequest): Observable<CreateMeetingResponse> {
+    return this.http.post<CreateMeetingResponse>(`${this.apiUrl}/create`, data);
   }
 
   /**

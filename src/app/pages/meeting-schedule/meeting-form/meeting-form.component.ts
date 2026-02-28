@@ -13,6 +13,7 @@ import { NzUploadModule } from 'ng-zorro-antd/upload';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { RoomService } from '../../../services/room.service';
 import { UserService } from '../../employee-management/services/user.service';
+import { MeetingService, CreateMeetingRequest } from '../../../services/meeting.service';
 
 @Component({
   selector: 'app-meeting-form',
@@ -76,6 +77,7 @@ export class MeetingFormComponent implements OnInit {
     private message: NzMessageService,
     private roomService: RoomService,
     private userService: UserService,
+    private meetingService: MeetingService,
     private router: Router
   ) {}
 
@@ -197,16 +199,60 @@ export class MeetingFormComponent implements OnInit {
 
   onSubmit(): void {
     if (this.meetingForm.valid) {
-      const formValue = {
-        ...this.meetingForm.getRawValue()
+      const formValue = this.meetingForm.getRawValue();
+      
+      // Transform form data to API request format
+      const request: CreateMeetingRequest = {
+        subject: formValue.subject,
+        content: formValue.content,
+        roomCode: formValue.roomCode,
+        startTime: this.formatTimeToString(formValue.startTime),
+        endTime: this.formatTimeToString(formValue.endTime),
+        meetingDate: this.formatDateToString(formValue.meetingDate),
+        organizerUnit: formValue.organizingUnit,
+        meetingHost: formValue.participants && formValue.participants.length > 0 
+          ? formValue.participants[0].toString() 
+          : '1000', // Default to first participant or fallback
+        contactEmail: formValue.contactEmail,
+        dressCode: formValue.dressCode,
+        scheduleType: this.mapScheduleType(formValue.meetingType),
+        participantUserIds: formValue.participants.map((id: number) => id.toString())
       };
-      console.log('Form submitted:', formValue);
-      // TODO: Call API to submit the meeting schedule
-      // When API returns success (HTTP 200), navigate to plan management
-      this.message.success('Tạo mới lịch họp thành công!');
-      setTimeout(() => {
-        this.router.navigate(['/home/plan-management']);
-      }, 1000);
+
+      // Add optional fields
+      if (formValue.note) {
+        request.note = formValue.note;
+      }
+      if (formValue.conclusionUnit) {
+        request.conclusionUnit = formValue.conclusionUnit;
+      }
+      if (formValue.recurringSchedule && formValue.recurringSchedule !== 'none') {
+        request.recurrencePattern = formValue.recurringSchedule;
+      }
+      if (formValue.attachedFile) {
+        request.attachment = formValue.attachedFile;
+      }
+      if (formValue.preparationTask) {
+        request.preparationTasks = formValue.preparationTask;
+      }
+
+      // Call API to create meeting
+      this.meetingService.createMeeting(request).subscribe({
+        next: (response) => {
+          if (response.status.statusCode === 'SUCCESS') {
+            this.message.success('Tạo mới lịch họp thành công!');
+            setTimeout(() => {
+              this.router.navigate(['/home/plan-management']);
+            }, 1000);
+          } else {
+            this.message.error(response.status.displayMessage || 'Tạo lịch họp thất bại!');
+          }
+        },
+        error: (error) => {
+          console.error('Error creating meeting:', error);
+          this.message.error('Không thể tạo lịch họp. Vui lòng thử lại!');
+        }
+      });
     } else {
       Object.values(this.meetingForm.controls).forEach(control => {
         if (control.invalid) {
@@ -229,6 +275,36 @@ export class MeetingFormComponent implements OnInit {
 
   onCancel(): void {
     this.router.navigate(['/home/plan-management']);
+  }
+
+  /**
+   * Format Date object to YYYY-MM-DD string
+   */
+  private formatDateToString(date: Date): string {
+    if (!date) return '';
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  /**
+   * Format Date object to HH:mm:ss string
+   */
+  private formatTimeToString(time: Date): string {
+    if (!time) return '';
+    const hours = String(time.getHours()).padStart(2, '0');
+    const minutes = String(time.getMinutes()).padStart(2, '0');
+    const seconds = String(time.getSeconds()).padStart(2, '0');
+    return `${hours}:${minutes}:${seconds}`;
+  }
+
+  /**
+   * Map meeting type to schedule type
+   */
+  private mapScheduleType(meetingType: string): string {
+    // Convert 'non-recurring' to 'non_recurring', 'recurring' stays the same
+    return meetingType === 'non-recurring' ? 'non_recurring' : 'recurring';
   }
 
   // File upload handlers
