@@ -7,6 +7,8 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzStatisticModule } from 'ng-zorro-antd/statistic';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { MeetingService, MeetingData } from '../../services/meeting.service';
+import { CommonService, OnboardingInfo } from '../../services/common.service';
+import { forkJoin } from 'rxjs';
 
 export interface RecentMeeting {
   title: string;
@@ -36,31 +38,56 @@ export interface RecentMeeting {
 export class OnboardingComponent implements OnInit {
   loading = false;
   recentMeetings: RecentMeeting[] = [];
+  
+  // Statistics data
+  totalMeetings = 0;
+  ongoingMeetings = 0;
+  totalIncidents = 0;
+  totalUnits = 0;
 
-  constructor(private meetingService: MeetingService) {}
+  constructor(
+    private meetingService: MeetingService,
+    private commonService: CommonService
+  ) {}
 
   ngOnInit(): void {
-    this.loadRecentMeetings();
+    this.loadData();
   }
 
-  loadRecentMeetings(): void {
+  loadData(): void {
     this.loading = true;
     
-    this.meetingService.listMeetings({
-      page: 0,
-      size: 5,
-      sort: 'createdAt,desc'
+    forkJoin({
+      onboardingInfo: this.commonService.getOnboardingInfo(),
+      recentMeetings: this.meetingService.listMeetings({
+        page: 0,
+        size: 5,
+        sort: 'createdAt,desc'
+      })
     }).subscribe({
-      next: (response) => {
-        this.recentMeetings = response.data.content.map(meeting => this.mapToRecentMeeting(meeting));
+      next: (results) => {
+        // Map onboarding info to statistics
+        const info = results.onboardingInfo.data;
+        this.totalMeetings = info.totalMeetingSchedules;
+        this.ongoingMeetings = info.meetingRoomsToday;
+        this.totalIncidents = info.incidents;
+        this.totalUnits = info.totalAvailableUsers;
+        
+        // Map recent meetings
+        this.recentMeetings = results.recentMeetings.data.content.map(meeting => 
+          this.mapToRecentMeeting(meeting)
+        );
+        
         this.loading = false;
       },
       error: (error) => {
-        console.error('Error loading recent meetings:', error);
+        console.error('Error loading data:', error);
         this.loading = false;
       }
     });
   }
+
+
 
   private mapToRecentMeeting(meeting: MeetingData): RecentMeeting {
     // Format date from YYYY-MM-DD to DD/MM/YYYY

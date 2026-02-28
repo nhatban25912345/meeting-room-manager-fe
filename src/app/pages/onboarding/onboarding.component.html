@@ -14,7 +14,7 @@
           </div>
           <div class="stat-details">
             <div class="stat-title">Tổng cuộc họp</div>
-            <div class="stat-value">156</div>
+            <div class="stat-value">{{ totalMeetings }}</div>
             <div class="stat-trend positive">
               <span nz-icon nzType="arrow-up"></span>
               +12% so với tháng trước
@@ -32,7 +32,7 @@
           </div>
           <div class="stat-details">
             <div class="stat-title">Đang diễn ra</div>
-            <div class="stat-value">3</div>
+            <div class="stat-value">{{ ongoingMeetings }}</div>
             <div class="stat-trend neutral">
               Hôm nay so với tháng trước
             </div>
@@ -49,7 +49,7 @@
           </div>
           <div class="stat-details">
             <div class="stat-title">Sự cố phát sinh</div>
-            <div class="stat-value">23</div>
+            <div class="stat-value">{{ totalIncidents }}</div>
             <div class="stat-trend negative">
               <span nz-icon nzType="arrow-down"></span>
               -8% so với tháng trước
@@ -67,7 +67,7 @@
           </div>
           <div class="stat-details">
             <div class="stat-title">Đơn vị tham gia</div>
-            <div class="stat-value">48</div>
+            <div class="stat-value">{{ totalUnits }}</div>
             <div class="stat-trend positive">
               <span nz-icon nzType="arrow-up"></span>
               +5 so với tháng trước
