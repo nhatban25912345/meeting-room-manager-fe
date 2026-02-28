@@ -1,0 +1,112 @@
+<nz-modal
+  [(nzVisible)]="visible"
+  [nzTitle]="modalTitle"
+  [nzFooter]="null"
+  [nzWidth]="800"
+  (nzOnCancel)="handleCancel()">
+  
+  <ng-template #modalTitle>
+    <div class="modal-title">
+      <span nz-icon nzType="info-circle" nzTheme="outline"></span>
+      <span>Chi tiết phòng họp</span>
+    </div>
+  </ng-template>
+
+  <div *nzModalContent class="room-detail-content">
+    <div *ngIf="room" class="detail-sections">
+      <!-- Thông tin cơ bản -->
+      <div class="detail-section">
+        <h3 class="section-title">
+          <span nz-icon nzType="home" nzTheme="outline"></span>
+          Thông tin cơ bản
+        </h3>
+        <nz-descriptions [nzColumn]="2" nzBordered nzSize="small">
+          <nz-descriptions-item nzTitle="Mã phòng">
+            <strong>{{ room.roomCode }}</strong>
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Tên phòng">
+            <strong>{{ room.roomName }}</strong>
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Vị trí" [nzSpan]="2">
+            <span nz-icon nzType="environment" nzTheme="outline"></span>
+            {{ room.location }}
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Sức chứa">
+            <span nz-icon nzType="team" nzTheme="outline"></span>
+            {{ room.capacity }} người
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Đơn vị quản lý">
+            {{ room.managementUnitName }}
+          </nz-descriptions-item>
+        </nz-descriptions>
+      </div>
+
+      <nz-divider></nz-divider>
+
+      <!-- Cấu hình và loại phòng -->
+      <div class="detail-section">
+        <h3 class="section-title">
+          <span nz-icon nzType="setting" nzTheme="outline"></span>
+          Cấu hình và loại phòng
+        </h3>
+        <nz-descriptions [nzColumn]="2" nzBordered nzSize="small">
+          <nz-descriptions-item nzTitle="Loại phòng">
+            <nz-tag [nzColor]="room.roomType === 'ONLINE' ? 'blue' : room.roomType === 'OFFLINE' ? 'green' : 'orange'">
+              {{ getRoomTypeLabel(room.roomType) }}
+            </nz-tag>
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Trạng thái">
+            <nz-tag [nzColor]="getStatusColor(room.status)">
+              {{ getStatusLabel(room.status) }}
+            </nz-tag>
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Cấu hình truyền hình" [nzSpan]="2">
+            {{ room.transmissionConfig || 'Không có' }}
+          </nz-descriptions-item>
+        </nz-descriptions>
+      </div>
+
+      <nz-divider></nz-divider>
+
+      <!-- Ghi chú -->
+      <div class="detail-section">
+        <h3 class="section-title">
+          <span nz-icon nzType="file-text" nzTheme="outline"></span>
+          Ghi chú
+        </h3>
+        <div class="notes-content">
+          {{ room.notes || 'Không có ghi chú' }}
+        </div>
+      </div>
+
+      <nz-divider></nz-divider>
+
+      <!-- Thông tin hệ thống -->
+      <div class="detail-section">
+        <h3 class="section-title">
+          <span nz-icon nzType="clock-circle" nzTheme="outline"></span>
+          Thông tin hệ thống
+        </h3>
+        <nz-descriptions [nzColumn]="2" nzBordered nzSize="small">
+          <nz-descriptions-item nzTitle="Người tạo">
+            {{ room.createdBy }}
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Ngày tạo">
+            {{ formatDate(room.createdDate) }}
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Người cập nhật">
+            {{ room.updatedBy || 'Chưa có' }}
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Ngày cập nhật">
+            {{ formatDate(room.updatedDate) }}
+          </nz-descriptions-item>
+        </nz-descriptions>
+      </div>
+    </div>
+
+    <div *ngIf="!room" class="no-data">
+      <span nz-icon nzType="inbox" nzTheme="outline"></span>
+      <p>Không có dữ liệu</p>
+    </div>
+  </div>
+</nz-modal>

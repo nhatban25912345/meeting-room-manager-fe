@@ -8,6 +8,7 @@ import { AuthService } from '../../services/auth.service';
 import { RoomFilterComponent } from './room-filter/room-filter.component';
 import { RoomTableComponent } from './room-table/room-table.component';
 import { RoomFormModalComponent } from './room-form-modal/room-form-modal.component';
+import { RoomDetailModalComponent } from './room-detail-modal/room-detail-modal.component';
 
 interface FilterCriteria {
   roomCode: string;
@@ -26,7 +27,8 @@ interface FilterCriteria {
     NzIconModule,
     RoomFilterComponent,
     RoomTableComponent,
-    RoomFormModalComponent
+    RoomFormModalComponent,
+    RoomDetailModalComponent
   ],
   templateUrl: './room-management.component.html',
   styleUrl: './room-management.component.scss'
@@ -38,6 +40,8 @@ export class RoomManagementComponent implements OnInit {
   // Modal state
   isModalVisible = false;
   isSubmitting = false;
+  isDetailModalVisible = false;
+  selectedRoom: RoomData | null = null;
   
   // Pagination
   pageIndex = 1;
@@ -216,7 +220,8 @@ export class RoomManagementComponent implements OnInit {
   }
 
   onViewRoom(room: RoomData): void {
-    this.message.info(`Xem chi tiết phòng ${room.roomCode}`);
+    this.selectedRoom = room;
+    this.isDetailModalVisible = true;
   }
 
   onEditRoom(room: RoomData): void {

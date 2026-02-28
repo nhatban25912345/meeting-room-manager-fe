@@ -57,5 +57,11 @@
     (onSubmit)="handleModalSubmit($event)"
     (onCancel)="handleModalCancel()">
   </app-room-form-modal>
+
+  <!-- Detail Modal Component -->
+  <app-room-detail-modal
+    [(visible)]="isDetailModalVisible"
+    [room]="selectedRoom">
+  </app-room-detail-modal>
 </div>
 
