@@ -12,14 +12,31 @@
   <div class="filter-content" *ngIf="showFilterPanel">
     <form nz-form [formGroup]="searchForm" (ngSubmit)="onSearch()">
       <div class="filter-grid">
-        <!-- Room Type -->
-        <div class="filter-item filter-item-full">
-          <label class="filter-label">Chọn loại phòng</label>
-          <nz-radio-group formControlName="roomType">
-            <label nz-radio nzValue="all">Tất cả các loại phòng</label>
-            <label nz-radio nzValue="managed">Phòng họp được quản lý</label>
-            <label nz-radio nzValue="unmanaged">Phòng họp không được quản lý</label>
-          </nz-radio-group>
+        <!-- Room Code -->
+        <div class="filter-item">
+          <label class="filter-label">Phòng họp</label>
+          <nz-select 
+            formControlName="roomCode" 
+            nzPlaceHolder="Chọn phòng họp"
+            nzShowSearch
+            nzAllowClear
+          >
+            <nz-option 
+              *ngFor="let option of roomCodeOptions" 
+              [nzValue]="option.value" 
+              [nzLabel]="option.label"
+            ></nz-option>
+          </nz-select>
+        </div>
+
+        <!-- Organizer -->
+        <div class="filter-item">
+          <label class="filter-label">Người chủ trì cuộc họp</label>
+          <input 
+            nz-input 
+            formControlName="organizer" 
+            placeholder="Nhập tên người chủ trì" 
+          />
         </div>
 
         <!-- Meeting Owner -->
@@ -29,26 +46,6 @@
             nz-input 
             formControlName="meetingOwner" 
             placeholder="Nhập chủ đề cuộc họp" 
-          />
-        </div>
-
-        <!-- Participants -->
-        <div class="filter-item">
-          <label class="filter-label">Cá nhân tham gia</label>
-          <input 
-            nz-input 
-            formControlName="participants" 
-            placeholder="Nhập tên người tham gia"
-          />
-        </div>
-
-        <!-- Participating Unit -->
-        <div class="filter-item">
-          <label class="filter-label">Đơn vị tham gia</label>
-          <input 
-            nz-input 
-            formControlName="participatingUnit" 
-            placeholder="Nhập tên đơn vị"
           />
         </div>
 

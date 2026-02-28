@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MeetingFilterComponent } from './meeting-filter/meeting-filter.component';
 import { MeetingTableComponent, MeetingSchedule, MeetingGroup } from './meeting-table/meeting-table.component';
+import { RoomService } from '../../services/room.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-meeting-schedule',
@@ -21,27 +23,33 @@ export class MeetingScheduleComponent implements OnInit {
   loading = false;
   totalMeetings = 0;
   showFilterPanel = false;
+  roomCodeOptions: Array<{ value: string; label: string }> = [];
 
   statusOptions = [
-    { label: 'Chờ duyệt', value: 'pending', color: 'blue' },
-    { label: 'Đã duyệt', value: 'approved', color: 'green' },
-    { label: 'Từ chối', value: 'rejected', color: 'red' },
-    { label: 'Hủy', value: 'cancelled', color: 'default' }
+    { label: 'Tạo mới', value: 'CREATED', color: 'default' },
+    { label: 'Chờ duyệt', value: 'PENDING_APPROVAL', color: 'blue' },
+    { label: 'Đã duyệt', value: 'APPROVED', color: 'green' },
+    { label: 'Từ chối', value: 'REJECTED', color: 'red' },
+    { label: 'Hủy', value: 'CANCELED', color: 'gray' }
   ];
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private roomService: RoomService,
+    private message: NzMessageService
+  ) {}
 
   ngOnInit(): void {
     this.initForm();
+    this.loadAvailableRooms();
     this.loadMeetingSchedules();
   }
 
   initForm(): void {
     this.searchForm = this.fb.group({
-      roomType: ['all'],
+      roomCode: [null],
+      organizer: [''],
       meetingOwner: [''],
-      participants: [''],
-      participatingUnit: [''],
       timeFrom: [null],
       timeTo: [null],
       createdFrom: [null],
@@ -52,6 +60,23 @@ export class MeetingScheduleComponent implements OnInit {
       searchType: [''],
       status: [null],
       meetingType: [null]
+    });
+  }
+
+  loadAvailableRooms(): void {
+    this.roomService.getAvailableRooms().subscribe({
+      next: (response) => {
+        if (response.status.statusCode === 'SUCCESS' && response.data) {
+          this.roomCodeOptions = response.data.map(room => ({
+            value: room.roomCode,
+            label: `${room.roomCode} - ${room.roomName} - ${room.location}`
+          }));
+        }
+      },
+      error: (error) => {
+        console.error('Error loading available rooms:', error);
+        this.message.error('Không thể tải danh sách phòng họp');
+      }
     });
   }
 

@@ -29,6 +29,7 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 export class MeetingFilterComponent {
   @Input() searchForm!: FormGroup;
   @Input() statusOptions: any[] = [];
+  @Input() roomCodeOptions: any[] = [];
   @Input() showFilterPanel = false;
   
   @Output() search = new EventEmitter<void>();
