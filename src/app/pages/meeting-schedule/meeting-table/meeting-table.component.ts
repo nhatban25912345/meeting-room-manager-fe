@@ -10,7 +10,7 @@ export interface MeetingSchedule {
   id: string;
   time: string;
   location: string;
-  status: 'approved' | 'pending' | 'rejected' | 'cancelled';
+  status: string; // 'CREATED' | 'PENDING_APPROVAL' | 'APPROVED' | 'REJECTED' | 'CANCELED'
   title: string;
   organizer: string;
   organizingUnit: string;

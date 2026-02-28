@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { MeetingFilterComponent } from './meeting-filter/meeting-filter.component';
 import { MeetingTableComponent, MeetingSchedule, MeetingGroup } from './meeting-table/meeting-table.component';
 import { RoomService } from '../../services/room.service';
+import { MeetingService, MeetingSearchRequest } from '../../services/meeting.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
@@ -36,6 +37,7 @@ export class MeetingScheduleComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private roomService: RoomService,
+    private meetingService: MeetingService,
     private message: NzMessageService
   ) {}
 
@@ -83,125 +85,81 @@ export class MeetingScheduleComponent implements OnInit {
   loadMeetingSchedules(): void {
     this.loading = true;
     
-    // Sample data - replace with actual API call
-    setTimeout(() => {
-      this.meetingGroups = [
-        {
-          date: '02/02/2026',
-          dayOfWeek: 'Thứ hai',
-          count: 9,
-          expanded: true,
-          meetings: [
-            {
-              id: '1',
-              time: '08:00 - 08:30',
-              location: 'F101_Nexus_Tầng 2_36A DVH',
-              status: 'approved',
-              title: 'Daily dự án UBCK',
-              organizer: 'Nguyễn Bá Ngọc',
-              organizingUnit: 'Vụ Kế hoạch',
-              dressCode: 'Thường phục',
-              notes: 'Phòng họp có tivi'
-            },
-            {
-              id: '2',
-              time: '09:00 - 11:00',
-              location: 'Phòng họp 44.06 - T44 Keangnam',
-              status: 'approved',
-              title: 'Brainstorming cải thiến chất lượng nền tảng vay',
-              organizer: 'Nguyễn Anh Chiến',
-              organizingUnit: 'Văn phòng Bộ',
-              dressCode: 'Công sở',
-              notes: ''
-            },
-            {
-              id: '3',
-              time: '10:00 - 12:00',
-              location: 'PH Stevejobs - Tầng 44 Keangnam',
-              status: 'approved',
-              title: '[KTDL] Retro and Planning',
-              organizer: 'Bùi Thị Ngọc Anh',
-              organizingUnit: 'Vụ Tài chính',
-              dressCode: 'Thường phục',
-              notes: 'Cần phòng họp kín'
-            },
-            {
-              id: '4',
-              time: '13:00 - 14:30',
-              location: 'F101_Nexus_Tầng 2_36A DVH',
-              status: 'pending',
-              title: 'Họp giao ban tuần',
-              organizer: 'Trần Văn Nam',
-              organizingUnit: 'Vụ Tổ chức',
-              dressCode: 'Trang trọng',
-              notes: 'Cần chuẩn bị máy chiếu'
-            },
-            {
-              id: '5',
-              time: '14:00 - 16:00',
-              location: 'Phòng họp 44.06 - T44 Keangnam',
-              status: 'rejected',
-              title: 'Thảo luận kế hoạch Q2',
-              organizer: 'Lê Thị Mai',
-              organizingUnit: 'Văn phòng Bộ',
-              dressCode: 'Công sở',
-              notes: 'Trùng lịch họp khác'
-            },
-            {
-              id: '6',
-              time: '15:00 - 17:00',
-              location: 'PH Stevejobs - Tầng 44 Keangnam',
-              status: 'pending',
-              title: 'Review dự án tháng 2',
-              organizer: 'Phạm Văn Hùng',
-              organizingUnit: 'Vụ Kế hoạch',
-              dressCode: 'Thường phục',
-              notes: ''
-            }
-          ]
-        },
-        {
-          date: '03/02/2026',
-          dayOfWeek: 'Thứ ba',
-          count: 4,
+    const formValue = this.searchForm.value;
+    
+    // Build search request
+    const request: MeetingSearchRequest = {
+      roomCode: formValue.roomCode || undefined,
+      organizer: formValue.organizer || undefined,
+      meetingDateFrom: formValue.timeFrom ? this.formatDateToString(formValue.timeFrom) : undefined,
+      meetingDateTo: formValue.timeTo ? this.formatDateToString(formValue.timeTo) : undefined,
+      createdAtFrom: formValue.createdFrom ? this.formatDateToString(formValue.createdFrom) : undefined,
+      createdAtTo: formValue.createdTo ? this.formatDateToString(formValue.createdTo) : undefined,
+      status: formValue.status || undefined,
+      scheduleType: formValue.scheduleType || undefined,
+      page: 0,
+      size: 100, // Load more items to group properly
+      sort: 'meetingDate,desc'
+    };
+
+    this.meetingService.searchMeetingsGrouped(request).subscribe({
+      next: (response) => {
+        // Map API data to UI model
+        this.meetingGroups = response.groups.map(group => ({
+          date: group.meetingDate,
+          dayOfWeek: group.dayOfWeek,
+          count: group.count,
           expanded: false,
-          meetings: [
-            {
-              id: '7',
-              time: '08:30 - 10:00',
-              location: 'F101_Nexus_Tầng 2_36A DVH',
-              status: 'approved',
-              title: 'Họp ban lãnh đạo',
-              organizer: 'Hoàng Văn Tuấn',
-              organizingUnit: 'Văn phòng Bộ',
-              dressCode: 'Trang trọng',
-              notes: 'Họp quan trọng'
-            },
-            {
-              id: '8',
-              time: '14:00 - 15:30',
-              location: 'Phòng họp 44.06 - T44 Keangnam',
-              status: 'approved',
-              title: 'Training nhân sự mới',
-              organizer: 'Đỗ Thị Lan',
-              organizingUnit: 'Vụ Tổ chức',
-              dressCode: 'Thường phục',
-              notes: ''
-            }
-          ]
-        },
-        {
-          date: '04/02/2026',
-          dayOfWeek: 'Thứ tư',
-          count: 6,
-          expanded: false,
-          meetings: []
+          meetings: group.meetings.map(meeting => ({
+            id: meeting.id.toString(),
+            time: `${this.formatTime(meeting.startTime)} - ${this.formatTime(meeting.endTime)}`,
+            location: meeting.roomCode, // Using roomCode as location for now
+            status: meeting.status,
+            title: meeting.subject,
+            organizer: meeting.participantUserIds && meeting.participantUserIds.length > 0 
+              ? meeting.participantUserIds[0].fullName 
+              : meeting.createdBy,
+            organizingUnit: meeting.organizerUnit,
+            dressCode: meeting.dressCode,
+            notes: meeting.note || ''
+          }))
+        }));
+        
+        // Expand first group by default
+        if (this.meetingGroups.length > 0) {
+          this.meetingGroups[0].expanded = true;
         }
-      ];
-      
-      this.totalMeetings = this.meetingGroups.reduce((sum, group) => sum + group.count, 0);
-      this.loading = false;
-    }, 500);
+        
+        this.totalMeetings = response.totalMeetings;
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error loading meeting schedules:', error);
+        this.message.error('Không thể tải danh sách lịch họp');
+        this.meetingGroups = [];
+        this.totalMeetings = 0;
+        this.loading = false;
+      }
+    });
+  }
+
+  /**
+   * Format Date object to YYYY-MM-DD string
+   */
+  private formatDateToString(date: Date): string {
+    if (!date) return '';
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  /**
+   * Format time from HH:mm:ss to HH:mm
+   */
+  private formatTime(time: string): string {
+    if (!time) return '';
+    return time.substring(0, 5); // Extract HH:mm from HH:mm:ss
   }
 
   search(): void {

@@ -13,37 +13,37 @@ export interface ApiStatus {
   displayMessage: string;
 }
 
-export interface MeetingData {
-  id: string;
-  roomCode: string;
-  roomName: string;
-  location: string;
-  meetingDate: string; // Format: YYYY-MM-DD
-  timeFrom: string; // Format: HH:mm
-  timeTo: string; // Format: HH:mm
-  title: string;
-  organizer: string;
-  organizerUnit: string;
-  participants: string;
-  internalParticipants: string;
-  externalParticipants: string;
-  preparation: string;
-  preparationUnit: string;
-  attachments: string;
-  notes: string;
-  meetingMinutes: string;
-  responseStatus: string;
-  status: string; // 'pending' | 'approved' | 'rejected' | 'cancelled'
-  scheduleType: string; // 'recurring' | 'one-time'
-  meetingType: string; // 'internal' | 'external' | 'mixed'
-  recurringConfig: string | null;
-  createdAt: string;
-  createdBy: string;
-  updatedAt: string | null;
-  updatedBy: string | null;
+export interface ParticipantUser {
+  userId: string;
+  fullName: string;
 }
 
-export interface MeetingQueryParams {
+export interface MeetingData {
+  id: number;
+  meetingCode: string | null;
+  subject: string;
+  content: string;
+  roomCode: string;
+  startTime: string; // Format: HH:mm:ss
+  endTime: string; // Format: HH:mm:ss
+  meetingDate: string; // Format: YYYY-MM-DD
+  organizerUnit: string;
+  contactEmail: string;
+  dressCode: string;
+  scheduleType: string; // 'recurring' | 'non_recurring'
+  recurrencePattern: string | null;
+  recurrenceEndDate: string | null;
+  note: string | null;
+  attachment: string | null;
+  preparationTasks: string | null;
+  conclusionUnit: string | null;
+  status: string; // 'CREATED' | 'APPROVED' | 'REJECTED' | 'CANCELLED'
+  createdBy: string;
+  createdAt: string;
+  participantUserIds: ParticipantUser[];
+}
+
+export interface MeetingSearchRequest {
   roomCode?: string;
   meetingDateFrom?: string; // Format: YYYY-MM-DD
   meetingDateTo?: string; // Format: YYYY-MM-DD
@@ -52,39 +52,22 @@ export interface MeetingQueryParams {
   status?: string;
   scheduleType?: string;
   organizer?: string; // Người chủ trì cuộc họp
-  pageNumber?: number;
-  pageSize?: number;
+  page?: number;
+  size?: number;
+  sort?: string;
 }
 
-export interface Pageable {
-  pageNumber: number;
-  pageSize: number;
-  sort: {
-    unsorted: boolean;
-    empty: boolean;
-    sorted: boolean;
-  };
-  offset: number;
-  unpaged: boolean;
-  paged: boolean;
-}
-
-export interface MeetingPageResponse {
-  content: MeetingData[];
-  pageable: Pageable;
-  totalElements: number;
-  totalPages: number;
-  last: boolean;
-  first: boolean;
-  size: number;
-  number: number;
-  numberOfElements: number;
-  empty: boolean;
+// API Response from backend (already grouped)
+export interface MeetingGroupResponse {
+  meetingDate: string; // Format: YYYY-MM-DD
+  dayOfWeek: string; // e.g., "MONDAY", "TUESDAY"
+  totalMeetings: number;
+  meetings: MeetingData[];
 }
 
 export interface MeetingApiResponse {
   status: ApiStatus;
-  data: MeetingPageResponse;
+  data: MeetingGroupResponse[];
 }
 
 // Grouped data interface
@@ -105,97 +88,67 @@ export interface GroupedMeetingsResponse {
   providedIn: 'root'
 })
 export class MeetingService {
-  private apiUrl = `${environment.apiUrl}/meetings`;
+  private apiUrl = `${environment.apiUrl}/meeting-schedule`;
 
   constructor(private http: HttpClient) {}
 
   /**
-   * Query meetings with filters
+   * Search meetings with filters using POST method
    * Returns data grouped by meeting_date and sorted in descending order
    */
-  queryMeetings(params: MeetingQueryParams): Observable<MeetingApiResponse> {
-    let httpParams = new HttpParams();
+  searchMeetings(request: MeetingSearchRequest): Observable<MeetingApiResponse> {
+    // Build request body, removing undefined/null values
+    const body: any = {};
+    
+    if (request.roomCode) body.roomCode = request.roomCode;
+    if (request.meetingDateFrom) body.meetingDateFrom = request.meetingDateFrom;
+    if (request.meetingDateTo) body.meetingDateTo = request.meetingDateTo;
+    if (request.createdAtFrom) body.createdAtFrom = request.createdAtFrom;
+    if (request.createdAtTo) body.createdAtTo = request.createdAtTo;
+    if (request.status) body.status = request.status;
+    if (request.scheduleType) body.scheduleType = request.scheduleType;
+    if (request.organizer) body.organizer = request.organizer;
+    
+    // Add pagination
+    body.page = request.page ?? 0;
+    body.size = request.size ?? 10;
+    body.sort = request.sort ?? 'meetingDate,desc';
 
-    // Add query parameters
-    if (params.roomCode) {
-      httpParams = httpParams.set('roomCode', params.roomCode);
-    }
-    if (params.meetingDateFrom) {
-      httpParams = httpParams.set('meetingDateFrom', params.meetingDateFrom);
-    }
-    if (params.meetingDateTo) {
-      httpParams = httpParams.set('meetingDateTo', params.meetingDateTo);
-    }
-    if (params.createdAtFrom) {
-      httpParams = httpParams.set('createdAtFrom', params.createdAtFrom);
-    }
-    if (params.createdAtTo) {
-      httpParams = httpParams.set('createdAtTo', params.createdAtTo);
-    }
-    if (params.status) {
-      httpParams = httpParams.set('status', params.status);
-    }
-    if (params.scheduleType) {
-      httpParams = httpParams.set('scheduleType', params.scheduleType);
-    }
-    if (params.organizer) {
-      httpParams = httpParams.set('organizer', params.organizer);
-    }
-    if (params.pageNumber !== undefined) {
-      httpParams = httpParams.set('pageNumber', params.pageNumber.toString());
-    }
-    if (params.pageSize !== undefined) {
-      httpParams = httpParams.set('pageSize', params.pageSize.toString());
-    }
-
-    // Add sorting by meetingDate descending
-    httpParams = httpParams.set('sort', 'meetingDate,desc');
-
-    return this.http.get<MeetingApiResponse>(this.apiUrl, { params: httpParams });
+    return this.http.post<MeetingApiResponse>(`${this.apiUrl}/search`, body);
   }
 
   /**
-   * Query meetings and group by meeting date
+   * Search meetings and group by meeting date
    */
-  queryMeetingsGrouped(params: MeetingQueryParams): Observable<GroupedMeetingsResponse> {
-    return this.queryMeetings(params).pipe(
-      map(response => this.groupMeetingsByDate(response.data.content, response.data.totalElements))
+  searchMeetingsGrouped(request: MeetingSearchRequest): Observable<GroupedMeetingsResponse> {
+    return this.searchMeetings(request).pipe(
+      map(response => this.mapApiResponseToGrouped(response))
     );
   }
 
   /**
-   * Group meetings by meeting date
-   * @param meetings Array of meeting data
-   * @param totalMeetings Total number of meetings
-   * @returns Grouped meetings by date
+   * Map API response (already grouped) to UI model
    */
-  private groupMeetingsByDate(meetings: MeetingData[], totalMeetings: number): GroupedMeetingsResponse {
-    const groupedMap = new Map<string, MeetingData[]>();
+  private mapApiResponseToGrouped(response: MeetingApiResponse): GroupedMeetingsResponse {
+    const dayOfWeekMap: { [key: string]: string } = {
+      'MONDAY': 'Thứ hai',
+      'TUESDAY': 'Thứ ba',
+      'WEDNESDAY': 'Thứ tư',
+      'THURSDAY': 'Thứ năm',
+      'FRIDAY': 'Thứ sáu',
+      'SATURDAY': 'Thứ bảy',
+      'SUNDAY': 'Chủ nhật'
+    };
 
-    // Group meetings by date
-    meetings.forEach(meeting => {
-      const date = meeting.meetingDate;
-      if (!groupedMap.has(date)) {
-        groupedMap.set(date, []);
-      }
-      groupedMap.get(date)!.push(meeting);
-    });
+    const groups = response.data.map(group => ({
+      meetingDate: this.formatDate(group.meetingDate),
+      dayOfWeek: dayOfWeekMap[group.dayOfWeek] || group.dayOfWeek,
+      count: group.totalMeetings,
+      meetings: group.meetings,
+      expanded: false
+    }));
 
-    // Convert to array and format
-    const groups: MeetingGroup[] = Array.from(groupedMap.entries())
-      .map(([date, meetingList]) => ({
-        meetingDate: this.formatDate(date),
-        dayOfWeek: this.getDayOfWeek(date),
-        count: meetingList.length,
-        meetings: meetingList,
-        expanded: false
-      }))
-      .sort((a, b) => {
-        // Sort by date descending
-        const dateA = this.parseDate(a.meetingDate);
-        const dateB = this.parseDate(b.meetingDate);
-        return dateB.getTime() - dateA.getTime();
-      });
+    const totalMeetings = response.data.reduce((sum, group) => sum + group.totalMeetings, 0);
 
     return {
       groups,
@@ -209,23 +162,6 @@ export class MeetingService {
   private formatDate(dateStr: string): string {
     const [year, month, day] = dateStr.split('-');
     return `${day}/${month}/${year}`;
-  }
-
-  /**
-   * Parse date from DD/MM/YYYY to Date object
-   */
-  private parseDate(dateStr: string): Date {
-    const [day, month, year] = dateStr.split('/');
-    return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-  }
-
-  /**
-   * Get day of week in Vietnamese
-   */
-  private getDayOfWeek(dateStr: string): string {
-    const date = new Date(dateStr);
-    const days = ['Chủ nhật', 'Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy'];
-    return days[date.getDay()];
   }
 
   /**
