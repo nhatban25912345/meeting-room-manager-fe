@@ -57,6 +57,47 @@
     border-radius: 8px 8px 0 0;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
 
+    // Tab color styles
+    .tab-created {
+      color: rgba(0, 0, 0, 0.65);
+      
+      span[nz-icon] {
+        color: rgba(0, 0, 0, 0.65);
+      }
+    }
+
+    .tab-pending {
+      color: #108ee9;
+      
+      span[nz-icon] {
+        color: #108ee9;
+      }
+    }
+
+    .tab-approved {
+      color: #52c41a;
+      
+      span[nz-icon] {
+        color: #52c41a;
+      }
+    }
+
+    .tab-rejected {
+      color: #ff4d4f;
+      
+      span[nz-icon] {
+        color: #ff4d4f;
+      }
+    }
+
+    .tab-cancelled {
+      color: #8c8c8c;
+      
+      span[nz-icon] {
+        color: #8c8c8c;
+      }
+    }
+
     ::ng-deep {
       .ant-tabs-nav {
         margin: 0;

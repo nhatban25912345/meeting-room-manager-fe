@@ -14,36 +14,36 @@
   <!-- Tabs with counts -->
   <nz-tabset [(nzSelectedIndex)]="selectedTab" (nzSelectedIndexChange)="onTabChange($event)" class="plan-tabs">
     <nz-tab>
-      <a *nzTabLink nz-tab-link>
+      <a *nzTabLink nz-tab-link class="tab-created">
         <span nz-icon nzType="file" nzTheme="outline"></span>
         Tạo mới ({{ tabCounts.newPlans }})
         <!-- <nz-badge [nzCount]="tabCounts.newPlans" [nzShowZero]="true"></nz-badge> -->
       </a>
     </nz-tab>
     <nz-tab>
-      <a *nzTabLink nz-tab-link>
+      <a *nzTabLink nz-tab-link class="tab-pending">
         <span nz-icon nzType="clock-circle" nzTheme="outline"></span>
         Chờ phê duyệt ({{ tabCounts.pending }})
         <!-- <nz-badge [nzCount]="tabCounts.pending" [nzShowZero]="true"></nz-badge> -->
       </a>
     </nz-tab>
     <nz-tab>
-      <a *nzTabLink nz-tab-link>
+      <a *nzTabLink nz-tab-link class="tab-approved">
         <span nz-icon nzType="check-circle" nzTheme="outline"></span>
         Đã phê duyệt ({{ tabCounts.approved }})
         <!-- <nz-badge [nzCount]="tabCounts.approved" [nzShowZero]="true"></nz-badge> -->
       </a>
     </nz-tab>
     <nz-tab>
-      <a *nzTabLink nz-tab-link>
+      <a *nzTabLink nz-tab-link class="tab-rejected">
         <span nz-icon nzType="close-circle" nzTheme="outline"></span>
         Từ chối ({{ tabCounts.rejected }})
         <!-- <nz-badge [nzCount]="tabCounts.rejected" [nzShowZero]="true"></nz-badge> -->
       </a>
     </nz-tab>
     <nz-tab>
-      <a *nzTabLink nz-tab-link>
-        <span nz-icon nzType="delete" nzTheme="outline"></span>
+      <a *nzTabLink nz-tab-link class="tab-cancelled">
+        <span nz-icon nzType="stop" nzTheme="outline"></span>
         Đã hủy ({{ tabCounts.cancelled }})
         <!-- <nz-badge [nzCount]="tabCounts.cancelled" [nzShowZero]="true"></nz-badge> -->
       </a>
