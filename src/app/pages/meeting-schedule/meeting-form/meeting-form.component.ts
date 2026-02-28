@@ -242,7 +242,7 @@ export class MeetingFormComponent implements OnInit {
           if (response.status.statusCode === 'SUCCESS') {
             this.message.success('Tạo mới lịch họp thành công!');
             setTimeout(() => {
-              this.router.navigate(['/home/plan-management']);
+              this.router.navigate(['/meeting-management/plan-management']);
             }, 1000);
           } else {
             this.message.error(response.status.displayMessage || 'Tạo lịch họp thất bại!');
@@ -274,7 +274,7 @@ export class MeetingFormComponent implements OnInit {
   }
 
   onCancel(): void {
-    this.router.navigate(['/home/plan-management']);
+    this.router.navigate(['/meeting-management/plan-management']);
   }
 
   /**

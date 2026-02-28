@@ -12,7 +12,7 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/login/login.component').then(m => m.LoginComponent)
   },
   { 
-    path: 'home', 
+    path: 'meeting-management', 
     loadComponent: () => import('./home/home.component').then(m => m.HomeComponent),
     canActivate: [authGuard],
     children: [

@@ -56,7 +56,7 @@ export class LoginComponent {
         next: (response) => {
           if (response.status.statusCode === 'SUCCESS') {
             this.message.success(response.status.displayMessage || 'Đăng nhập thành công!');
-            this.router.navigate(['/home']);
+            this.router.navigate(['/meeting-management']);
           } else {
             this.message.error(response.status.displayMessage || 'Đăng nhập thất bại!');
           }

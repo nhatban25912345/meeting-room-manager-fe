@@ -199,7 +199,7 @@ export class PlanManagementComponent implements OnInit {
 
   createNewPlan(): void {
     // Navigate to create new plan page
-    this.router.navigate(['/home/bookings-new']);
+    this.router.navigate(['/meeting-management/bookings-new']);
   }
 
   viewPlan(plan: MeetingPlan): void {
