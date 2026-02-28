@@ -1,63 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
-import { NzFormModule } from 'ng-zorro-antd/form';
-import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzTableModule } from 'ng-zorro-antd/table';
-import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzRadioModule } from 'ng-zorro-antd/radio';
-import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
-import { NzSelectModule } from 'ng-zorro-antd/select';
-import { NzTagModule } from 'ng-zorro-antd/tag';
-import { NzCardModule } from 'ng-zorro-antd/card';
-import { NzGridModule } from 'ng-zorro-antd/grid';
-import { NzDividerModule } from 'ng-zorro-antd/divider';
-import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
-
-interface MeetingSchedule {
-  id: string;
-  time: string;
-  location: string;
-  status: 'approved' | 'pending' | 'rejected' | 'cancelled';
-  title: string;
-  organizer: string;
-  preparation: string;
-  participants: string;
-  internalParticipants: string;
-  responseStatus: string;
-  notes: string;
-  meetingMinutes: string;
-}
-
-interface MeetingGroup {
-  date: string;
-  dayOfWeek: string;
-  count: number;
-  meetings: MeetingSchedule[];
-  expanded: boolean;
-}
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { MeetingFilterComponent } from './meeting-filter/meeting-filter.component';
+import { MeetingTableComponent, MeetingSchedule, MeetingGroup } from './meeting-table/meeting-table.component';
 
 @Component({
   selector: 'app-meeting-schedule',
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    NzFormModule,
-    NzInputModule,
-    NzButtonModule,
-    NzTableModule,
-    NzIconModule,
-    NzRadioModule,
-    NzDatePickerModule,
-    NzSelectModule,
-    NzTagModule,
-    NzCardModule,
-    NzGridModule,
-    NzDividerModule,
-    NzDropDownModule
+    MeetingFilterComponent,
+    MeetingTableComponent
   ],
   templateUrl: './meeting-schedule.component.html',
   styleUrl: './meeting-schedule.component.scss'
@@ -228,21 +181,6 @@ export class MeetingScheduleComponent implements OnInit {
       // Load meetings from API
       console.log('Loading meetings for', group.date);
     }
-  }
-
-  getStatusColor(status: string): string {
-    const option = this.statusOptions.find(opt => opt.value === status);
-    return option?.color || 'default';
-  }
-
-  getStatusLabel(status: string): string {
-    const option = this.statusOptions.find(opt => opt.value === status);
-    return option?.label || status;
-  }
-
-  exportReport(): void {
-    console.log('Exporting report');
-    // Implement export functionality
   }
 
   viewDetails(meeting: MeetingSchedule): void {

@@ -1,0 +1,112 @@
+<div class="results-card">
+  <div class="results-header">
+    <h4 class="results-title">
+      Danh sách lịch họp
+      <span class="meeting-count">
+        <span nz-icon nzType="info-circle" nzTheme="outline"></span>
+        Tổng số cuộc họp: {{ totalMeetings }}
+      </span>
+    </h4>
+    <div class="status-legend">
+      <nz-tag nzColor="gray">Tạo mới</nz-tag>
+      <nz-tag nzColor="cyan">Chờ duyệt</nz-tag>
+      <nz-tag nzColor="green">Đã duyệt</nz-tag>
+      <nz-tag nzColor="red">Từ chối</nz-tag>
+      <nz-tag>Hủy</nz-tag>
+    </div>
+  </div>
+
+  <!-- Meetings Table -->
+  <div class="table-wrapper">
+    <nz-table 
+      #meetingTable 
+      [nzData]="meetingGroups" 
+      [nzLoading]="loading"
+      [nzShowPagination]="false"
+      nzSize="small"
+      class="meetings-table">
+      <thead>
+        <tr>
+          <th nzWidth="50px">Thao tác</th>
+          <th nzWidth="120px">Thời gian</th>
+          <th nzWidth="180px">Địa điểm</th>
+          <th nzWidth="100px">Trạng thái</th>
+          <th nzWidth="200px">Chủ đề cuộc họp</th>
+          <th nzWidth="150px">Chủ trì</th>
+          <th nzWidth="200px">Chuẩn bị</th>
+          <th nzWidth="200px">Tham gia</th>
+          <th nzWidth="180px">Thành phần nội bộ</th>
+          <th nzWidth="120px">Trạng phúc</th>
+          <th nzWidth="150px">Ghi chú</th>
+          <th nzWidth="120px">Biên bản họp</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let group of meetingGroups">
+          <!-- Group Header Row -->
+          <tr class="group-header-row" (click)="onToggleGroup(group)">
+            <td colspan="12">
+              <span nz-icon [nzType]="group.expanded ? 'right' : 'down'"></span>
+              <strong>{{ group.dayOfWeek }} - {{ group.date }}</strong>
+              (Có {{ group.count }} cuộc họp)
+            </td>
+          </tr>
+          
+          <!-- Meeting Rows -->
+          <ng-container *ngIf="group.expanded">
+            <tr *ngFor="let meeting of group.meetings" class="meeting-row">
+              <td>
+                <button nz-button nzType="text" nzSize="small" nz-dropdown [nzDropdownMenu]="actionMenu">
+                  <span nz-icon nzType="more"></span>
+                </button>
+                <nz-dropdown-menu #actionMenu="nzDropdownMenu">
+                  <ul nz-menu>
+                    <li nz-menu-item (click)="onViewDetails(meeting)">
+                      <span nz-icon nzType="eye"></span>
+                      Xem chi tiết
+                    </li>
+                    <li nz-menu-item (click)="onEditMeeting(meeting)">
+                      <span nz-icon nzType="edit"></span>
+                      Chỉnh sửa
+                    </li>
+                    <li nz-menu-item (click)="onDeleteMeeting(meeting)">
+                      <span nz-icon nzType="delete"></span>
+                      Xóa
+                    </li>
+                  </ul>
+                </nz-dropdown-menu>
+              </td>
+              <td>{{ meeting.time }}</td>
+              <td>
+                <div class="location-cell">{{ meeting.location }}</div>
+              </td>
+              <td>
+                <nz-tag [nzColor]="getStatusColor(meeting.status)">
+                  {{ getStatusLabel(meeting.status) }}
+                </nz-tag>
+              </td>
+              <td>
+                <div class="text-cell">{{ meeting.title }}</div>
+              </td>
+              <td>{{ meeting.organizer }}</td>
+              <td>
+                <div class="text-cell">{{ meeting.preparation }}</div>
+              </td>
+              <td>
+                <div class="text-cell">{{ meeting.participants }}</div>
+              </td>
+              <td>
+                <div class="text-cell">{{ meeting.internalParticipants }}</div>
+              </td>
+              <td>{{ meeting.responseStatus }}</td>
+              <td>
+                <div class="text-cell">{{ meeting.notes }}</div>
+              </td>
+              <td>{{ meeting.meetingMinutes }}</td>
+            </tr>
+          </ng-container>
+        </ng-container>
+      </tbody>
+    </nz-table>
+  </div>
+</div>
