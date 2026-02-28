@@ -50,29 +50,6 @@
     </nz-tab>
   </nz-tabset>
 
-  <!-- Search and Filter -->
-  <div class="search-filter-bar">
-    <nz-input-group [nzPrefix]="prefixIconSearch" class="search-input">
-      <input 
-        type="text" 
-        nz-input 
-        placeholder="Tìm kiếm cuộc họp..." 
-        [(ngModel)]="searchText"
-        (keyup.enter)="search()"
-      />
-    </nz-input-group>
-    <ng-template #prefixIconSearch>
-      <span nz-icon nzType="search"></span>
-    </ng-template>
-    
-    <div class="filter-right">
-      <button nz-button nzType="default" class="filter-button">
-        <span nz-icon nzType="filter"></span>
-        Bộ lọc
-      </button>
-    </div>
-  </div>
-
   <!-- Table -->
   <nz-table 
     #planTable 

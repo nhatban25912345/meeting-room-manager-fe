@@ -118,7 +118,7 @@ export class PlanManagementComponent implements OnInit {
 
     this.meetingService.listMeetings({
       page: 0,
-      size: 100,
+      size: 20,
       sort: 'createdAt,desc',
       status: status
     }).subscribe({
@@ -188,12 +188,7 @@ export class PlanManagementComponent implements OnInit {
   }
 
   search(): void {
-    const searchValue = this.searchText?.toLowerCase() || '';
-    if (searchValue) {
-      this.loadMeetings();
-    } else {
-      this.loadMeetings();
-    }
+    this.loadMeetings();
   }
 
   createNewPlan(): void {
