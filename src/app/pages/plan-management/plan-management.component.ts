@@ -20,6 +20,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { MeetingService, MeetingData } from '../../services/meeting.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
+import { MeetingDetailModalComponent } from '../meeting-schedule/meeting-detail-modal/meeting-detail-modal.component';
 
 interface MeetingPlan {
   id: string;
@@ -56,7 +57,8 @@ interface MeetingPlan {
     NzSpaceModule,
     NzToolTipModule,
     NzMessageModule,
-    NzModalModule
+    NzModalModule,
+    MeetingDetailModalComponent
   ],
   templateUrl: './plan-management.component.html',
   styleUrl: './plan-management.component.scss'
@@ -66,6 +68,10 @@ export class PlanManagementComponent implements OnInit {
   loading = false;
   selectedTab = 0;
   searchText = '';
+
+  // Detail Modal
+  isDetailModalVisible = false;
+  selectedMeetingDetail: MeetingData | null = null;
 
   // Tab counts
   tabCounts = {
@@ -197,8 +203,19 @@ export class PlanManagementComponent implements OnInit {
   }
 
   viewPlan(plan: MeetingPlan): void {
-    console.log('View plan:', plan);
-    // TODO: Navigate to detail view or open modal
+    this.loading = true;
+    this.meetingService.getMeetingById(plan.id).subscribe({
+      next: (response) => {
+        this.selectedMeetingDetail = response.data;
+        this.isDetailModalVisible = true;
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error loading meeting detail:', error);
+        this.message.error('Không thể tải thông tin chi tiết cuộc họp');
+        this.loading = false;
+      }
+    });
   }
 
   editPlan(plan: MeetingPlan): void {

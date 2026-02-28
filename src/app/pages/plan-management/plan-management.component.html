@@ -175,4 +175,10 @@
       </tr>
     </tbody>
   </nz-table>
+
+  <!-- Meeting Detail Modal -->
+  <app-meeting-detail-modal
+    [(visible)]="isDetailModalVisible"
+    [meeting]="selectedMeetingDetail">
+  </app-meeting-detail-modal>
 </div>
