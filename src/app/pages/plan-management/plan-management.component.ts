@@ -63,25 +63,25 @@ export class PlanManagementComponent implements OnInit {
   loading = false;
   selectedTab = 0;
   searchText = '';
-  
+
   // Tab counts
   tabCounts = {
     approved: 0,
     pending: 0,
     rejected: 0,
-    deleted: 0,
+    cancelled: 0,
     newPlans: 0
   };
 
   filteredPlans: MeetingPlan[] = [];
-  
+
   // Mapping tab index to status
   private tabStatusMap: { [key: number]: string } = {
-    0: 'APPROVED',
-    1: 'PENDING',
-    2: 'REJECTED',
-    3: 'DELETED',
-    4: 'CREATED'
+    0: 'CREATED',
+    1: 'PENDING_APPROVAL',
+    2: 'APPROVED',
+    3: 'REJECTED',
+    4: 'CANCELED'
   };
 
   constructor(
@@ -111,7 +111,7 @@ export class PlanManagementComponent implements OnInit {
   loadMeetings(): void {
     this.loading = true;
     const status = this.tabStatusMap[this.selectedTab];
-    
+
     this.meetingService.listMeetings({
       page: 0,
       size: 100,
@@ -146,11 +146,11 @@ export class PlanManagementComponent implements OnInit {
           if (response.status.statusCode === 'SUCCESS' && response.data) {
             const count = response.data.totalElements;
             switch (parseInt(tabIndex)) {
-              case 0: this.tabCounts.approved = count; break;
+              case 0: this.tabCounts.newPlans = count; break;
               case 1: this.tabCounts.pending = count; break;
-              case 2: this.tabCounts.rejected = count; break;
-              case 3: this.tabCounts.deleted = count; break;
-              case 4: this.tabCounts.newPlans = count; break;
+              case 2: this.tabCounts.approved = count; break;
+              case 3: this.tabCounts.rejected = count; break;
+              case 4: this.tabCounts.cancelled = count; break;
             }
           }
         },
@@ -199,14 +199,32 @@ export class PlanManagementComponent implements OnInit {
 
   viewPlan(plan: MeetingPlan): void {
     console.log('View plan:', plan);
+    // TODO: Navigate to detail view or open modal
   }
 
   editPlan(plan: MeetingPlan): void {
     console.log('Edit plan:', plan);
+    // TODO: Navigate to edit page or open edit modal
   }
 
-  deletePlan(plan: MeetingPlan): void {
-    console.log('Delete plan:', plan);
+  submitForApproval(plan: MeetingPlan): void {
+    console.log('Submit for approval:', plan);
+    // TODO: Call API to submit meeting for approval
+  }
+
+  approvePlan(plan: MeetingPlan): void {
+    console.log('Approve plan:', plan);
+    // TODO: Call API to approve meeting
+  }
+
+  rejectPlan(plan: MeetingPlan): void {
+    console.log('Reject plan:', plan);
+    // TODO: Show reason input modal and call API to reject meeting
+  }
+
+  cancelPlan(plan: MeetingPlan): void {
+    console.log('Cancel plan:', plan);
+    // TODO: Show confirmation modal and call API to cancel meeting
   }
 
   applyFilters(): void {

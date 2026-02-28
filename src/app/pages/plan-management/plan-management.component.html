@@ -15,9 +15,9 @@
   <nz-tabset [(nzSelectedIndex)]="selectedTab" (nzSelectedIndexChange)="onTabChange($event)" class="plan-tabs">
     <nz-tab>
       <a *nzTabLink nz-tab-link>
-        <span nz-icon nzType="check-circle" nzTheme="outline"></span>
-        Đã phê duyệt ({{ tabCounts.approved }})
-        <!-- <nz-badge [nzCount]="tabCounts.approved" [nzShowZero]="true"></nz-badge> -->
+        <span nz-icon nzType="file" nzTheme="outline"></span>
+        Tạo mới ({{ tabCounts.newPlans }})
+        <!-- <nz-badge [nzCount]="tabCounts.newPlans" [nzShowZero]="true"></nz-badge> -->
       </a>
     </nz-tab>
     <nz-tab>
@@ -25,6 +25,13 @@
         <span nz-icon nzType="clock-circle" nzTheme="outline"></span>
         Chờ phê duyệt ({{ tabCounts.pending }})
         <!-- <nz-badge [nzCount]="tabCounts.pending" [nzShowZero]="true"></nz-badge> -->
+      </a>
+    </nz-tab>
+    <nz-tab>
+      <a *nzTabLink nz-tab-link>
+        <span nz-icon nzType="check-circle" nzTheme="outline"></span>
+        Đã phê duyệt ({{ tabCounts.approved }})
+        <!-- <nz-badge [nzCount]="tabCounts.approved" [nzShowZero]="true"></nz-badge> -->
       </a>
     </nz-tab>
     <nz-tab>
@@ -37,15 +44,8 @@
     <nz-tab>
       <a *nzTabLink nz-tab-link>
         <span nz-icon nzType="delete" nzTheme="outline"></span>
-        Đã xóa ({{ tabCounts.deleted }})
-        <!-- <nz-badge [nzCount]="tabCounts.deleted" [nzShowZero]="true"></nz-badge> -->
-      </a>
-    </nz-tab>
-    <nz-tab>
-      <a *nzTabLink nz-tab-link>
-        <span nz-icon nzType="file" nzTheme="outline"></span>
-        Tạo mới ({{ tabCounts.newPlans }})
-        <!-- <nz-badge [nzCount]="tabCounts.newPlans" [nzShowZero]="true"></nz-badge> -->
+        Đã hủy ({{ tabCounts.cancelled }})
+        <!-- <nz-badge [nzCount]="tabCounts.cancelled" [nzShowZero]="true"></nz-badge> -->
       </a>
     </nz-tab>
   </nz-tabset>
@@ -121,6 +121,7 @@
         </td>
         <td nzAlign="center">
           <div class="action-buttons">
+            <!-- Xem chi tiết - hiển thị cho tất cả các tab -->
             <button
               nz-button
               nzType="text"
@@ -128,26 +129,69 @@
               (click)="viewPlan(plan)"
               nz-tooltip
               nzTooltipTitle="Xem chi tiết">
-              <span nz-icon nzType="eye" nzTheme="outline"></span>
+              <span nz-icon nzType="eye" nzTheme="outline" style="color: #1890ff;"></span>
             </button>
+            
+            <!-- Sửa - chỉ hiển thị ở tab Tạo mới và Từ chối -->
             <button
+              *ngIf="selectedTab === 0 || selectedTab === 3"
               nz-button
               nzType="text"
               nzSize="small"
               (click)="editPlan(plan)"
               nz-tooltip
               nzTooltipTitle="Chỉnh sửa">
-              <span nz-icon nzType="edit" nzTheme="outline"></span>
+              <span nz-icon nzType="edit" nzTheme="outline" style="color: #faad14;"></span>
             </button>
+            
+            <!-- Gửi duyệt - chỉ hiển thị ở tab Tạo mới -->
             <button
+              *ngIf="selectedTab === 0"
+              nz-button
+              nzType="text"
+              nzSize="small"
+              (click)="submitForApproval(plan)"
+              nz-tooltip
+              nzTooltipTitle="Gửi duyệt">
+              <span nz-icon nzType="send" nzTheme="outline" style="color: #52c41a;"></span>
+            </button>
+            
+            <!-- Phê duyệt - chỉ hiển thị ở tab Chờ phê duyệt -->
+            <button
+              *ngIf="selectedTab === 1"
+              nz-button
+              nzType="text"
+              nzSize="small"
+              (click)="approvePlan(plan)"
+              nz-tooltip
+              nzTooltipTitle="Phê duyệt">
+              <span nz-icon nzType="check-circle" nzTheme="outline" style="color: #52c41a;"></span>
+            </button>
+            
+            <!-- Từ chối - chỉ hiển thị ở tab Chờ phê duyệt -->
+            <button
+              *ngIf="selectedTab === 1"
               nz-button
               nzType="text"
               nzSize="small"
               nzDanger
-              (click)="deletePlan(plan)"
+              (click)="rejectPlan(plan)"
               nz-tooltip
-              nzTooltipTitle="Xóa">
-              <span nz-icon nzType="delete" nzTheme="outline"></span>
+              nzTooltipTitle="Từ chối">
+              <span nz-icon nzType="close-circle" nzTheme="outline" style="color: #fd7a00;"></span>
+            </button>
+            
+            <!-- Hủy - không hiển thị ở tab Đã hủy -->
+            <button
+              *ngIf="selectedTab !== 4"
+              nz-button
+              nzType="text"
+              nzSize="small"
+              nzDanger
+              (click)="cancelPlan(plan)"
+              nz-tooltip
+              nzTooltipTitle="Hủy cuộc họp">
+              <span nz-icon nzType="stop" nzTheme="outline" style="color: #ff4d4f;"></span>
             </button>
           </div>
         </td>
