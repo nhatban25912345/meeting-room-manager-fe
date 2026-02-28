@@ -1,0 +1,99 @@
+<div class="user-profile-container">
+  <div class="page-header">
+    <h2>Thông tin người dùng</h2>
+    <p>Xem thông tin chi tiết tài khoản của bạn</p>
+  </div>
+
+  <div nz-row [nzGutter]="16">
+    <!-- User Profile Card -->
+    <div nz-col [nzSpan]="24" [nzMd]="8">
+      <nz-card class="profile-card">
+        <div class="profile-section">
+          <div class="avatar-section">
+            <nz-avatar 
+              [nzSize]="120" 
+              [nzText]="getInitials(currentUser?.fullName || '')"
+              class="user-avatar">
+            </nz-avatar>
+          </div>
+          <div class="user-name">{{ currentUser?.fullName || 'N/A' }}</div>
+          <div class="user-username">{{ '@' + (currentUser?.username || 'N/A') }}</div>
+          <nz-tag 
+            [nzColor]="getRoleColor(currentUser?.roleCode || '')" 
+            class="user-role-tag">
+            {{ getRoleDisplayName(currentUser?.roleCode || '') }}
+          </nz-tag>
+        </div>
+
+        <nz-divider></nz-divider>
+
+        <div class="quick-info">
+          <div class="info-item">
+            <span nz-icon nzType="mail" nzTheme="outline" class="info-icon"></span>
+            <span class="info-text">{{ currentUser?.email || 'Chưa cập nhật' }}</span>
+          </div>
+          <div class="info-item">
+            <span nz-icon nzType="phone" nzTheme="outline" class="info-icon"></span>
+            <span class="info-text">{{ currentUser?.phoneNumber || 'Chưa cập nhật' }}</span>
+          </div>
+          <div class="info-item">
+            <span nz-icon nzType="bank" nzTheme="outline" class="info-icon"></span>
+            <span class="info-text">{{ currentUser?.unitCode || 'Chưa cập nhật' }}</span>
+          </div>
+          <div class="info-item">
+            <span nz-icon nzType="solution" nzTheme="outline" class="info-icon"></span>
+            <span class="info-text">{{ currentUser?.jobTitle || 'Chưa cập nhật' }}</span>
+          </div>
+        </div>
+      </nz-card>
+    </div>
+
+    <!-- User Details Card -->
+    <div nz-col [nzSpan]="24" [nzMd]="16">
+      <nz-card class="details-card" nzTitle="Chi tiết thông tin">
+        <nz-descriptions [nzColumn]="2" nzBordered>
+          <nz-descriptions-item nzTitle="Họ và tên">
+            {{ currentUser?.fullName || 'N/A' }}
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Tên đăng nhập">
+            {{ currentUser?.username || 'N/A' }}
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Email">
+            {{ currentUser?.email || 'N/A' }}
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Số điện thoại">
+            {{ currentUser?.phoneNumber || 'N/A' }}
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Mã đơn vị">
+            {{ currentUser?.unitCode || 'N/A' }}
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Chức vụ">
+            {{ currentUser?.jobTitle || 'N/A' }}
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Vai trò" [nzSpan]="2">
+            <nz-tag [nzColor]="getRoleColor(currentUser?.roleCode || '')">
+              {{ getRoleDisplayName(currentUser?.roleCode || '') }}
+            </nz-tag>
+          </nz-descriptions-item>
+        </nz-descriptions>
+      </nz-card>
+
+      <!-- Permissions Card -->
+      <nz-card class="permissions-card" nzTitle="Quyền hạn" *ngIf="currentUser && currentUser.permissions && currentUser.permissions.length > 0">
+        <div class="permissions-section">
+          <div *ngFor="let permissionGroup of currentUser!.permissions" class="permission-group">
+            <div class="permission-group-title">
+              <span nz-icon nzType="apartment" nzTheme="outline"></span>
+              {{ permissionGroup.groupName }}
+            </div>
+            <div class="permission-tags">
+              <nz-tag *ngFor="let permission of permissionGroup.permissions" nzColor="blue">
+                {{ permission }}
+              </nz-tag>
+            </div>
+          </div>
+        </div>
+      </nz-card>
+    </div>
+  </div>
+</div>

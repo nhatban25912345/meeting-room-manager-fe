@@ -64,4 +64,15 @@
       <span>Cài đặt</span>
     </a>
   </li>
+
+  <!-- TÀI KHOẢN Section -->
+  <li class="menu-section-title" *ngIf="!isCollapsed">
+    <span>TÀI KHOẢN</span>
+  </li>
+  <li nz-menu-item nzMatchRouter>
+    <a routerLink="/home/profile">
+      <span nz-icon nzType="user" nzTheme="outline"></span>
+      <span>Thông tin cá nhân</span>
+    </a>
+  </li>
 </ul>

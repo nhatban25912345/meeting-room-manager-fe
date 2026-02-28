@@ -67,8 +67,10 @@
           <nz-dropdown-menu #userMenu="nzDropdownMenu">
             <ul nz-menu class="user-dropdown-menu">
               <li nz-menu-item>
-                <span nz-icon nzType="user" nzTheme="outline"></span>
-                Thông tin cá nhân
+                <a routerLink="/home/profile">
+                  <span nz-icon nzType="user" nzTheme="outline"></span>
+                  Thông tin cá nhân
+                </a>
               </li>
               <li nz-menu-item>
                 <span nz-icon nzType="setting" nzTheme="outline"></span>

@@ -7,6 +7,7 @@ import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
+import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { AuthService, User } from '../services/auth.service';
 import { SidebarMenuComponent } from './sidebar-menu/sidebar-menu.component';
 
@@ -22,6 +23,7 @@ import { SidebarMenuComponent } from './sidebar-menu/sidebar-menu.component';
     NzDropDownModule,
     NzButtonModule,
     NzBadgeModule,
+    NzMenuModule,
     SidebarMenuComponent
   ],
   templateUrl: './home.component.html',

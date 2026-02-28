@@ -1,0 +1,166 @@
+.user-profile-container {
+  padding: 24px;
+  background: #f0f2f5;
+  min-height: calc(100vh - 64px);
+
+  .page-header {
+    margin-bottom: 24px;
+
+    h2 {
+      font-size: 24px;
+      font-weight: 600;
+      color: #262626;
+      margin: 0 0 8px 0;
+    }
+
+    p {
+      color: #8c8c8c;
+      margin: 0;
+      font-size: 14px;
+    }
+  }
+
+  .profile-card {
+    margin-bottom: 16px;
+
+    .profile-section {
+      text-align: center;
+
+      .avatar-section {
+        margin-bottom: 16px;
+
+        .user-avatar {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          font-size: 48px;
+          font-weight: 600;
+          color: #fff;
+        }
+      }
+
+      .user-name {
+        font-size: 24px;
+        font-weight: 600;
+        color: #262626;
+        margin-bottom: 4px;
+      }
+
+      .user-username {
+        font-size: 14px;
+        color: #8c8c8c;
+        margin-bottom: 12px;
+      }
+
+      .user-role-tag {
+        font-size: 14px;
+        padding: 4px 12px;
+        border-radius: 12px;
+      }
+    }
+
+    .quick-info {
+      .info-item {
+        display: flex;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid #f0f0f0;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        .info-icon {
+          font-size: 16px;
+          color: #1890ff;
+          margin-right: 12px;
+          width: 20px;
+          text-align: center;
+        }
+
+        .info-text {
+          font-size: 14px;
+          color: #595959;
+          flex: 1;
+          word-break: break-word;
+        }
+      }
+    }
+  }
+
+  .details-card {
+    margin-bottom: 16px;
+
+    ::ng-deep .ant-descriptions-item-label {
+      font-weight: 600;
+      color: #595959;
+    }
+
+    ::ng-deep .ant-descriptions-item-content {
+      color: #262626;
+    }
+  }
+
+  .permissions-card {
+    .permissions-section {
+      .permission-group {
+        margin-bottom: 24px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        .permission-group-title {
+          font-size: 16px;
+          font-weight: 600;
+          color: #262626;
+          margin-bottom: 12px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+
+          span[nz-icon] {
+            color: #1890ff;
+          }
+        }
+
+        .permission-tags {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+
+          nz-tag {
+            margin: 0;
+            padding: 4px 12px;
+            font-size: 13px;
+            border-radius: 4px;
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 16px;
+
+    .page-header {
+      h2 {
+        font-size: 20px;
+      }
+    }
+
+    .profile-card {
+      .profile-section {
+        .avatar-section {
+          .user-avatar {
+            width: 100px !important;
+            height: 100px !important;
+            font-size: 40px !important;
+          }
+        }
+
+        .user-name {
+          font-size: 20px;
+        }
+      }
+    }
+  }
+}
