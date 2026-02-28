@@ -1,0 +1,165 @@
+.meeting-detail-content {
+  .detail-section {
+    margin-bottom: 24px;
+
+    .section-title {
+      margin: 0 0 16px 0;
+      font-size: 16px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      span[nz-icon] {
+        color: #1890ff;
+        font-size: 18px;
+      }
+    }
+
+    ::ng-deep {
+      .ant-descriptions-item-label {
+        font-weight: 500;
+        background: #fafafa;
+        width: 180px;
+      }
+
+      .ant-descriptions-item-content {
+        background: #fff;
+
+        strong {
+          font-size: 15px;
+          color: rgba(0, 0, 0, 0.85);
+        }
+
+        a {
+          color: #1890ff;
+          text-decoration: none;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+
+    .participants-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 12px;
+      background: #fafafa;
+      border-radius: 6px;
+      border: 1px solid #f0f0f0;
+
+      .participant-tag {
+        margin: 0;
+        padding: 6px 12px;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+
+        span[nz-icon] {
+          font-size: 14px;
+        }
+      }
+    }
+
+    .text-muted {
+      color: rgba(0, 0, 0, 0.45);
+      font-style: italic;
+    }
+  }
+
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #f0f0f0;
+
+    button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  }
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  gap: 16px;
+
+  p {
+    margin: 0;
+    color: rgba(0, 0, 0, 0.45);
+    font-size: 14px;
+  }
+}
+
+.no-data-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  gap: 16px;
+
+  .no-data-icon {
+    font-size: 64px;
+    color: rgba(0, 0, 0, 0.25);
+  }
+
+  p {
+    margin: 0;
+    color: rgba(0, 0, 0, 0.45);
+    font-size: 14px;
+  }
+}
+
+::ng-deep {
+  .ant-modal-header {
+    background: #fafafa;
+    border-bottom: 2px solid #1890ff;
+
+    .ant-modal-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+    }
+  }
+
+  .ant-modal-body {
+    padding: 24px;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 4px;
+
+      &:hover {
+        background: #555;
+      }
+    }
+  }
+
+  nz-divider {
+    margin: 20px 0;
+  }
+}

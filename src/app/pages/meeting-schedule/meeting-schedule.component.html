@@ -32,4 +32,10 @@
     (editMeeting)="editMeeting($event)"
     (deleteMeeting)="deleteMeeting($event)">
   </app-meeting-table>
+
+  <!-- Meeting Detail Modal -->
+  <app-meeting-detail-modal
+    [meeting]="selectedMeeting"
+    [(visible)]="detailModalVisible">
+  </app-meeting-detail-modal>
 </div>

@@ -3,8 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MeetingFilterComponent } from './meeting-filter/meeting-filter.component';
 import { MeetingTableComponent, MeetingSchedule, MeetingGroup } from './meeting-table/meeting-table.component';
+import { MeetingDetailModalComponent } from './meeting-detail-modal/meeting-detail-modal.component';
 import { RoomService } from '../../services/room.service';
-import { MeetingService, MeetingSearchRequest } from '../../services/meeting.service';
+import { MeetingService, MeetingSearchRequest, MeetingData } from '../../services/meeting.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
@@ -13,7 +14,8 @@ import { NzMessageService } from 'ng-zorro-antd/message';
   imports: [
     CommonModule,
     MeetingFilterComponent,
-    MeetingTableComponent
+    MeetingTableComponent,
+    MeetingDetailModalComponent
   ],
   templateUrl: './meeting-schedule.component.html',
   styleUrl: './meeting-schedule.component.scss'
@@ -25,6 +27,13 @@ export class MeetingScheduleComponent implements OnInit {
   totalMeetings = 0;
   showFilterPanel = false;
   roomCodeOptions: Array<{ value: string; label: string }> = [];
+  
+  // Store full meeting data for details
+  meetingDataMap: Map<string, MeetingData> = new Map();
+  
+  // Modal state
+  detailModalVisible = false;
+  selectedMeeting: MeetingData | null = null;
 
   statusOptions = [
     { label: 'Tạo mới', value: 'CREATED', color: 'default' },
@@ -104,25 +113,33 @@ export class MeetingScheduleComponent implements OnInit {
 
     this.meetingService.searchMeetingsGrouped(request).subscribe({
       next: (response) => {
+        // Clear previous data
+        this.meetingDataMap.clear();
+        
         // Map API data to UI model
         this.meetingGroups = response.groups.map(group => ({
           date: group.meetingDate,
           dayOfWeek: group.dayOfWeek,
           count: group.count,
           expanded: false,
-          meetings: group.meetings.map(meeting => ({
-            id: meeting.id.toString(),
-            time: `${this.formatTime(meeting.startTime)} - ${this.formatTime(meeting.endTime)}`,
-            location: meeting.roomCode, // Using roomCode as location for now
-            status: meeting.status,
-            title: meeting.subject,
-            organizer: meeting.participantUserIds && meeting.participantUserIds.length > 0 
-              ? meeting.participantUserIds[0].fullName 
-              : meeting.createdBy,
-            organizingUnit: meeting.organizerUnit,
-            dressCode: meeting.dressCode,
-            notes: meeting.note || ''
-          }))
+          meetings: group.meetings.map(meeting => {
+            // Store full meeting data for details modal
+            this.meetingDataMap.set(meeting.id.toString(), meeting);
+            
+            return {
+              id: meeting.id.toString(),
+              time: `${this.formatTime(meeting.startTime)} - ${this.formatTime(meeting.endTime)}`,
+              location: meeting.roomCode, // Using roomCode as location for now
+              status: meeting.status,
+              title: meeting.subject,
+              organizer: meeting.participantUserIds && meeting.participantUserIds.length > 0 
+                ? meeting.participantUserIds[0].fullName 
+                : meeting.createdBy,
+              organizingUnit: meeting.organizerUnit,
+              dressCode: meeting.dressCode,
+              notes: meeting.note || ''
+            };
+          })
         }));
         
         // Expand first group by default
@@ -206,8 +223,9 @@ export class MeetingScheduleComponent implements OnInit {
   }
 
   viewDetails(meeting: MeetingSchedule): void {
-    console.log('View meeting details:', meeting);
-    // Navigate to meeting details or open modal
+    // Get full meeting data from map
+    this.selectedMeeting = this.meetingDataMap.get(meeting.id) || null;
+    this.detailModalVisible = true;
   }
 
   editMeeting(meeting: MeetingSchedule): void {

@@ -70,6 +70,11 @@ export interface MeetingApiResponse {
   data: MeetingGroupResponse[];
 }
 
+export interface MeetingDetailResponse {
+  status: ApiStatus;
+  data: MeetingData;
+}
+
 // Grouped data interface
 export interface MeetingGroup {
   meetingDate: string; // Format: DD/MM/YYYY
@@ -167,8 +172,8 @@ export class MeetingService {
   /**
    * Get meeting by ID
    */
-  getMeetingById(id: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/${id}`);
+  getMeetingById(id: string): Observable<MeetingDetailResponse> {
+    return this.http.get<MeetingDetailResponse>(`${this.apiUrl}/${id}`);
   }
 
   /**

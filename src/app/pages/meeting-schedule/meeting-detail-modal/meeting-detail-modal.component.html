@@ -1,0 +1,164 @@
+<nz-modal
+  [(nzVisible)]="visible"
+  nzTitle="Chi tiết cuộc họp"
+  [nzWidth]="900"
+  [nzFooter]="null"
+  (nzOnCancel)="handleClose()">
+  
+  <ng-container *nzModalContent>
+    <div class="meeting-detail-content" *ngIf="meeting">
+      <!-- Thông tin cơ bản -->
+      <div class="detail-section">
+        <h3 class="section-title">
+          <span nz-icon nzType="info-circle" nzTheme="outline"></span>
+          Thông tin cơ bản
+        </h3>
+        <nz-descriptions [nzColumn]="2" nzBordered nzSize="small">
+          <nz-descriptions-item nzTitle="Chủ đề cuộc họp" [nzSpan]="2">
+            <strong>{{ meeting.subject }}</strong>
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Nội dung" [nzSpan]="2">
+            {{ meeting.content }}
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Trạng thái">
+            <nz-tag [nzColor]="getStatusColor(meeting.status)">
+              {{ getStatusLabel(meeting.status) }}
+            </nz-tag>
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Loại lịch">
+            {{ getScheduleTypeLabel(meeting.scheduleType) }}
+          </nz-descriptions-item>
+        </nz-descriptions>
+      </div>
+
+      <nz-divider></nz-divider>
+
+      <!-- Thời gian và địa điểm -->
+      <div class="detail-section">
+        <h3 class="section-title">
+          <span nz-icon nzType="calendar" nzTheme="outline"></span>
+          Thời gian và địa điểm
+        </h3>
+        <nz-descriptions [nzColumn]="2" nzBordered nzSize="small">
+          <nz-descriptions-item nzTitle="Ngày họp">
+            {{ formatDate(meeting.meetingDate) }}
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Thời gian">
+            {{ formatTime(meeting.startTime) }} - {{ formatTime(meeting.endTime) }}
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Mã phòng họp">
+            {{ meeting.roomCode }}
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Trang phục">
+            {{ meeting.dressCode }}
+          </nz-descriptions-item>
+        </nz-descriptions>
+      </div>
+
+      <nz-divider></nz-divider>
+
+      <!-- Thông tin tổ chức -->
+      <div class="detail-section">
+        <h3 class="section-title">
+          <span nz-icon nzType="team" nzTheme="outline"></span>
+          Thông tin tổ chức
+        </h3>
+        <nz-descriptions [nzColumn]="2" nzBordered nzSize="small">
+          <nz-descriptions-item nzTitle="Đơn vị chủ trì">
+            {{ meeting.organizerUnit }}
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Email liên hệ">
+            <a [href]="'mailto:' + meeting.contactEmail">{{ meeting.contactEmail }}</a>
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Đơn vị viết kết luận" [nzSpan]="2">
+            {{ meeting.conclusionUnit || '-' }}
+          </nz-descriptions-item>
+        </nz-descriptions>
+      </div>
+
+      <nz-divider></nz-divider>
+
+      <!-- Người tham gia -->
+      <div class="detail-section" *ngIf="meeting.participantUserIds && meeting.participantUserIds.length > 0">
+        <h3 class="section-title">
+          <span nz-icon nzType="user" nzTheme="outline"></span>
+          Người tham gia ({{ meeting.participantUserIds.length }})
+        </h3>
+        <div class="participants-list">
+          <nz-tag 
+            *ngFor="let participant of meeting.participantUserIds" 
+            nzColor="blue"
+            class="participant-tag">
+            <span nz-icon nzType="user" nzTheme="outline"></span>
+            {{ participant.fullName }} ({{ participant.userId }})
+          </nz-tag>
+        </div>
+      </div>
+
+      <nz-divider *ngIf="meeting.participantUserIds && meeting.participantUserIds.length > 0"></nz-divider>
+
+      <!-- Lịch định kỳ -->
+      <div class="detail-section" *ngIf="meeting.scheduleType === 'recurring'">
+        <h3 class="section-title">
+          <span nz-icon nzType="sync" nzTheme="outline"></span>
+          Lịch định kỳ
+        </h3>
+        <nz-descriptions [nzColumn]="2" nzBordered nzSize="small">
+          <nz-descriptions-item nzTitle="Chu kỳ lặp lại">
+            {{ meeting.recurrencePattern || '-' }}
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Ngày kết thúc">
+            {{ meeting.recurrenceEndDate ? formatDate(meeting.recurrenceEndDate) : '-' }}
+          </nz-descriptions-item>
+        </nz-descriptions>
+      </div>
+
+      <nz-divider *ngIf="meeting.scheduleType === 'recurring'"></nz-divider>
+
+      <!-- Tài liệu và ghi chú -->
+      <div class="detail-section">
+        <h3 class="section-title">
+          <span nz-icon nzType="file-text" nzTheme="outline"></span>
+          Tài liệu và ghi chú
+        </h3>
+        <nz-descriptions [nzColumn]="1" nzBordered nzSize="small">
+          <nz-descriptions-item nzTitle="Ghi chú">
+            {{ meeting.note || '-' }}
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Nhiệm vụ chuẩn bị">
+            {{ meeting.preparationTasks || '-' }}
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="File đính kèm">
+            {{ meeting.attachment || 'Không có file đính kèm' }}
+          </nz-descriptions-item>
+        </nz-descriptions>
+      </div>
+
+      <nz-divider></nz-divider>
+
+      <!-- Thông tin hệ thống -->
+      <div class="detail-section">
+        <h3 class="section-title">
+          <span nz-icon nzType="audit" nzTheme="outline"></span>
+          Thông tin hệ thống
+        </h3>
+        <nz-descriptions [nzColumn]="2" nzBordered nzSize="small">
+          <nz-descriptions-item nzTitle="Người tạo">
+            {{ meeting.createdBy }}
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Ngày tạo">
+            {{ meeting.createdAt | date: 'dd/MM/yyyy HH:mm' }}
+          </nz-descriptions-item>
+        </nz-descriptions>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="modal-actions">
+        <button nz-button nzType="default" (click)="handleClose()">
+          <span nz-icon nzType="close" nzTheme="outline"></span>
+          Đóng
+        </button>
+      </div>
+    </div>
+  </ng-container>
+</nz-modal>
