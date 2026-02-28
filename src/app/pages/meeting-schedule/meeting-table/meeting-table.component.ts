@@ -4,7 +4,7 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 
 export interface MeetingSchedule {
   id: string;
@@ -13,12 +13,9 @@ export interface MeetingSchedule {
   status: 'approved' | 'pending' | 'rejected' | 'cancelled';
   title: string;
   organizer: string;
-  preparation: string;
-  participants: string;
-  internalParticipants: string;
-  responseStatus: string;
+  organizingUnit: string;
+  dressCode: string;
   notes: string;
-  meetingMinutes: string;
 }
 
 export interface MeetingGroup {
@@ -38,7 +35,7 @@ export interface MeetingGroup {
     NzTagModule,
     NzButtonModule,
     NzIconModule,
-    NzDropDownModule
+    NzToolTipModule
   ],
   templateUrl: './meeting-table.component.html',
   styleUrl: './meeting-table.component.scss'

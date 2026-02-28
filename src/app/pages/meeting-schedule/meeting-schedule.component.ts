@@ -94,45 +94,69 @@ export class MeetingScheduleComponent implements OnInit {
           meetings: [
             {
               id: '1',
-              time: '08:00-08:30',
+              time: '08:00 - 08:30',
               location: 'F101_Nexus_Tầng 2_36A DVH',
               status: 'approved',
               title: 'Daily dự án UBCK',
               organizer: 'Nguyễn Bá Ngọc',
-              preparation: '- Nguyễn Minh Đức, Dương Ngọc Linh, Đặng Văn Hùng, Thái...',
-              participants: '- Hoàng Mạnh Linh, Vũ Ngọc Tiến, Trần Thanh Hòa, Nguyễn...',
-              internalParticipants: '- Hoàng Mạnh Linh, Lê Văn Chính',
-              responseStatus: 'Thường phúc',
-              notes: 'Phòng họp có tivi',
-              meetingMinutes: ''
+              organizingUnit: 'Vụ Kế hoạch',
+              dressCode: 'Thường phục',
+              notes: 'Phòng họp có tivi'
             },
             {
               id: '2',
-              time: '09:00-11:00',
+              time: '09:00 - 11:00',
               location: 'Phòng họp 44.06 - T44 Keangnam',
               status: 'approved',
               title: 'Brainstorming cải thiến chất lượng nền tảng vay',
               organizer: 'Nguyễn Anh Chiến',
-              preparation: '- Hoàng Mạnh Linh, Vũ Ngọc Tiến, Trần Thanh Hòa, Nguyễn...',
-              participants: '- Hoàng Mạnh Linh, Lê Văn Chính',
-              internalParticipants: '- Hoàng Mạnh Linh, Lê Văn Chính',
-              responseStatus: 'Thường phúc',
-              notes: '',
-              meetingMinutes: ''
+              organizingUnit: 'Văn phòng Bộ',
+              dressCode: 'Công sở',
+              notes: ''
             },
             {
               id: '3',
-              time: '10:00-12:00',
+              time: '10:00 - 12:00',
               location: 'PH Stevejobs - Tầng 44 Keangnam',
               status: 'approved',
               title: '[KTDL] Retro and Planning',
               organizer: 'Bùi Thị Ngọc Anh',
-              preparation: '- Hoàng Đức Hiệp, Đỗ Thùy Hằng, Đỗ Thùy Trang, Thái Thi...',
-              participants: '- Đỗ Thùy Hằng',
-              internalParticipants: '- Đỗ Thùy Hằng',
-              responseStatus: 'Thường phúc',
-              notes: 'Cần phòng họp kín',
-              meetingMinutes: ''
+              organizingUnit: 'Vụ Tài chính',
+              dressCode: 'Thường phục',
+              notes: 'Cần phòng họp kín'
+            },
+            {
+              id: '4',
+              time: '13:00 - 14:30',
+              location: 'F101_Nexus_Tầng 2_36A DVH',
+              status: 'pending',
+              title: 'Họp giao ban tuần',
+              organizer: 'Trần Văn Nam',
+              organizingUnit: 'Vụ Tổ chức',
+              dressCode: 'Trang trọng',
+              notes: 'Cần chuẩn bị máy chiếu'
+            },
+            {
+              id: '5',
+              time: '14:00 - 16:00',
+              location: 'Phòng họp 44.06 - T44 Keangnam',
+              status: 'rejected',
+              title: 'Thảo luận kế hoạch Q2',
+              organizer: 'Lê Thị Mai',
+              organizingUnit: 'Văn phòng Bộ',
+              dressCode: 'Công sở',
+              notes: 'Trùng lịch họp khác'
+            },
+            {
+              id: '6',
+              time: '15:00 - 17:00',
+              location: 'PH Stevejobs - Tầng 44 Keangnam',
+              status: 'pending',
+              title: 'Review dự án tháng 2',
+              organizer: 'Phạm Văn Hùng',
+              organizingUnit: 'Vụ Kế hoạch',
+              dressCode: 'Thường phục',
+              notes: ''
             }
           ]
         },
@@ -141,7 +165,30 @@ export class MeetingScheduleComponent implements OnInit {
           dayOfWeek: 'Thứ ba',
           count: 4,
           expanded: false,
-          meetings: []
+          meetings: [
+            {
+              id: '7',
+              time: '08:30 - 10:00',
+              location: 'F101_Nexus_Tầng 2_36A DVH',
+              status: 'approved',
+              title: 'Họp ban lãnh đạo',
+              organizer: 'Hoàng Văn Tuấn',
+              organizingUnit: 'Văn phòng Bộ',
+              dressCode: 'Trang trọng',
+              notes: 'Họp quan trọng'
+            },
+            {
+              id: '8',
+              time: '14:00 - 15:30',
+              location: 'Phòng họp 44.06 - T44 Keangnam',
+              status: 'approved',
+              title: 'Training nhân sự mới',
+              organizer: 'Đỗ Thị Lan',
+              organizingUnit: 'Vụ Tổ chức',
+              dressCode: 'Thường phục',
+              notes: ''
+            }
+          ]
         },
         {
           date: '04/02/2026',
@@ -162,23 +209,15 @@ export class MeetingScheduleComponent implements OnInit {
     this.loadMeetingSchedules();
   }
 
-  reset(): void {
-    this.searchForm.reset({
-      roomType: 'all'
-    });
-    this.loadMeetingSchedules();
-  }
-
   toggleFilterPanel(): void {
     this.showFilterPanel = !this.showFilterPanel;
   }
 
   resetFilter(): void {
     this.searchForm.reset({
-      roomType: 'all',
+      roomCode: null,
+      organizer: '',
       meetingOwner: '',
-      participants: '',
-      participatingUnit: '',
       timeFrom: null,
       timeTo: null,
       createdFrom: null,
