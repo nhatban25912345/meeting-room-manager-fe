@@ -8,10 +8,12 @@ import { NzStatisticModule } from 'ng-zorro-antd/statistic';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 
 export interface RecentMeeting {
-  name: string;
+  title: string;
+  meetingDate: string;
   time: string;
-  type: string;
-  unit: string;
+  location: string;
+  scheduleType: string;
+  participants: string;
   status: string;
 }
 
@@ -44,38 +46,48 @@ export class OnboardingComponent implements OnInit {
     setTimeout(() => {
       this.recentMeetings = [
         {
-          name: 'Hội nghị giao ban tháng 2',
+          title: 'Hội nghị giao ban tháng 2',
+          meetingDate: '15/03/2026',
           time: '08:00 - 11:30',
-          type: 'Trực tuyến',
-          unit: '12 đơn vị',
+          location: 'Phòng họp A1',
+          scheduleType: 'Trực tuyến',
+          participants: '45',
           status: 'Đang diễn ra'
         },
         {
-          name: 'Họp triển khai kế hoạch Q1',
+          title: 'Họp triển khai kế hoạch Q1',
+          meetingDate: '14/03/2026',
           time: '14:00 - 16:00',
-          type: 'Trực tiếp',
-          unit: '8 đơn vị',
+          location: 'Phòng họp B2',
+          scheduleType: 'Trực tiếp',
+          participants: '28',
           status: 'Đã duyệt'
         },
         {
-          name: 'Hội nghị tổng kết năm 2025',
+          title: 'Hội nghị tổng kết năm 2025',
+          meetingDate: '12/03/2026',
           time: '09:00 - 17:00',
-          type: 'Trực tuyến',
-          unit: '24 đơn vị',
+          location: 'Hội trường lớn',
+          scheduleType: 'Trực tuyến',
+          participants: '150',
           status: 'Chờ duyệt'
         },
         {
-          name: 'Họp ban chỉ đạo CNTT',
+          title: 'Họp ban chỉ đạo CNTT',
+          meetingDate: '11/03/2026',
           time: '15:00 - 16:30',
-          type: 'Kết hợp',
-          unit: '6 đơn vị',
+          location: 'Phòng họp C3',
+          scheduleType: 'Kết hợp',
+          participants: '20',
           status: 'Đã duyệt'
         },
         {
-          name: 'Hội nghị sơ kết 6 tháng',
+          title: 'Hội nghị sơ kết 6 tháng',
+          meetingDate: '10/03/2026',
           time: '08:30 - 12:00',
-          type: 'Trực tuyến',
-          unit: '18 đơn vị',
+          location: 'Phòng họp A2',
+          scheduleType: 'Trực tuyến',
+          participants: '85',
           status: 'Nhập'
         }
       ];

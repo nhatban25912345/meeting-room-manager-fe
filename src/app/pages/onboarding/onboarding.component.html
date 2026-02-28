@@ -91,19 +91,26 @@
     >
       <thead>
         <tr>
-          <th>Tên cuộc họp</th>
-          <th>Thời gian</th>
-          <th>Loại</th>
-          <th>Đơn vị</th>
+          <th>Chủ đề cuộc họp</th>
+          <th>Thời gian họp</th>
+          <th>Địa điểm</th>
+          <th>Loại lịch họp</th>
+          <th>Số người tham gia</th>
           <th>Trạng thái</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let meeting of recentMeetings">
-          <td>{{ meeting.name }}</td>
-          <td>{{ meeting.time }}</td>
-          <td>{{ meeting.type }}</td>
-          <td>{{ meeting.unit }}</td>
+          <td>{{ meeting.title }}</td>
+          <td>
+            <div class="meeting-time">
+              <div class="meeting-date">{{ meeting.meetingDate }}</div>
+              <div class="meeting-hours">{{ meeting.time }}</div>
+            </div>
+          </td>
+          <td>{{ meeting.location }}</td>
+          <td>{{ meeting.scheduleType }}</td>
+          <td>{{ meeting.participants }}</td>
           <td>
             <nz-tag 
               [nzColor]="getStatusColor(meeting.status)"
