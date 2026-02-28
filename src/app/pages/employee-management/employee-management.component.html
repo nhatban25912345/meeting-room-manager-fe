@@ -7,7 +7,7 @@
         <p class="page-subtitle">Danh sách nhân viên hỗ trợ cuộc họp</p>
       </div>
       <div class="header-right">
-        <button nz-button nzType="primary" nzSize="large" class="add-employee-btn">
+        <button nz-button nzType="primary" nzSize="large" class="add-employee-btn" (click)="openFormModal()">
           <img src="assets/img/plus-icon.svg" alt="plus" class="plus-icon">
           Thêm nhân viên
         </button>
@@ -30,4 +30,12 @@
       (employeeCountChange)="employeeCount = $event">
     </app-employee-table>
   </div>
+
+  <!-- Employee Form Modal -->
+  <app-employee-form-modal
+    [(visible)]="formModalVisible"
+    [isSubmitting]="isSubmittingForm"
+    (onSubmit)="handleCreateEmployee($event)"
+    (onCancel)="closeFormModal()">
+  </app-employee-form-modal>
 </div>

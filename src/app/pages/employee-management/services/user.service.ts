@@ -63,6 +63,28 @@ export interface UpdateRoleResponse {
   data: any;
 }
 
+export interface CreateUserRequest {
+  username: string;
+  password: string;
+  email: string;
+  fullName: string;
+  phoneNumber: string;
+  unitCode: string;
+  jobTitle: string;
+  roleCode: string;
+}
+
+export interface CreateUserResponse {
+  status: {
+    errorCode: string;
+    errorMessage: string;
+    statusCode: string;
+    responseTime: string;
+    displayMessage: string;
+  };
+  data: any;
+}
+
 @Injectable({ providedIn: 'root' })
 export class UserService {
   private baseUrl = `${environment.apiUrl}/user`;
@@ -99,6 +121,18 @@ export class UserService {
     });
 
     return this.http.put<UpdateRoleResponse>(`${this.baseUrl}/update-role`, request, { headers });
+  }
+
+  createUser(
+    request: CreateUserRequest,
+    token: string
+  ): Observable<CreateUserResponse> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.post<CreateUserResponse>(`${this.baseUrl}/create`, request, { headers });
   }
 
   // Get all active users for participant selection

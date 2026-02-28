@@ -1,0 +1,21 @@
+.password-toggle {
+  cursor: pointer;
+  color: rgba(0, 0, 0, 0.45);
+  
+  &:hover {
+    color: rgba(0, 0, 0, 0.85);
+  }
+}
+
+nz-form-item {
+  margin-bottom: 16px;
+}
+
+nz-input-group {
+  ::ng-deep {
+    .ant-input-prefix {
+      color: rgba(0, 0, 0, 0.45);
+      margin-right: 8px;
+    }
+  }
+}
