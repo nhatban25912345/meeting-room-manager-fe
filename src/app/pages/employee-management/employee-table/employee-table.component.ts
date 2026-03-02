@@ -9,7 +9,7 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzMessageModule, NzMessageService } from 'ng-zorro-antd/message';
-import { UserService } from '../services/user.service';
+import { UserService } from '../../../services/user.service';
 import { AuthService } from '../../../services/auth.service';
 import { PermissionModalComponent, PermissionChangeData } from '../permission-modal/permission-modal.component';
 import { EmployeeDetailModalComponent } from '../employee-detail-modal/employee-detail-modal.component';

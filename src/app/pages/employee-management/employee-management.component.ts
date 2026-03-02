@@ -5,7 +5,7 @@ import { EmployeeFilterComponent } from "./employee-filter/employee-filter.compo
 import { EmployeeFormModalComponent, CreateEmployeeRequest } from './employee-form-modal/employee-form-modal.component';
 import { NzMessageModule, NzMessageService } from 'ng-zorro-antd/message';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { UserService } from './services/user.service';
+import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
 
 @Component({

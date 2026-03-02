@@ -12,7 +12,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzUploadModule } from 'ng-zorro-antd/upload';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { RoomService } from '../../../services/room.service';
-import { UserService } from '../../employee-management/services/user.service';
+import { UserService } from '../../../services/user.service';
 import { MeetingService, CreateMeetingRequest } from '../../../services/meeting.service';
 
 @Component({
