@@ -27,7 +27,7 @@ export const routes: Routes = [
       },
       {
         path: 'analytics',
-        loadComponent: () => import('./pages/welcome/welcome.component').then(m => m.WelcomeComponent),
+        loadComponent: () => import('./pages/meeting-calendar/meeting-calendar.component').then(m => m.MeetingCalendarComponent),
         data: { roles: ['admin'] }
       },
       {

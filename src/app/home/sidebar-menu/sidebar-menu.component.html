@@ -48,14 +48,14 @@
     </a>
   </li>
 
-  <!-- HỆ THỐNG Section -->
+  <!-- BIỂU ĐỒ Section -->
   <li class="menu-section-title" *ngIf="!isCollapsed && canViewDashboard">
-    <span>HỆ THỐNG</span>
+    <span>BIỂU ĐỒ</span>
   </li>
   <li nz-menu-item nzMatchRouter *ngIf="canViewDashboard">
     <a routerLink="/meeting-management/analytics">
       <span nz-icon nzType="bar-chart" nzTheme="outline"></span>
-      <span>Thống kê</span>
+      <span>Lịch họp</span>
     </a>
   </li>
   <li nz-menu-item nzMatchRouter *ngIf="canAccessSettings">

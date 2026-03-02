@@ -1,0 +1,62 @@
+<div class="analytics-container">
+  <div class="calendar-header">
+    <div class="calendar-title">
+      <h1 class="page-title">{{ pageTitle }}</h1>
+    </div>
+    <div class="calendar-legend">
+      <span class="legend-item">
+        <span class="legend-dot ready"></span>
+        Trực tuyến
+      </span>
+      <span class="legend-item">
+        <span class="legend-dot preparing"></span>
+        Trực tiếp
+      </span>
+      <span class="legend-item">
+        <span class="legend-dot issue"></span>
+        Kết hợp
+      </span>
+      <span class="legend-item">
+        <span class="legend-dot cancelled"></span>
+        Bỏ lọc
+      </span>
+    </div>
+  </div>
+
+  <div class="calendar-controls">
+    <div class="month-navigation">
+      <button nz-button nzType="text" (click)="previousMonth()">
+        <span nz-icon nzType="left"></span>
+      </button>
+      <h2 class="current-month">{{ getCurrentMonthYear() }}</h2>
+      <button nz-button nzType="text" (click)="nextMonth()">
+        <span nz-icon nzType="right"></span>
+      </button>
+    </div>
+    
+    <nz-radio-group [(ngModel)]="viewMode" class="view-mode-toggle">
+      <label nz-radio-button nzValue="week">Tuần</label>
+      <label nz-radio-button nzValue="month">Tháng</label>
+    </nz-radio-group>
+  </div>
+
+  <div class="calendar-wrapper">
+    <nz-calendar 
+      [(ngModel)]="selectedDate"
+      [nzFullscreen]="true"
+      (nzPanelChange)="onPanelChange($event)">
+      
+      <ul *nzDateCell="let date" class="meetings-list">
+        <li *ngFor="let meeting of getMeetingsForDate(date)" 
+            [class]="'meeting-item ' + getStatusClass(meeting.status)">
+          <div class="meeting-title">{{ meeting.title }}</div>
+          <div class="meeting-time">
+            <span nz-icon nzType="clock-circle" nzTheme="outline"></span>
+            {{ meeting.startTime }}-{{ meeting.endTime }}
+          </div>
+          <div class="meeting-status">{{ meeting.statusLabel }}</div>
+        </li>
+      </ul>
+    </nz-calendar>
+  </div>
+</div>
