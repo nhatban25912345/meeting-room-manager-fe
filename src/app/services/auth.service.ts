@@ -127,8 +127,16 @@ export class AuthService {
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('tokenType');
     localStorage.removeItem('currentUser');
+    // Không xóa thông tin ghi nhớ đăng nhập khi logout
+    // Người dùng có thể muốn sử dụng lại thông tin này
     this.currentUserSubject.next(null);
     this.router.navigate(['/login']);
+  }
+
+  clearRememberedCredentials(): void {
+    localStorage.removeItem('rememberedUsername');
+    localStorage.removeItem('rememberedPassword');
+    localStorage.removeItem('rememberMe');
   }
 
   isAuthenticated(): boolean {
