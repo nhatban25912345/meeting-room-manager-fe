@@ -100,15 +100,34 @@ export class LoginComponent implements OnInit {
             // Lưu thông tin đăng nhập nếu người dùng chọn ghi nhớ
             this.saveCredentials(username, password, remember);
             
-            this.message.success(response.status.displayMessage || 'Đăng nhập thành công!');
+            this.message.success('Đăng nhập thành công!');
             this.router.navigate(['/meeting-management']);
+          } else if (response.status.statusCode === 'FAIL') {
+            // Xử lý các lỗi cụ thể từ API
+            let errorMessage = 'Đăng nhập thất bại!';
+            
+            // Xử lý các mã lỗi cụ thể
+            switch (response.status.errorCode) {
+              case 'AUTH001':
+                errorMessage = 'Tên đăng nhập không chính xác';
+                break;
+              case 'AUTH002':
+                errorMessage = 'Mật khẩu không hợp lệ';
+                break;
+              default:
+                errorMessage = 'Đăng nhập thất bại!';
+            }
+            
+            this.message.error(errorMessage);
           } else {
-            this.message.error(response.status.displayMessage || 'Đăng nhập thất bại!');
+            this.message.error('Đăng nhập thất bại!');
           }
           this.loading = false;
         },
         error: (error) => {
-          const errorMessage = error?.error?.status?.displayMessage || 'Đã có lỗi xảy ra. Vui lòng thử lại!';
+          // Xử lý lỗi từ server
+          let errorMessage = 'Đã có lỗi xảy ra. Vui lòng thử lại!';
+          
           this.message.error(errorMessage);
           this.loading = false;
         }
