@@ -5,14 +5,20 @@ import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { FormsModule } from '@angular/forms';
+import { MeetingService, MeetingData, MeetingSearchRequest } from '../../services/meeting.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 interface MeetingEvent {
+  id: number;
   title: string;
   startTime: string;
   endTime: string;
-  status: 'ready' | 'preparing' | 'issue';
+  status: 'ready' | 'preparing' | 'issue' | 'cancelled';
   statusLabel: string;
+  roomCode: string;
+  meetingData: MeetingData;
 }
 
 interface CalendarData {
@@ -29,7 +35,8 @@ interface CalendarData {
     NzBadgeModule,
     NzButtonModule,
     NzIconModule,
-    NzRadioModule
+    NzRadioModule,
+    NzSpinModule
   ],
   templateUrl: './meeting-calendar.component.html',
   styleUrls: ['./meeting-calendar.component.scss']
@@ -37,90 +44,132 @@ interface CalendarData {
 export class MeetingCalendarComponent implements OnInit {
   pageTitle = 'Lịch họp';
   viewMode: 'month' | 'week' = 'month';
-  selectedDate: Date = new Date(2026, 1, 1); // Tháng 2 2026
+  selectedDate: Date = new Date();
+  loading = false;
   
-  meetingsData: CalendarData = {
-    '2026-02-09': [
-      {
-        title: 'Giao ban tuần',
-        startTime: '08:00',
-        endTime: '09:30',
-        status: 'ready',
-        statusLabel: 'Sẵn sàng'
-      }
-    ],
-    '2026-02-10': [
-      {
-        title: 'Hội nghị CNTT toàn quốc',
-        startTime: '08:00',
-        endTime: '17:00',
-        status: 'preparing',
-        statusLabel: 'Đang chuẩn bị'
-      },
-      {
-        title: 'Họp ban chỉ đạo',
-        startTime: '14:00',
-        endTime: '15:30',
-        status: 'ready',
-        statusLabel: 'Sẵn sàng'
-      }
-    ],
-    '2026-02-11': [
-      {
-        title: 'Họp triển khai dự án ABC',
-        startTime: '08:00',
-        endTime: '11:00',
-        status: 'ready',
-        statusLabel: 'Sẵn sàng'
-      }
-    ],
-    '2026-02-12': [
-      {
-        title: 'Hội nghị tổng kết',
-        startTime: '08:00',
-        endTime: '12:00',
-        status: 'issue',
-        statusLabel: 'Có sự cố'
-      }
-    ],
-    '2026-02-14': [
-      {
-        title: 'Họp giao ban tháng 2',
-        startTime: '08:00',
-        endTime: '11:30',
-        status: 'ready',
-        statusLabel: 'Sẵn sàng'
-      },
-      {
-        title: 'Workshop Design Sprint',
-        startTime: '14:00',
-        endTime: '17:00',
-        status: 'preparing',
-        statusLabel: 'Đang chuẩn bị'
-      }
-    ],
-    '2026-02-17': [
-      {
-        title: 'Họp về ngân sách Q2',
-        startTime: '10:00',
-        endTime: '11:30',
-        status: 'ready',
-        statusLabel: 'Sẵn sàng'
-      }
-    ],
-    '2026-02-20': [
-      {
-        title: 'Hội thảo chuyên đề số',
-        startTime: '08:00',
-        endTime: '17:00',
-        status: 'preparing',
-        statusLabel: 'Đang chuẩn bị'
-      }
-    ]
-  };
+  meetingsData: CalendarData = {};
+
+  constructor(
+    private meetingService: MeetingService,
+    private message: NzMessageService
+  ) {}
 
   ngOnInit(): void {
-    // Initialize component
+    this.loadMeetings();
+  }
+
+  /**
+   * Load meetings for current month
+   */
+  loadMeetings(): void {
+    const year = this.selectedDate.getFullYear();
+    const month = this.selectedDate.getMonth() + 1;
+    
+    // Get first and last day of month
+    const firstDay = new Date(year, month - 1, 1);
+    const lastDay = new Date(year, month, 0);
+    
+    const request: MeetingSearchRequest = {
+      meetingDateFrom: this.formatDateForApi(firstDay),
+      meetingDateTo: this.formatDateForApi(lastDay),
+      page: 0,
+      size: 1000, // Load all meetings for the month
+      sort: 'meetingDate,asc'
+    };
+
+    this.loading = true;
+    this.meetingService.searchMeetings(request).subscribe({
+      next: (response) => {
+        this.meetingsData = this.convertApiDataToCalendar(response.data);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error loading meetings:', error);
+        this.message.error('Không thể tải dữ liệu lịch họp');
+        this.loading = false;
+        this.meetingsData = {};
+      }
+    });
+  }
+
+  /**
+   * Convert API response to calendar format
+   */
+  private convertApiDataToCalendar(groups: any[]): CalendarData {
+    const calendarData: CalendarData = {};
+    
+    groups.forEach(group => {
+      const dateKey = group.meetingDate; // Already in YYYY-MM-DD format
+      calendarData[dateKey] = group.meetings.map((meeting: MeetingData) => ({
+        id: meeting.id,
+        title: meeting.subject,
+        startTime: this.formatTime(meeting.startTime),
+        endTime: this.formatTime(meeting.endTime),
+        status: this.mapApiStatus(meeting.status),
+        statusLabel: this.getStatusLabel(meeting.status),
+        roomCode: meeting.roomCode,
+        meetingData: meeting
+      }));
+    });
+    
+    return calendarData;
+  }
+
+  /**
+   * Map API status to UI status
+   */
+  private mapApiStatus(apiStatus: string): 'ready' | 'preparing' | 'issue' | 'cancelled' {
+    switch (apiStatus) {
+      case 'APPROVED':
+        return 'ready';
+      case 'CREATED':
+      case 'PENDING_APPROVAL':
+        return 'preparing';
+      case 'REJECTED':
+        return 'issue';
+      case 'CANCELLED':
+        return 'cancelled';
+      default:
+        return 'preparing';
+    }
+  }
+
+  /**
+   * Get status label in Vietnamese
+   */
+  private getStatusLabel(apiStatus: string): string {
+    switch (apiStatus) {
+      case 'CREATED':
+        return 'Tạo mới';
+      case 'PENDING_APPROVAL':
+        return 'Chờ duyệt';
+      case 'APPROVED':
+        return 'Đã duyệt';
+      case 'REJECTED':
+        return 'Từ chối';
+      case 'CANCELLED':
+        return 'Đã hủy';
+      default:
+        return apiStatus;
+    }
+  }
+
+  /**
+   * Format time from HH:mm:ss to HH:mm
+   */
+  private formatTime(time: string): string {
+    if (!time) return '';
+    return time.substring(0, 5); // Get HH:mm from HH:mm:ss
+  }
+
+  /**
+   * Format date for API (YYYY-MM-DD)
+   */
+  private formatDateForApi(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   getMeetingsForDate(date: Date): MeetingEvent[] {
@@ -156,12 +205,14 @@ export class MeetingCalendarComponent implements OnInit {
     const newDate = new Date(this.selectedDate);
     newDate.setMonth(newDate.getMonth() - 1);
     this.selectedDate = newDate;
+    this.loadMeetings();
   }
 
   nextMonth(): void {
     const newDate = new Date(this.selectedDate);
     newDate.setMonth(newDate.getMonth() + 1);
     this.selectedDate = newDate;
+    this.loadMeetings();
   }
 
   getCurrentMonthYear(): string {
