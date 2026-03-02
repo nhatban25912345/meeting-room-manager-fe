@@ -121,7 +121,7 @@ export class OnboardingComponent implements OnInit {
       'CREATED': 'Tạo mới',
       'APPROVED': 'Đã duyệt',
       'REJECTED': 'Từ chối',
-      'CANCELLED': 'Đã hủy',
+      'CANCELED': 'Đã hủy',
       'PENDING_APPROVAL': 'Chờ duyệt'
     };
     return statusMap[status] || status;
