@@ -1,7 +1,7 @@
 .password-toggle {
   cursor: pointer;
   color: rgba(0, 0, 0, 0.45);
-  
+
   &:hover {
     color: rgba(0, 0, 0, 0.85);
   }
@@ -41,7 +41,7 @@ nz-input-group {
       height: 36px;
       padding: 0 20px;
       font-weight: 500;
-      
+
       &:hover {
         transform: translateY(-1px);
         transition: all 0.2s;
